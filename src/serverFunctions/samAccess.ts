@@ -27,7 +27,12 @@ export const getSamAccessSetupStatus = createServerFn({ method: "GET" })
       return { enabled: true, errorMessage: null };
     }
 
-    const enabled = Boolean(await getOptionalEnvValue("OPENROUTER_API_KEY"));
+    // A self-hosted OpenAI-compatible endpoint (OPENROUTER_BASE_URL, e.g.
+    // local vLLM) enables SAM without an OpenRouter key.
+    const enabled = Boolean(
+      (await getOptionalEnvValue("OPENROUTER_API_KEY")) ||
+        (await getOptionalEnvValue("OPENROUTER_BASE_URL")),
+    );
     return {
       enabled,
       errorMessage: enabled ? null : OPENROUTER_KEY_MISSING_MESSAGE,

@@ -23,6 +23,13 @@ const MINIMAX_M3 = "minimax/minimax-m3";
  * separate reasoning channel and are billed as output tokens, which the usage
  * accounting above captures.
  *
+ * `baseURL` points the provider at any OpenAI-compatible endpoint (self-hosted
+ * vLLM, Ollama, ...) for self-hosted deployments. Those servers accept plain
+ * chat completions and reject or ignore OpenRouter-specific fields, so the
+ * request is sent without usage accounting, provider routing, or reasoning
+ * tuning — local inference meters as $0 (openRouterCostUsd falls back to 0
+ * when no cost is reported).
+ *
  * Sync on purpose: Think's `getModel()` hook is sync and runs on every turn,
  * so the SAM agent reads the key/model from its DO env and builds here.
  */
@@ -30,9 +37,17 @@ export function buildChatAgentModel(
   apiKey: string,
   modelId?: string,
   reasoningEffort: "max" | "low" = "max",
+  baseURL?: string,
 ): LanguageModelV3 {
   const model = modelId ?? DEFAULT_CHAT_AGENT_MODEL;
-  const openrouter = createOpenRouter({ apiKey });
+  const openrouter = createOpenRouter({
+    apiKey,
+    ...(baseURL ? { baseURL } : {}),
+  });
+
+  if (baseURL) {
+    return openrouter(model);
+  }
 
   // MiniMax M3 (env-override path only): `provider.order` prefers Together,
   // then Atlas Cloud (fp8); `zdr: true` restricts routing to Zero-Data-

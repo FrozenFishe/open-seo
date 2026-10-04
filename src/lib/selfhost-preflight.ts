@@ -203,13 +203,21 @@ function checkOptionalFeatures(env: EnvRecord, items: PreflightItem[]): void {
           level: "ok",
           message: "OPENROUTER_API_KEY set",
         }
-      : {
-          key: "ai",
-          name: "AI features",
-          level: "info",
-          message:
-            "OPENROUTER_API_KEY not set (optional) — SAM, the in-app SEO agent, is disabled.",
-        },
+      : get(env, "OPENROUTER_BASE_URL")
+        ? {
+            key: "ai",
+            name: "AI features",
+            level: "ok",
+            message:
+              "OPENROUTER_BASE_URL set — SAM uses a self-hosted OpenAI-compatible endpoint.",
+          }
+        : {
+            key: "ai",
+            name: "AI features",
+            level: "info",
+            message:
+              "OPENROUTER_API_KEY not set (optional) — SAM, the in-app SEO agent, is disabled.",
+          },
   );
 
   items.push(
