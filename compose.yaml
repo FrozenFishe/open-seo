@@ -32,7 +32,7 @@ services:
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-}
       - VITE_SHOW_DEVTOOLS=false
     ports:
-      - "127.0.0.1:${PORT:-3001}:${PORT:-3001}"
+      - "${HOST_IP:-127.0.0.1}:${PORT:-3001}:${PORT:-3001}"
     volumes:
       - open_seo_data:/app/.wrangler
 volumes:

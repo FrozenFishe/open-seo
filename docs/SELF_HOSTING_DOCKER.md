@@ -30,6 +30,7 @@ Open `http://localhost:<PORT>` (default `3001`). The first start builds the app 
 Optional env values:
 
 - `PORT` (defaults to `3001`)
+- `HOST_IP` (host interface the port binds to; defaults to `127.0.0.1`. Set it to the machine's LAN or Tailscale IP to reach the app from the network — the app has no auth in this mode, so keep it on a private network)
 - `ALLOWED_HOST` (single reverse-proxy hostname to allow in Vite preview)
 - `AUTH_MODE=local_noauth` (already set in compose)
 - `OPEN_SEO_IMAGE` (defaults to `ghcr.io/every-app/open-seo:latest`)
