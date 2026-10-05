@@ -30,6 +30,9 @@ services:
       # Optional: AI features (SAM, the in-app SEO agent)
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-}
+      # Optional: point SAM at a self-hosted OpenAI-compatible endpoint (e.g.
+      # local vLLM) instead of OpenRouter. When set, no OpenRouter key is needed.
+      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-}
       - VITE_SHOW_DEVTOOLS=false
     ports:
       - "${HOST_IP:-127.0.0.1}:${PORT:-3001}:${PORT:-3001}"
