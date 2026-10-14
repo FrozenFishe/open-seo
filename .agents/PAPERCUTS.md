@@ -28,6 +28,7 @@ data, or sensitive paths.
 
 - `2026-09-05T23:52:53Z` — `codex` — After `pnpm build` ran alongside an active Vite dev server, browser navigation failed and server functions returned undefined. The server logged `Cannot read properties of undefined (reading 'map')` in `runInRunnerObject` / `loadEntries`. Restarting Vite restored the same dashboard without code changes. Stop and restart the dev server around production builds before browser QA; consider documenting or isolating the shared build/runtime state.
 - [ ] `2026-09-27T22:06:28Z` — `claude` — Hosted auth mode can't run behind `pnpm dev:agents`: `hostedBaseUrlSchema` in `src/lib/auth.ts` accepts only https or the exact host `localhost`, so a portless `*.localhost` `BETTER_AUTH_URL` returns 500, and setting `TURNSTILE_SITE_KEY` without `TURNSTILE_SECRET_KEY` turns every `/api/auth` call into a bare "Missing Better Auth hosted configuration" 500. Workaround: run `vite dev --port <n> --strictPort` with `BETTER_AUTH_URL=http://localhost:<n>`; fix: accept `*.localhost` over http and name the missing variable in the error.
+- [ ] `2026-10-11T10:44:05Z` — `claude` — `docs/SELF_HOSTING_CLOUDFLARE.md` step 2 runs `pnpm alchemy login` and `pnpm alchemy cloudflare bootstrap` bare, which fail with "Cannot find module .../alchemy.run.ts" because Alchemy defaults to a repo-root `alchemy.run.ts`; append `deploy/alchemy/alchemy.run.ts --env-file .env.selfhost` in the docs (or add `pnpm` scripts that pass it).
 
 ## Deferred
 
