@@ -64,7 +64,7 @@ export function ResearchScopeSelect({
               <span className="text-xs text-muted-foreground">
                 {RESEARCH_SCOPE_DESCRIPTIONS[scope]}
               </span>
-              <span className="font-mono text-xs text-muted-foreground/70">
+              <span className="font-mono text-xs text-muted-foreground">
                 {RESEARCH_SCOPE_EXAMPLES[scope]}
               </span>
             </span>
