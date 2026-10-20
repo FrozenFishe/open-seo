@@ -31,6 +31,11 @@ services:
       # local vLLM) instead of OpenRouter. When set, no OpenRouter key is needed.
       - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-}
       - VITE_SHOW_DEVTOOLS=false
+    # Lets the container reach services on the Docker host (e.g. a local
+    # OpenAI-compatible LLM at http://host.docker.internal:8000/v1). Docker
+    # Desktop provides this name already; Linux Docker Engine needs the mapping.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "${HOST_IP:-127.0.0.1}:${PORT:-3001}:${PORT:-3001}"
     volumes:
