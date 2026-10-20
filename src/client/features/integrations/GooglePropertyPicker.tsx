@@ -281,7 +281,7 @@ export function GooglePropertyPicker({
                                 disabled={
                                   readOnly || !property.selectable || saving
                                 }
-                                className={`h-auto w-full justify-between gap-3 rounded-md px-2 py-2.5 text-left font-normal hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring disabled:opacity-40 ${chosen ? "bg-accent" : ""}`}
+                                className={`h-auto w-full justify-between gap-3 rounded-md px-2 py-2.5 text-left font-normal hover:bg-secondary focus-visible:outline-2 focus-visible:outline-ring disabled:opacity-40 ${chosen ? "bg-secondary" : ""}`}
                                 onClick={() => {
                                   onSelect({
                                     accountId: account.accountId,

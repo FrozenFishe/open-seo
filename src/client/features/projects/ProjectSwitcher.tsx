@@ -113,7 +113,7 @@ export function ProjectSwitcher({
         <div className="flex items-stretch rounded-lg border border-sidebar-border bg-card">
           <ComboboxTrigger
             aria-label="Switch project"
-            className="flex min-w-0 flex-1 items-center justify-between gap-2 rounded-l-lg px-3 py-1.5 text-left hover:bg-accent"
+            className="flex min-w-0 flex-1 items-center justify-between gap-2 rounded-l-lg px-3 py-1.5 text-left hover:bg-secondary"
           >
             <span className="flex min-w-0 flex-col">
               <span className="truncate text-sm font-medium">
