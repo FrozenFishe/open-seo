@@ -16,6 +16,11 @@ services:
       - PORT=${PORT:-3001}
       - ALLOWED_HOST=${ALLOWED_HOST:-}
       - AUTH_MODE=local_noauth
+      # Lets the startup checks warn when the port binds beyond this machine.
+      - HOST_IP=${HOST_IP:-}
+      # Optional: shared secret /mcp requires (Authorization: Bearer <token> or
+      # x-api-key: <token>). Set it whenever HOST_IP is not 127.0.0.1.
+      - MCP_AUTH_TOKEN=${MCP_AUTH_TOKEN:-}
       - OPENSEO_TELEMETRY_DISABLED=${OPENSEO_TELEMETRY_DISABLED:-}
       - DO_NOT_TRACK=${DO_NOT_TRACK:-}
       - DATAFORSEO_API_KEY=${DATAFORSEO_API_KEY}

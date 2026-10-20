@@ -70,4 +70,16 @@ describe("runSelfhostPreflight", () => {
 
     expect(itemFor(result, "AI features")?.level).toBe(level);
   });
+
+  it.each([
+    [{ HOST_IP: "100.101.102.103" }, "warn"],
+    [{ HOST_IP: "127.0.0.1" }, "info"],
+    [{ HOST_IP: "100.101.102.103", MCP_AUTH_TOKEN: "secret-token" }, "ok"],
+  ])("reports MCP_AUTH_TOKEN for %o as %s", (env, level) => {
+    const result = runSelfhostPreflight({ AUTH_MODE: "local_noauth", ...env });
+
+    const item = itemFor(result, "MCP_AUTH_TOKEN");
+    expect(item?.level).toBe(level);
+    expect(item?.message).not.toContain("secret-token");
+  });
 });

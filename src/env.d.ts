@@ -92,6 +92,9 @@ declare namespace Cloudflare {
     // Optional OpenAI-compatible base URL for every AI feature — points at a
     // self-hosted endpoint (local vLLM, Ollama, ...) instead of OpenRouter.
     OPENROUTER_BASE_URL?: string;
+    // Optional shared secret self-hosted /mcp requires as a Bearer token or
+    // x-api-key header. Unset leaves /mcp open, as before.
+    MCP_AUTH_TOKEN?: string;
   }
 }
 
