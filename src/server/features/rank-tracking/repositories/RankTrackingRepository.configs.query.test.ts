@@ -37,6 +37,26 @@ async function getConfigRow(id: string) {
   return rows[0];
 }
 
+describe("getConfigById", () => {
+  it("returns a config only to the project that owns it", async () => {
+    await seedConfig({ id: "cfg_1", projectId: "proj_1" });
+
+    expect(
+      await RankTrackingRepository.getConfigById({
+        configId: "cfg_1",
+        projectId: "proj_1",
+      }),
+    ).toMatchObject({ id: "cfg_1", projectId: "proj_1" });
+    // A caller-supplied config ID from another project must not resolve.
+    expect(
+      await RankTrackingRepository.getConfigById({
+        configId: "cfg_1",
+        projectId: "proj_other",
+      }),
+    ).toBeNull();
+  });
+});
+
 describe("getDueConfigsWithOrganization", () => {
   it("returns due rows oldest-first and excludes manual, inactive, future, and archived rows", async () => {
     await seedProject("proj_1");
