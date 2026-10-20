@@ -2,10 +2,37 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GscApiError, GscTokenError } from "@/server/lib/gscErrors";
 import { GscService } from "./GscService";
 
-const mocks = vi.hoisted(() => {
-  const state: { selectRows: Array<{ id: string; accountId: string }> } = {
-    selectRows: [],
+// Grants are read from a real SQLite `account` table so the user and provider
+// filters are exercised; a mocked builder chain would ignore the WHERE clause.
+const grants = await vi.hoisted(async () => {
+  const { createClient } = await import("@libsql/client");
+  const { drizzle } = await import("drizzle-orm/libsql");
+  const client = createClient({ url: "file::memory:" });
+  await client.execute(
+    "CREATE TABLE account (id text PRIMARY KEY, account_id text NOT NULL, provider_id text NOT NULL, user_id text NOT NULL)",
+  );
+  return {
+    db: drizzle(client),
+    async seed(
+      rows: Array<{ accountId: string; userId?: string; providerId?: string }>,
+    ) {
+      await client.execute("DELETE FROM account");
+      for (const [index, row] of rows.entries()) {
+        await client.execute({
+          sql: "INSERT INTO account VALUES (?, ?, ?, ?)",
+          args: [
+            `grant-${index}`,
+            row.accountId,
+            row.providerId ?? "google-search-console",
+            row.userId ?? "u1",
+          ],
+        });
+      }
+    },
   };
+});
+
+const mocks = vi.hoisted(() => {
   type GscClientOptions = { userId: string; gscAccountId?: string };
   type GscSite = { siteUrl: string; permissionLevel: string };
   const listSites = vi.fn<(opts: GscClientOptions) => Promise<GscSite[]>>();
@@ -13,20 +40,7 @@ const mocks = vi.hoisted(() => {
     vi.fn<(opts: GscClientOptions) => Promise<string | null>>();
   const querySearchAnalytics =
     vi.fn<(opts: GscClientOptions) => Promise<never[]>>();
-  const dbSelect = vi.fn(() => ({
-    from: vi.fn(() => ({
-      where: vi.fn(() => {
-        const rows = state.selectRows;
-        return Object.assign(Promise.resolve(rows), {
-          limit: vi.fn().mockResolvedValue(rows),
-        });
-      }),
-    })),
-  }));
-
   return {
-    state,
-    dbSelect,
     listSites,
     getUserInfoEmail,
     querySearchAnalytics,
@@ -41,9 +55,7 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("cloudflare:workers", () => ({ env: {} }));
-vi.mock("@/db", () => ({
-  db: { select: mocks.dbSelect },
-}));
+vi.mock("@/db", () => ({ db: grants.db }));
 vi.mock("@/server/lib/gscClient", () => ({
   createGscClient: mocks.createGscClient,
 }));
@@ -62,8 +74,8 @@ const baseInput = {
 };
 
 describe("GscService.setSite", () => {
-  beforeEach(() => {
-    mocks.state.selectRows = [{ id: "grant-a", accountId: "sub-a" }];
+  beforeEach(async () => {
+    await grants.seed([{ accountId: "sub-a" }]);
   });
 
   it("upserts a verified property with the selected grant and userinfo email", async () => {
@@ -98,6 +110,13 @@ describe("GscService.setSite", () => {
   });
 
   it("rejects a Google sub that is not one of the caller's grants", async () => {
+    // The requested sub exists, but only as another user's Search Console
+    // grant and as this user's GA4 grant; neither may authorize the site.
+    await grants.seed([
+      { accountId: "sub-a" },
+      { accountId: "foreign-sub", userId: "u2" },
+      { accountId: "foreign-sub", providerId: "google-analytics" },
+    ]);
     await expect(
       GscService.setSite({
         ...baseInput,
@@ -133,11 +152,12 @@ describe("GscService.setSite", () => {
 });
 
 describe("GscService.listSitesForUserWithGrantStatus", () => {
-  beforeEach(() => {
-    mocks.state.selectRows = [
-      { id: "grant-a", accountId: "sub-a" },
-      { id: "grant-b", accountId: "sub-b" },
-    ];
+  beforeEach(async () => {
+    await grants.seed([
+      { accountId: "sub-a" },
+      { accountId: "sub-b" },
+      { accountId: "sub-c", userId: "u2" },
+    ]);
   });
 
   it.each([
@@ -187,7 +207,7 @@ describe("GscService.listSitesForUserWithGrantStatus", () => {
   );
 
   it("keeps userinfo failures non-fatal", async () => {
-    mocks.state.selectRows = [{ id: "grant-a", accountId: "sub-a" }];
+    await grants.seed([{ accountId: "sub-a" }]);
     mocks.getUserInfoEmail.mockRejectedValue(new Error("userinfo unavailable"));
     mocks.listSites.mockResolvedValue([
       { siteUrl: "https://x/", permissionLevel: "siteOwner" },

@@ -49,7 +49,7 @@ vi.mock("@/server/features/audit/repositories/AuditRepository", () => ({
 vi.mock("@/server/lib/posthog", () => ({ captureServerEvent: vi.fn() }));
 
 beforeEach(() => {
-  vi.resetAllMocks();
+  mocks.terminate.mockResolvedValue(undefined);
   mocks.getProjectForOrganization.mockResolvedValue({ id: "project_1" });
   mocks.deleteReport.mockResolvedValue(true);
   mocks.deleteTemplate.mockResolvedValue(true);
@@ -126,6 +126,12 @@ describe("site audit cleanup", () => {
         context,
       ),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    // This lookup gates terminate() and the scratchpad wipe, which are keyed
+    // by audit alone.
+    expect(mocks.getAuditForProject).toHaveBeenCalledWith(
+      "audit_1",
+      "project_1",
+    );
     expect(mocks.deleteAuditForProject).not.toHaveBeenCalled();
   });
 

@@ -328,6 +328,12 @@ describe("RankTrackingService management invariants", () => {
     await expect(
       RankTrackingService.removeKeywords("foreign", "project_1", ["kw_1"]),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    // The keyword delete is keyed by configId alone, so this lookup is the
+    // only thing tying the tracker to the caller's project.
+    expect(mocks.getConfigById).toHaveBeenCalledWith({
+      configId: "foreign",
+      projectId: "project_1",
+    });
     expect(mocks.removeKeywordsFromConfig).not.toHaveBeenCalled();
   });
 });

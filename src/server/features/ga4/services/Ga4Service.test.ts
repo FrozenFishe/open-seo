@@ -2,15 +2,41 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Ga4AdminApiError, Ga4TokenError } from "@/server/lib/ga4Errors";
 import { Ga4Service } from "./Ga4Service";
 
-const mocks = vi.hoisted(() => {
-  const state: { grants: Array<{ id: string; accountId: string }> } = {
-    grants: [],
+// Grants are read from a real SQLite `account` table so the user and provider
+// filters are exercised; a mocked builder chain would ignore the WHERE clause.
+const grants = await vi.hoisted(async () => {
+  const { createClient } = await import("@libsql/client");
+  const { drizzle } = await import("drizzle-orm/libsql");
+  const client = createClient({ url: "file::memory:" });
+  await client.execute(
+    "CREATE TABLE account (id text PRIMARY KEY, account_id text NOT NULL, provider_id text NOT NULL, user_id text NOT NULL)",
+  );
+  return {
+    db: drizzle(client),
+    async seed(
+      rows: Array<{ accountId: string; userId?: string; providerId?: string }>,
+    ) {
+      await client.execute("DELETE FROM account");
+      for (const [index, row] of rows.entries()) {
+        await client.execute({
+          sql: "INSERT INTO account VALUES (?, ?, ?, ?)",
+          args: [
+            `grant-${index}`,
+            row.accountId,
+            row.providerId ?? "google-analytics",
+            row.userId ?? "u1",
+          ],
+        });
+      }
+    },
   };
+});
+
+const mocks = vi.hoisted(() => {
   const listProperties = vi.fn();
   const getProperty = vi.fn();
   const getUserInfoEmail = vi.fn();
   return {
-    state,
     listProperties,
     getProperty,
     getUserInfoEmail,
@@ -19,23 +45,13 @@ const mocks = vi.hoisted(() => {
       getProperty,
       getUserInfoEmail,
     })),
-    dbSelect: vi.fn(() => ({
-      from: vi.fn(() => ({
-        where: vi.fn(() => {
-          const rows = state.grants;
-          return Object.assign(Promise.resolve(rows), {
-            limit: vi.fn().mockResolvedValue(rows),
-          });
-        }),
-      })),
-    })),
     upsert: vi.fn(),
     getByProjectId: vi.fn(),
   };
 });
 
 vi.mock("cloudflare:workers", () => ({ env: {} }));
-vi.mock("@/db", () => ({ db: { select: mocks.dbSelect } }));
+vi.mock("@/db", () => ({ db: grants.db }));
 vi.mock("@/server/lib/ga4Client", () => ({
   createGa4AdminClient: mocks.createGa4AdminClient,
 }));
@@ -47,8 +63,8 @@ vi.mock("@/server/features/ga4/repositories/Ga4ConnectionRepository", () => ({
 }));
 
 describe("Ga4Service", () => {
-  beforeEach(() => {
-    mocks.state.grants = [{ id: "grant-a", accountId: "sub-a" }];
+  beforeEach(async () => {
+    await grants.seed([{ accountId: "sub-a" }]);
   });
 
   it("verifies a freshly discovered property before persisting metadata", async () => {
@@ -98,6 +114,13 @@ describe("Ga4Service", () => {
   });
 
   it("rejects a property or connector the current user does not own", async () => {
+    // The requested sub exists, but only as another user's GA4 grant and as
+    // this user's Search Console grant; neither may authorize the connection.
+    await grants.seed([
+      { accountId: "sub-a" },
+      { accountId: "foreign-sub", userId: "u2" },
+      { accountId: "foreign-sub", providerId: "google-search-console" },
+    ]);
     await expect(
       Ga4Service.setProperty({
         projectId: "p1",
@@ -107,6 +130,7 @@ describe("Ga4Service", () => {
         userId: "u1",
       }),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(mocks.createGa4AdminClient).not.toHaveBeenCalled();
 
     mocks.listProperties.mockResolvedValue([]);
     await expect(
@@ -122,10 +146,11 @@ describe("Ga4Service", () => {
   });
 
   it("distinguishes expired grants from inaccessible property discovery", async () => {
-    mocks.state.grants = [
-      { id: "grant-a", accountId: "sub-a" },
-      { id: "grant-b", accountId: "sub-b" },
-    ];
+    await grants.seed([
+      { accountId: "sub-a" },
+      { accountId: "sub-b" },
+      { accountId: "sub-c", userId: "u2" },
+    ]);
     mocks.listProperties
       .mockRejectedValueOnce(new Ga4TokenError("revoked"))
       .mockRejectedValueOnce(new Ga4AdminApiError(403, "forbidden"));

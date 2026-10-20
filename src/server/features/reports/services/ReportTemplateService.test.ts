@@ -75,6 +75,9 @@ describe("saveReportTemplate", () => {
     await expect(save({ templateId: "template_other" })).rejects.toThrow(
       /No report template template_other/,
     );
+    // One project-scoped read drives the existence, name and cap checks.
+    expect(mocks.listTemplates).toHaveBeenCalledWith("project_1");
+    expect(mocks.updateTemplate).not.toHaveBeenCalled();
   });
 
   it("refuses a name another template in the project already uses, ignoring case", async () => {

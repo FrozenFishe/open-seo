@@ -145,6 +145,10 @@ describe("save_report", () => {
         toolContext,
       ),
     ).rejects.toThrow(/No report template template_other_project/);
+    expect(mocks.getTemplate).toHaveBeenCalledWith(
+      projectId,
+      "template_other_project",
+    );
     expect(mocks.insertReport).not.toHaveBeenCalled();
   });
 });
