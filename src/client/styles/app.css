@@ -93,7 +93,8 @@
   --success-foreground: oklch(100% 0 0);
   --warning: oklch(80% 0.15 80);
   --warning-foreground: oklch(25% 0.05 80);
-  --info: oklch(70% 0.15 230);
+  /* Dark enough that info text stays above 4.5:1 on its own 10% tint. */
+  --info: oklch(48% 0.11 230);
   --info-foreground: oklch(100% 0 0);
   --border: oklch(92% 0 0);
   --input: oklch(82% 0 0);
