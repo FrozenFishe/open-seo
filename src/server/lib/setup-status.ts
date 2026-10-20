@@ -32,6 +32,8 @@ const CHECK_ENV_VARS = [
   "OPENROUTER_BASE_URL",
   "OPENROUTER_MODEL",
   "CONTEXT_API_KEY",
+  "MCP_AUTH_TOKEN",
+  "HOST_IP",
 ] as const;
 
 const LEVEL_TO_STATUS = {

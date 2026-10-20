@@ -200,6 +200,57 @@ describe("handleSelfHostedOpenSeoMcpRequest", () => {
     },
   );
 
+  describe("with MCP_AUTH_TOKEN set", () => {
+    const env = { MCP_AUTH_TOKEN: "correct-token" };
+
+    it.each([
+      ["no token", {}, 'Bearer realm="OpenSEO MCP"'],
+      [
+        "a wrong Bearer token",
+        { Authorization: "Bearer wrong-token" },
+        'Bearer realm="OpenSEO MCP", error="invalid_token"',
+      ],
+      [
+        "a wrong x-api-key",
+        { "x-api-key": "wrong-token" },
+        'Bearer realm="OpenSEO MCP", error="invalid_token"',
+      ],
+    ])("rejects a request with %s", async (_label, headers, challenge) => {
+      const response = await handleSelfHostedOpenSeoMcpRequest(
+        createMcpRequest(headers),
+        "local_noauth",
+        env,
+        ctx,
+      );
+
+      expect(response.status).toBe(401);
+      expect(response.headers.get("www-authenticate")).toBe(challenge);
+      const body = await response.text();
+      expect(JSON.parse(body)).toMatchObject({
+        jsonrpc: "2.0",
+        error: { code: -32001 },
+        id: null,
+      });
+      expect(body).not.toContain("correct-token");
+      expect(selfHostedAuthMocks.createOpenSeoMcpServer).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ["Bearer", { Authorization: "Bearer correct-token" }],
+      ["x-api-key", { "x-api-key": "correct-token" }],
+    ])("accepts the token as %s", async (_label, headers) => {
+      const response = await handleSelfHostedOpenSeoMcpRequest(
+        createMcpRequest(headers),
+        "local_noauth",
+        env,
+        ctx,
+      );
+
+      expect(response.status).toBe(200);
+      expect(selfHostedAuthMocks.createOpenSeoMcpServer).toHaveBeenCalled();
+    });
+  });
+
   it("answers OPTIONS preflight without resolving an auth context", async () => {
     const response = await handleSelfHostedOpenSeoMcpRequest(
       new Request("https://open-seo.test/mcp", { method: "OPTIONS" }),

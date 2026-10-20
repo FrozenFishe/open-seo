@@ -38,6 +38,7 @@ Optional env values:
 
 - `PORT` (defaults to `3001`)
 - `HOST_IP` (host interface the port binds to; defaults to `127.0.0.1`. Set it to the machine's LAN or Tailscale IP to reach the app from the network — the app has no auth in this mode, so keep it on a private network)
+- `MCP_AUTH_TOKEN` (shared secret the `/mcp` endpoint requires from MCP clients; unset leaves it open. Set it whenever `HOST_IP` is not `127.0.0.1`; see [Protect the MCP endpoint](#protect-the-mcp-endpoint))
 - `ALLOWED_HOST` (reverse-proxy or DNS hostnames to allow, comma-separated; localhost and raw IP addresses always work)
 - `AUTH_MODE=local_noauth` (already set in compose)
 - `OPEN_SEO_IMAGE` (defaults to `ghcr.io/every-app/open-seo:latest`)
@@ -76,7 +77,7 @@ Setup notes:
 
 By default the port binds to `127.0.0.1`, so only the machine running Docker can open the app. The app has no auth in Docker mode, so widen access only on a network you trust:
 
-- **LAN or tailnet:** set `HOST_IP` in `.env` to the machine's LAN or Tailscale IP (for example `HOST_IP=100.101.102.103`), then `docker compose up -d`. Opening `http://<that IP>:3001` works as is. To use a hostname such as a Tailscale MagicDNS name, also add it to `ALLOWED_HOST`.
+- **LAN or tailnet:** set `HOST_IP` in `.env` to the machine's LAN or Tailscale IP (for example `HOST_IP=100.101.102.103`), then `docker compose up -d`. Opening `http://<that IP>:3001` works as is. To use a hostname such as a Tailscale MagicDNS name, also add it to `ALLOWED_HOST`. Also set `MCP_AUTH_TOKEN` so the network cannot use `/mcp` without it ([Protect the MCP endpoint](#protect-the-mcp-endpoint)).
 - **Reverse proxy:** keep the default `127.0.0.1` bind, put the proxy on the same machine, and set `ALLOWED_HOST` to the public hostname. Several hostnames can be comma-separated (`ALLOWED_HOST=seo.example.com,openseo.tailnet-name.ts.net`). Put authentication in the proxy (for example Caddy `basic_auth`, oauth2-proxy, or an identity-aware tunnel). A minimal Caddy example:
 
 ```text
@@ -89,6 +90,34 @@ seo.example.com {
 ```
 
 Without the right `ALLOWED_HOST`, requests by hostname show Vite's "Blocked request" page.
+
+## Protect the MCP endpoint
+
+OpenSEO serves an MCP endpoint at `/mcp`. With the default `127.0.0.1` bind only this machine can reach it, but once `HOST_IP` points at a LAN or Tailscale address, anyone on that network can call it and spend your DataForSEO credits. Set `MCP_AUTH_TOKEN` to require a shared secret from MCP clients.
+
+1. Generate a token:
+
+   ```bash
+   openssl rand -hex 32
+   ```
+
+2. Add it to `.env`:
+
+   ```bash
+   MCP_AUTH_TOKEN=paste-the-generated-token
+   ```
+
+3. Apply it with `docker compose up -d --force-recreate open-seo`. The startup checks report `MCP_AUTH_TOKEN: Set` (the value is never printed).
+
+Clients then send the token as `Authorization: Bearer <token>` or `x-api-key: <token>`. Requests without it, or with a wrong one, get `401 Unauthorized`. For Claude Code:
+
+```bash
+claude mcp add --transport http --scope user openseo-local http://100.101.102.103:3001/mcp --header "Authorization: Bearer YOUR_MCP_AUTH_TOKEN"
+```
+
+Other MCP clients that support custom headers take the same `Authorization` header. Behind a reverse proxy that uses `Authorization` for its own login (such as Caddy `basic_auth`), send `x-api-key: YOUR_MCP_AUTH_TOKEN` instead.
+
+The token protects `/mcp` only. The web app still has no login in Docker mode, so anyone who can reach the port can use the app itself; keep it on a network you trust or behind an authenticating proxy. Leaving `MCP_AUTH_TOKEN` unset keeps `/mcp` open, as before.
 
 ## Data and backups
 

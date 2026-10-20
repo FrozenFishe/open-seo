@@ -14,7 +14,7 @@ type PreflightLevel = "ok" | "info" | "warn" | "fail";
 
 type PreflightItem = {
   // Stable identifier shared with /api/health's check map.
-  key: "auth" | "dataforseo" | "gsc" | "ai" | "rendering" | "runtime";
+  key: "auth" | "dataforseo" | "gsc" | "ai" | "mcp" | "rendering" | "runtime";
   name: string;
   level: PreflightLevel;
   message: string;
@@ -261,6 +261,50 @@ function checkAi(env: EnvRecord): PreflightItem {
       };
 }
 
+// HOST_IP is the host interface compose binds the port to; unset means its
+// 127.0.0.1 default. Anything else (a LAN or tailnet IP, 0.0.0.0) is reachable
+// from other machines.
+function bindsBeyondLoopback(hostIp: string | undefined): boolean {
+  if (!hostIp) return false;
+  const host = hostIp.replace(/^\[|\]$/g, "").toLowerCase();
+  return !(host === "localhost" || host === "::1" || host.startsWith("127."));
+}
+
+// Hosted MCP uses OAuth and API keys; this optional shared secret is the
+// self-hosted equivalent. Report only whether it is set, never its value.
+function checkMcpAuthToken(env: EnvRecord): PreflightItem | null {
+  if (isHostedAuthMode(get(env, "AUTH_MODE"))) return null;
+  const name = "MCP_AUTH_TOKEN";
+  if (get(env, "MCP_AUTH_TOKEN")) {
+    return {
+      key: "mcp",
+      name,
+      level: "ok",
+      message:
+        "Set — /mcp requires it as Authorization: Bearer <token> or x-api-key: <token>.",
+    };
+  }
+  if (
+    get(env, "AUTH_MODE") === "local_noauth" &&
+    bindsBeyondLoopback(get(env, "HOST_IP"))
+  ) {
+    return {
+      key: "mcp",
+      name,
+      level: "warn",
+      message:
+        "Not set while HOST_IP binds a non-loopback address — anyone on that network can call /mcp and spend your DataForSEO credits. Set MCP_AUTH_TOKEN (generate one with: openssl rand -hex 32).",
+    };
+  }
+  return {
+    key: "mcp",
+    name,
+    level: "info",
+    message:
+      "Not set (optional) — /mcp accepts requests without a token. Set it before exposing the port beyond this machine.",
+  };
+}
+
 // Shared per-feature checks: the Docker preflight prints these at boot and
 // /api/health (setup-status.ts) serves the same results at runtime, so the
 // two can never drift.
@@ -269,6 +313,8 @@ export function runSelfhostChecks(env: EnvRecord): PreflightItem[] {
   checkAuthMode(env, items);
   checkDataForSeo(env, items);
   checkOptionalFeatures(env, items);
+  const mcpItem = checkMcpAuthToken(env);
+  if (mcpItem) items.push(mcpItem);
   return items;
 }
 

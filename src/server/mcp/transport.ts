@@ -21,6 +21,7 @@ import {
 import { getPublicOrigin } from "@/server/mcp/public-origin";
 import { createOpenSeoMcpServer } from "@/server/mcp/server";
 import { supportsMcpApps } from "@/server/mcp/ui-capabilities";
+import { getEnvValueSync } from "@/server/lib/runtime-env";
 import { AuthRepository } from "@/server/auth/repositories/AuthRepository";
 import { resolveExistingActiveHostedOrganization } from "@/server/auth/default-hosted-organization";
 
@@ -240,15 +241,84 @@ export async function handleAuthenticatedOpenSeoMcpRequest(
   ])(request, env, ctx);
 }
 
+async function sha256(value: string) {
+  return new Uint8Array(
+    await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)),
+  );
+}
+
+// Hashing first gives both sides a fixed length, so neither the comparison
+// time nor an early length check reveals anything about the configured token.
+async function tokenMatches(candidate: string, expected: string) {
+  const [left, right] = await Promise.all([
+    sha256(candidate),
+    sha256(expected),
+  ]);
+  let difference = 0;
+  for (let index = 0; index < left.length; index += 1) {
+    difference |= left[index] ^ right[index];
+  }
+  return difference === 0;
+}
+
+// Either header may carry the token: `x-api-key` lets a client keep working
+// behind a reverse proxy that uses `Authorization` for its own auth.
+async function hasValidMcpAuthToken(request: Request, expected: string) {
+  const bearer = request.headers
+    .get("Authorization")
+    ?.match(/^Bearer\s+(.+)$/i)?.[1]
+    ?.trim();
+  const apiKey = request.headers.get("x-api-key")?.trim();
+  for (const candidate of [bearer, apiKey]) {
+    if (candidate && (await tokenMatches(candidate, expected))) return true;
+  }
+  return false;
+}
+
+function mcpAuthTokenRejection(request: Request) {
+  const presented =
+    request.headers.has("Authorization") || request.headers.has("x-api-key");
+  return withMcpCors(
+    Response.json(
+      {
+        jsonrpc: "2.0",
+        error: {
+          code: -32001,
+          message: presented
+            ? "Unauthorized: the MCP auth token is invalid."
+            : "Unauthorized: this server requires an MCP auth token (Authorization: Bearer <token> or x-api-key: <token>).",
+        },
+        id: null,
+      },
+      {
+        status: 401,
+        headers: {
+          "WWW-Authenticate": presented
+            ? 'Bearer realm="OpenSEO MCP", error="invalid_token"'
+            : 'Bearer realm="OpenSEO MCP"',
+        },
+      },
+    ),
+  );
+}
+
 export async function handleSelfHostedOpenSeoMcpRequest(
   request: Request,
   authMode: "cloudflare_access" | "local_noauth",
-  env: unknown,
+  env: object,
   ctx: ExecutionContext,
 ): Promise<Response> {
   // Preflight does not carry an authenticated application context.
   if (request.method === "OPTIONS") {
     return new Response(null, { headers: MCP_CORS_HEADERS });
+  }
+
+  // Optional shared secret for machine clients. local_noauth has no login, so
+  // once the port is reachable from a LAN or tailnet this is the only thing
+  // standing between that network and the operator's DataForSEO credits.
+  const mcpAuthToken = getEnvValueSync(env, "MCP_AUTH_TOKEN")?.trim();
+  if (mcpAuthToken && !(await hasValidMcpAuthToken(request, mcpAuthToken))) {
+    return mcpAuthTokenRejection(request);
   }
 
   const identity =
