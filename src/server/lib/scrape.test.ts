@@ -50,12 +50,15 @@ describe("readPages SSRF guard", () => {
 });
 
 describe("readSite", () => {
-  // Unlisted URLs (sitemaps, DoH lookups) 404; a missing route value throws
-  // like a failed TLS handshake.
+  // DoH lookups resolve clean, unlisted URLs (sitemaps) 404, and a missing
+  // route value throws like a failed TLS handshake.
   function stubSite(routes: Record<string, string | null>) {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string) => {
+        if (url.includes("dns-query")) {
+          return new Response(JSON.stringify({ Status: 0, Answer: [] }));
+        }
         if (!(url in routes)) return new Response(null, { status: 404 });
         const target = routes[url];
         if (target === null) throw new TypeError("fetch failed");

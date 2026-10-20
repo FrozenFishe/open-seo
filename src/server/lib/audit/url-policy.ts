@@ -33,16 +33,18 @@ function normalizeHost(hostname: string): string {
   return host;
 }
 
-function isPrivateIpv4(host: string): boolean {
-  const parts = normalizeHost(host)
-    .split(".")
-    .map((x) => Number(x));
-  if (
-    parts.length !== 4 ||
-    parts.some((x) => !Number.isInteger(x) || x < 0 || x > 255)
-  ) {
-    return false;
+function parseIpv4(host: string): number[] | null {
+  const parts = normalizeHost(host).split(".");
+  if (parts.length !== 4 || parts.some((x) => !/^\d{1,3}$/.test(x))) {
+    return null;
   }
+  const octets = parts.map(Number);
+  return octets.every((x) => x <= 255) ? octets : null;
+}
+
+function isPrivateIpv4(host: string): boolean {
+  const parts = parseIpv4(host);
+  if (!parts) return false;
 
   const [a, b] = parts;
   if (a === 10) return true;
@@ -57,56 +59,74 @@ function isPrivateIpv4(host: string): boolean {
   return false;
 }
 
-function parseMappedIpv4FromIpv6(host: string): string | null {
-  const normalized = normalizeHost(host);
-  if (!normalized.startsWith("::ffff:")) return null;
+/** Parses an IPv6 literal into its eight 16-bit groups, or null. */
+function parseIpv6(host: string): number[] | null {
+  let value = normalizeHost(host);
+  if (!value.includes(":")) return null;
 
-  const mapped = normalized.slice("::ffff:".length);
-  if (/^\d+\.\d+\.\d+\.\d+$/.test(mapped)) {
-    return mapped;
+  // A trailing dotted quad fills the last two groups.
+  const dotted = /^(.*:)(\d+\.\d+\.\d+\.\d+)$/.exec(value);
+  if (dotted) {
+    const octets = parseIpv4(dotted[2]);
+    if (!octets) return null;
+    const [a, b, c, d] = octets;
+    value = `${dotted[1]}${((a << 8) | b).toString(16)}:${((c << 8) | d).toString(16)}`;
   }
 
-  const segments = mapped.split(":").filter(Boolean);
-  if (segments.length !== 2) return null;
+  const halves = value.split("::");
+  if (halves.length > 2) return null;
+  const head = halves[0] ? halves[0].split(":") : [];
+  const tail = halves.length === 2 && halves[1] ? halves[1].split(":") : [];
+  const missing = 8 - head.length - tail.length;
+  if (halves.length === 2 ? missing < 1 : missing !== 0) return null;
 
-  const high = Number.parseInt(segments[0], 16);
-  const low = Number.parseInt(segments[1], 16);
-  if (
-    !Number.isFinite(high) ||
-    !Number.isFinite(low) ||
-    high < 0 ||
-    high > 0xffff ||
-    low < 0 ||
-    low > 0xffff
-  ) {
-    return null;
+  const groups = [...head, ...Array<string>(missing).fill("0"), ...tail];
+  if (groups.some((group) => !/^[0-9a-f]{1,4}$/.test(group))) return null;
+  return groups.map((group) => Number.parseInt(group, 16));
+}
+
+function ipv4FromGroups(high: number, low: number): string {
+  return `${high >> 8}.${high & 0xff}.${low >> 8}.${low & 0xff}`;
+}
+
+/**
+ * IPv6 forms that carry an IPv4 address the network may route to: mapped
+ * (::ffff:0:0/96), translated (::ffff:0:0:0/96), compatible (::/96), NAT64
+ * (64:ff9b::/96) and 6to4 (2002::/16).
+ */
+function embeddedIpv4(groups: number[]): string | null {
+  const zeroes = (from: number, to: number) =>
+    groups.slice(from, to).every((group) => group === 0);
+  if (zeroes(0, 5) && (groups[5] === 0xffff || groups[5] === 0)) {
+    return ipv4FromGroups(groups[6], groups[7]);
   }
-
-  const a = (high >> 8) & 0xff;
-  const b = high & 0xff;
-  const c = (low >> 8) & 0xff;
-  const d = low & 0xff;
-  return `${a}.${b}.${c}.${d}`;
+  if (zeroes(0, 4) && groups[4] === 0xffff && groups[5] === 0) {
+    return ipv4FromGroups(groups[6], groups[7]);
+  }
+  if (groups[0] === 0x64 && groups[1] === 0xff9b && zeroes(2, 6)) {
+    return ipv4FromGroups(groups[6], groups[7]);
+  }
+  if (groups[0] === 0x2002) {
+    return ipv4FromGroups(groups[1], groups[2]);
+  }
+  return null;
 }
 
 function isPrivateIpv6(host: string): boolean {
-  const value = normalizeHost(host);
-  if (value === "::1" || value === "::") return true;
-  if (value.startsWith("fc") || value.startsWith("fd")) return true;
-  if (
-    value.startsWith("fe8") ||
-    value.startsWith("fe9") ||
-    value.startsWith("fea") ||
-    value.startsWith("feb")
-  ) {
-    return true;
-  }
+  const groups = parseIpv6(host);
+  if (!groups) return false;
 
-  const mappedIpv4 = parseMappedIpv4FromIpv6(value);
-  if (mappedIpv4 && isPrivateIpv4(mappedIpv4)) {
-    return true;
-  }
+  const embedded = embeddedIpv4(groups);
+  // ::1 and :: land here as 0.0.0.1 and 0.0.0.0.
+  if (embedded) return isPrivateIpv4(embedded);
 
+  const first = groups[0];
+  if ((first & 0xfe00) === 0xfc00) return true; // unique local fc00::/7
+  if ((first & 0xffc0) === 0xfe80) return true; // link-local fe80::/10
+  if ((first & 0xffc0) === 0xfec0) return true; // site-local fec0::/10
+  if ((first & 0xff00) === 0xff00) return true; // multicast ff00::/8
+  // Local-use NAT64 (64:ff9b:1::/48) translates into the operator's network.
+  if (first === 0x64 && groups[1] === 0xff9b && groups[2] === 1) return true;
   return false;
 }
 
@@ -152,10 +172,14 @@ async function resolveAddressRecords(
     },
   );
 
-  if (!response.ok) return [];
+  if (!response.ok) throw new Error(`DoH lookup failed: ${response.status}`);
 
   const body: DnsJsonResponse = await response.json();
-  if (body.Status !== 0 || !Array.isArray(body.Answer)) return [];
+  // NXDOMAIN is a real answer: the name has no address to reach. Any other
+  // failure (SERVFAIL, REFUSED) leaves the address unknown.
+  if (body.Status === 3) return [];
+  if (body.Status !== 0) throw new Error(`DoH lookup failed: ${body.Status}`);
+  if (!Array.isArray(body.Answer)) return [];
 
   const expectedType = type === "A" ? 1 : 28;
   return body.Answer.filter(
@@ -164,27 +188,30 @@ async function resolveAddressRecords(
   ).map((answer) => normalizeHost(answer.data));
 }
 
+/**
+ * Fails closed: when the lookup cannot complete, the host is treated as
+ * blocked, since an unverified name may point anywhere.
+ */
 async function hostnameResolvesToBlockedAddress(
   hostname: string,
 ): Promise<boolean> {
   const host = normalizeHost(hostname);
   if (!host || isIpLiteral(host)) return false;
 
+  let addresses: string[];
   try {
     const [v4, v6] = await Promise.all([
       resolveAddressRecords(host, "A"),
       resolveAddressRecords(host, "AAAA"),
     ]);
-
-    const addresses = [...v4, ...v6];
-    if (addresses.length === 0) return false;
-
-    return addresses.some(
-      (address) => isPrivateIpv4(address) || isPrivateIpv6(address),
-    );
+    addresses = [...v4, ...v6];
   } catch {
-    return false;
+    return true;
   }
+
+  return addresses.some(
+    (address) => isPrivateIpv4(address) || isPrivateIpv6(address),
+  );
 }
 
 /**
