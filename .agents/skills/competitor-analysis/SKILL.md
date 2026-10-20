@@ -73,7 +73,7 @@ If a report template applies (see `seo-report`), its sections and tone replace t
 
 Sections in this order:
 
-1. **Snapshot** — one or two opening sentences, then a table of the competitor's organic footprint (traffic estimate, keyword count, referring domains). Add the user's domain as a second row when comparing.
+1. **Snapshot** — one or two opening sentences, then a table of the competitor's organic footprint (traffic estimate and keyword count from `get_domain_overview`, referring domains from `get_backlinks_overview`). Add the user's domain as a second row when comparing.
 2. **The biggest lesson** — one finding.
 3. **Where they are vulnerable** — one finding per opening, ordered by how winnable it is.
 4. **Keyword themes** — a table of theme, example keywords, volume, and whether the user competes there. A bar chart when a few themes dominate the footprint.
