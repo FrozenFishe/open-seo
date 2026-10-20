@@ -35,7 +35,11 @@ export function SearchConsoleTable({
     <Table>
       <TableHeader>
         <TableRow>
-          {queryIndex >= 0 && <TableHead className="w-8" />}
+          {queryIndex >= 0 && (
+            <TableHead className="w-8">
+              <span className="sr-only">Select</span>
+            </TableHead>
+          )}
           <TableHead>{dimensions.join(" / ") || "Result"}</TableHead>
           <TableHead className="text-right">Impressions</TableHead>
           <TableHead className="text-right">Clicks</TableHead>

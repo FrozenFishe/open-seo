@@ -127,7 +127,9 @@ export function SerpWidget({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-8" />
+                  <TableHead className="w-8">
+                    <span className="sr-only">Select</span>
+                  </TableHead>
                   <TableHead className="w-20 text-center">Organic #</TableHead>
                   <TableHead>Page</TableHead>
                 </TableRow>
