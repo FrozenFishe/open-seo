@@ -63,7 +63,9 @@ export function ReportsList({
               <TableHead>Created by</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Updated</TableHead>
-              <TableHead />
+              <TableHead>
+                <span className="sr-only">Actions</span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

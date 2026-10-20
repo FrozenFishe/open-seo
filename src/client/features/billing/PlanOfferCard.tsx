@@ -37,7 +37,7 @@ export function PlanOfferCard({
               key={item}
               className="flex gap-2.5 text-sm text-muted-foreground"
             >
-              <span className="text-muted-foreground/60 mt-[2px] shrink-0">
+              <span aria-hidden className="mt-[2px] shrink-0">
                 &mdash;
               </span>
               {item}

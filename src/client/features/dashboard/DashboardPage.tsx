@@ -61,6 +61,7 @@ export function DashboardPage({
   if (activationQuery.isError && !activation) {
     return (
       <div className="px-4 py-4 md:px-6 md:py-6">
+        <h1 className="sr-only">Dashboard</h1>
         <QueryError
           error={activationQuery.error}
           fallback="Failed to load dashboard"
@@ -79,6 +80,7 @@ export function DashboardPage({
     return (
       <div className="px-4 py-4 md:px-6 md:py-6" aria-busy>
         <div className="mx-auto flex max-w-7xl flex-col gap-5">
+          <h1 className="sr-only">Dashboard</h1>
           <Skeleton className="h-8 w-52" />
           <Skeleton className="h-36" />
           <div className="grid gap-5 lg:grid-cols-2">

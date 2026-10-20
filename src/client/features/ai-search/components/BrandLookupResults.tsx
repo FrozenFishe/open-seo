@@ -222,7 +222,7 @@ function InfoTooltip({ text }: { text: string }) {
       <TooltipTrigger
         delay={150}
         aria-label="More info"
-        className="inline-flex rounded-sm text-muted-foreground/70 outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+        className="inline-flex rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
       >
         <Info className="size-3" />
       </TooltipTrigger>

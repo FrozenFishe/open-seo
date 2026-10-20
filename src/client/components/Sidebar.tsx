@@ -139,65 +139,67 @@ export function Sidebar({
 
   return (
     <UiSidebar variant="inset" collapsible="offcanvas" className="md:!p-0">
-      <SidebarHeader className="gap-0 px-3 pb-1 pt-3">
-        <Link
-          to="/"
-          onClick={() => setOpenMobile(false)}
-          className="px-1 pb-2 text-base font-semibold text-sidebar-foreground"
-        >
-          OpenSEO
-        </Link>
-        <ProjectSwitcher
-          activeProjectId={projectId}
-          ready={ready}
-          onCloseDrawer={() => setOpenMobile(false)}
-        />
-      </SidebarHeader>
-
-      <SidebarContent>
-        {onSamRoute && projectId ? (
-          ready ? (
-            <SamSidebarPanel
-              projectId={projectId}
-              onNavigate={() => setOpenMobile(false)}
-            />
-          ) : (
-            <div className="px-2 py-1">
-              <SamChatListSkeleton />
-            </div>
-          )
-        ) : (
-          <nav
-            aria-label="Main navigation"
-            aria-busy={navPlaceholder || undefined}
+      <aside aria-label="Sidebar" className="flex min-h-0 flex-1 flex-col">
+        <SidebarHeader className="gap-0 px-3 pb-1 pt-3">
+          <Link
+            to="/"
+            onClick={() => setOpenMobile(false)}
+            className="px-1 pb-2 text-base font-semibold text-sidebar-foreground"
           >
-            {navGroups.map((group) => (
-              <SidebarGroup key={group.label} className="py-1">
-                <SidebarGroupLabel className="h-7 uppercase tracking-wider">
-                  {group.label}
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {group.items.map((item) => {
-                      const { icon, label, ...linkProps } = item;
-                      return (
-                        <SidebarNavLink
-                          key={linkProps.to}
-                          icon={icon}
-                          label={label}
-                          linkProps={linkProps}
-                          placeholder={navPlaceholder}
-                        />
-                      );
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            ))}
-          </nav>
-        )}
-      </SidebarContent>
-      <AccountFooter ready={ready} />
+            OpenSEO
+          </Link>
+          <ProjectSwitcher
+            activeProjectId={projectId}
+            ready={ready}
+            onCloseDrawer={() => setOpenMobile(false)}
+          />
+        </SidebarHeader>
+
+        <SidebarContent>
+          {onSamRoute && projectId ? (
+            ready ? (
+              <SamSidebarPanel
+                projectId={projectId}
+                onNavigate={() => setOpenMobile(false)}
+              />
+            ) : (
+              <div className="px-2 py-1">
+                <SamChatListSkeleton />
+              </div>
+            )
+          ) : (
+            <nav
+              aria-label="Main navigation"
+              aria-busy={navPlaceholder || undefined}
+            >
+              {navGroups.map((group) => (
+                <SidebarGroup key={group.label} className="py-1">
+                  <SidebarGroupLabel className="h-7 uppercase tracking-wider">
+                    {group.label}
+                  </SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {group.items.map((item) => {
+                        const { icon, label, ...linkProps } = item;
+                        return (
+                          <SidebarNavLink
+                            key={linkProps.to}
+                            icon={icon}
+                            label={label}
+                            linkProps={linkProps}
+                            placeholder={navPlaceholder}
+                          />
+                        );
+                      })}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))}
+            </nav>
+          )}
+        </SidebarContent>
+        <AccountFooter ready={ready} />
+      </aside>
     </UiSidebar>
   );
 }

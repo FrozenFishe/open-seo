@@ -48,7 +48,7 @@ export function WizardFooter({
           <Button
             type="button"
             variant="ghost"
-            className="h-8 px-3 text-xs font-semibold text-foreground/55"
+            className="h-8 px-3 text-xs font-semibold text-muted-foreground"
             onClick={onSkip}
           >
             {skipLabel}

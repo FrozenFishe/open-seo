@@ -156,7 +156,7 @@ function SignUpPage() {
             </button>
           ) : (
             <div className="space-y-4">
-              <p className="text-sm text-foreground/50">
+              <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link
                   to="/sign-in"

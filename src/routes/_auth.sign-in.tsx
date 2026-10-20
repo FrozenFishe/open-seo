@@ -110,8 +110,8 @@ function SignInPage() {
           <div
             className={
               showEmailForm
-                ? "flex w-full justify-between text-sm text-foreground/50"
-                : "w-full text-sm text-foreground/50"
+                ? "flex w-full justify-between text-sm text-muted-foreground"
+                : "w-full text-sm text-muted-foreground"
             }
           >
             {showEmailForm ? (

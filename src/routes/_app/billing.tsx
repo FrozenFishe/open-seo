@@ -248,7 +248,7 @@ function BillingPage() {
                           key={item}
                           className="flex gap-2 text-xs text-muted-foreground"
                         >
-                          <span className="mt-[1px] shrink-0 text-muted-foreground/60">
+                          <span aria-hidden className="mt-[1px] shrink-0">
                             &mdash;
                           </span>
                           {item}
