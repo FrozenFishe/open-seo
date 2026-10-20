@@ -106,6 +106,7 @@ export function SerpLocationCombobox({
       <div ref={anchor}>
         <ComboboxInput
           id={id}
+          aria-label="City or region"
           aria-invalid={invalid || undefined}
           className="w-full"
           placeholder={placeholder}

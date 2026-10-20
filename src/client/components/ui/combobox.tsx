@@ -75,6 +75,7 @@ function ComboboxInput({
             size="icon-xs"
             variant="ghost"
             render={<ComboboxTrigger />}
+            aria-label="Show options"
             // The input opens the list, so the chevron is not a Tab stop.
             tabIndex={-1}
             data-slot="input-group-button"
