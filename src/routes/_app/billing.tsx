@@ -1,4 +1,5 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
 import { useState } from "react";
 import { ErrorState } from "@/client/components/ErrorState";
 import { PageHeader } from "@/client/components/PageHeader";
@@ -27,10 +28,9 @@ import {
   openUpgradeCheckout,
   prefetchUpgradeCheckout,
 } from "@/client/features/billing/checkout";
-import { BillingUsageChart } from "@/client/features/billing/BillingUsageChart";
-import { BillingFeatureBreakdown } from "@/client/features/billing/BillingFeatureBreakdown";
+import { BillingTabs } from "@/client/features/billing/BillingTabs";
 import { parseTopUpAmount } from "@/client/features/billing/HostedBillingContentUtils";
-import { billingUsageEventsQueryOptions } from "@/client/features/billing/useBillingUsageEvents";
+import { billingUsageQueryOptions } from "@/client/features/billing/useBillingUsage";
 import { useCreditBalance } from "@/client/features/billing/useCreditBalance";
 import {
   BASE_PLAN_OFFER,
@@ -41,9 +41,15 @@ import {
   createBillingPortalSession,
   createTopUpCheckout,
 } from "@/serverFunctions/billing";
-import { BILLING_ROUTE } from "@/shared/billing";
+import { BILLING_ROUTE, BILLING_TABS } from "@/shared/billing";
 
 export const Route = createFileRoute("/_app/billing")({
+  validateSearch: z.object({
+    tab: z
+      .enum(BILLING_TABS.map((item) => item.value))
+      .optional()
+      .catch(undefined),
+  }),
   // The loader fills the module-scoped query client, so keep it out of server
   // requests: one worker isolate must not cache another account's billing.
   ssr: false,
@@ -56,7 +62,7 @@ export const Route = createFileRoute("/_app/billing")({
   // a full load alongside the session check, without holding up navigation.
   loader: () => {
     prefetchBillingAccount();
-    void queryClient.prefetchQuery(billingUsageEventsQueryOptions());
+    void queryClient.prefetchQuery(billingUsageQueryOptions());
     prefetchUpgradeCheckout();
   },
   component: BillingPage,
@@ -65,6 +71,8 @@ export const Route = createFileRoute("/_app/billing")({
 type BillingAction = "plan" | "topUp";
 
 function BillingPage() {
+  const { tab } = Route.useSearch();
+  const navigate = useNavigate();
   const [topUpAmount, setTopUpAmount] = useState("20");
   const [pendingAction, setPendingAction] = useState<BillingAction | null>(
     null,
@@ -347,9 +355,20 @@ function BillingPage() {
         </>
       )}
 
-      <BillingUsageChart />
-
-      <BillingFeatureBreakdown />
+      <BillingTabs
+        tab={tab ?? "usage"}
+        onTabChange={(next) =>
+          void navigate({
+            to: BILLING_ROUTE,
+            // Like other tabbed pages, Back leaves the page.
+            replace: true,
+            search: { tab: next === "usage" ? undefined : next },
+          })
+        }
+        invoiceEmailsEnabled={
+          canManageBilling && account ? account.invoiceEmailsEnabled : null
+        }
+      />
 
       <p className="text-xs text-muted-foreground">
         Billing is powered by Stripe.
