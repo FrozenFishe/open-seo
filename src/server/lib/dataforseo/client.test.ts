@@ -279,6 +279,28 @@ describe("meterDataforseoCall", () => {
     expect(finalizeMock.mock.calls[0][0]).toMatchObject({ action: "release" });
   });
 
+  it("confirms an invalid-field failure that DataForSEO still billed, and rethrows it", async () => {
+    setupHostedMode();
+    mockMonthlyBalance(5000);
+    vi.mocked(fetchBacklinksSummary).mockRejectedValue(
+      new DataforseoChargedTaskError(
+        "Invalid Field: 'target'.",
+        { costUsd: RAW_COST, path: backlinksPath },
+        true,
+      ),
+    );
+
+    const client = createDataforseoClient(billingCustomer);
+    await expect(
+      client.backlinks.summary(backlinksInput),
+    ).rejects.toBeInstanceOf(DataforseoChargedTaskError);
+
+    expect(finalizeMock.mock.calls[0][0]).toMatchObject({
+      action: "confirm",
+      overrideValue: EXPECTED_CREDITS,
+    });
+  });
+
   it("releases the hold when the provider call fails before billing", async () => {
     setupHostedMode();
     mockMonthlyBalance(5000);
@@ -352,6 +374,25 @@ describe("rankCheckBatch", () => {
       action: "confirm",
       overrideValue: 2 * creditsForProviderUsd(0.001),
     });
+  });
+
+  it("refuses the calls the balance can't cover without sending them to DataForSEO", async () => {
+    setupHostedMode();
+    mockMonthlyBalance(2 * callEstimate);
+    vi.mocked(fetchRankCheckSerp).mockResolvedValue(billed);
+
+    const client = createDataforseoClient(billingCustomer);
+    const settled = await client.serp.rankCheckBatch([input, input, input]);
+
+    expect(settled.map((outcome) => outcome.status)).toEqual([
+      "fulfilled",
+      "fulfilled",
+      "rejected",
+    ]);
+    expect(settled[2]).toMatchObject({
+      reason: { code: "INSUFFICIENT_CREDITS" },
+    });
+    expect(fetchRankCheckSerp).toHaveBeenCalledTimes(2);
   });
 
   it("splits a batch across monthly and top-up when only both together cover it", async () => {
