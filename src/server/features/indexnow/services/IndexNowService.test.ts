@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { IndexNowService } from "./IndexNowService";
 
-const { getProject, setKey } = vi.hoisted(() => ({
+const { getProject, setKey, validateUrl } = vi.hoisted(() => ({
   getProject: vi.fn(),
   setKey: vi.fn(),
+  validateUrl: vi.fn<(url: string) => Promise<string>>(),
 }));
 vi.mock("@/server/features/projects/repositories/ProjectRepository", () => ({
   ProjectRepository: {
@@ -11,9 +12,10 @@ vi.mock("@/server/features/projects/repositories/ProjectRepository", () => ({
     setIndexNowKeyIfMissing: setKey,
   },
 }));
-// The SSRF guard resolves DNS; these tests only cover IndexNow behavior.
+// The SSRF guard resolves DNS, so it passes URLs through unless a test
+// makes it reject.
 vi.mock("@/server/lib/audit/url-policy", () => ({
-  normalizeAndValidateStartUrl: async (url: string) => url,
+  normalizeAndValidateStartUrl: validateUrl,
 }));
 
 const KEY = "abc123def456";
@@ -53,6 +55,7 @@ function submissions() {
 
 beforeEach(() => {
   vi.stubGlobal("fetch", fetchMock);
+  validateUrl.mockImplementation(async (url) => url);
   getProject.mockResolvedValue({ domain: "example.com", indexnowKey: KEY });
   respond(new Response(KEY));
 });
@@ -196,5 +199,21 @@ describe("IndexNowService.checkKeyFiles", () => {
       { host: "example.com", status: "moved" },
       { host: "www.example.com", status: "missing" },
     ]);
+  });
+
+  it("never fetches a key file the SSRF guard rejects", async () => {
+    getProject.mockResolvedValue({ domain: "internal.test", indexnowKey: KEY });
+    validateUrl.mockRejectedValue(new Error("CRAWL_TARGET_BLOCKED"));
+
+    const result = await IndexNowService.checkKeyFiles(scope);
+
+    expect(validateUrl).toHaveBeenCalledWith(
+      `https://internal.test/${KEY}.txt`,
+    );
+    expect(result.hosts).toEqual([
+      { host: "internal.test", status: "unreachable" },
+      { host: "www.internal.test", status: "unreachable" },
+    ]);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
