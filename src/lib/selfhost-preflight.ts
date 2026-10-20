@@ -265,7 +265,7 @@ export function runSelfhostPreflight(env: EnvRecord): PreflightResult {
           name: "ALLOWED_HOST",
           level: "info",
           message:
-            'Not set — only localhost and raw IP addresses are accepted. Behind a reverse proxy, tunnel, or a DNS name (e.g. a Tailscale MagicDNS name), set ALLOWED_HOST=yourdomain.com or requests are blocked with Vite\'s "Blocked request" page.',
+            'Not set — only localhost and raw IP addresses are accepted. Behind a reverse proxy, tunnel, or a DNS name (e.g. a Tailscale MagicDNS name), set ALLOWED_HOST=yourdomain.com (comma-separate several) or requests are blocked with Vite\'s "Blocked request" page.',
         },
   );
 
