@@ -76,7 +76,9 @@
   --secondary: oklch(97% 0 0);
   --secondary-foreground: oklch(20% 0 0);
   --muted: oklch(97% 0 0);
-  --muted-foreground: oklch(20% 0 0 / 60%);
+  /* 64% keeps muted text above 4.5:1 on the gray surfaces too: the page
+     background, the sidebar and the tab list. */
+  --muted-foreground: oklch(20% 0 0 / 64%);
   --accent: oklch(97% 0 0);
   --accent-foreground: oklch(20% 0 0);
   /* Dark enough that destructive text stays above 4.5:1 on its own 10-20%
