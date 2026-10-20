@@ -82,6 +82,13 @@ jobs:
             *.workers.dev) ;;
             *) echo "::error::ENV_PREVIEW secret is missing a valid WORKERS_SUBDOMAIN (needed to derive and verify the preview URL)"; exit 1 ;;
           esac
+          # An unset AUTH_MODE falls back to cloudflare_access, which provisions
+          # a per-deploy Access app the CI token has no permission to create.
+          auth_mode=$(grep '^AUTH_MODE=' .env.preview | cut -d= -f2-)
+          case "$auth_mode" in
+            local_noauth|hosted) ;;
+            *) echo "::error::ENV_PREVIEW secret must set AUTH_MODE to local_noauth or hosted (previews sit behind the shared preview Access app, not a per-deploy one)"; exit 1 ;;
+          esac
           echo "PREVIEW_URL=https://open-seo-${STAGE}.${subdomain}" >> "$GITHUB_ENV"
 
       # Same command as a local preview deploy: vite build, alchemy deploy.
