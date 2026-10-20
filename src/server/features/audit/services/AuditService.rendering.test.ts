@@ -24,6 +24,8 @@ vi.mock("@/server/lib/audit/rendering-billing", () => ({
   lockRenderingCredits: mocks.lock,
   releaseRenderingLocks: mocks.release,
 }));
+// Skips the guard's DNS lookup; AuditService.crawlerAccess.test.ts starts an
+// audit through the real guard.
 vi.mock("@/server/lib/audit/url-policy", () => ({
   normalizeAndValidateStartUrl: async (url: string) => url,
 }));
