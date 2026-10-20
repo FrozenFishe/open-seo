@@ -209,14 +209,14 @@ function checkOptionalFeatures(env: EnvRecord, items: PreflightItem[]): void {
             name: "AI features",
             level: "ok",
             message:
-              "OPENROUTER_BASE_URL set — SAM uses a self-hosted OpenAI-compatible endpoint (set OPENROUTER_MODEL to a model it serves). AI setup research and prompt suggestions still need OPENROUTER_API_KEY.",
+              "OPENROUTER_BASE_URL set — SAM uses a self-hosted OpenAI-compatible endpoint (set OPENROUTER_MODEL to a model it serves). AI setup research, Prompt Research, and prompt suggestions still need OPENROUTER_API_KEY.",
           }
         : {
             key: "ai",
             name: "AI features",
             level: "info",
             message:
-              "OPENROUTER_API_KEY not set (optional) — SAM, the in-app SEO agent, and AI setup research are disabled. To run SAM on a self-hosted OpenAI-compatible endpoint instead, set OPENROUTER_BASE_URL and OPENROUTER_MODEL.",
+              "OPENROUTER_API_KEY not set (optional) — SAM, the in-app SEO agent, AI setup research, and Prompt Research are disabled. To run SAM on a self-hosted OpenAI-compatible endpoint instead, set OPENROUTER_BASE_URL and OPENROUTER_MODEL.",
           },
   );
 

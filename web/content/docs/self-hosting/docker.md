@@ -59,7 +59,7 @@ OPENROUTER_MODEL=your-served-model-name
 - Use the `/v1` base URL as the container sees it. `localhost` inside the container is the container itself; `host.docker.internal` reaches the Docker host (`compose.yaml` maps it on Linux too), or use the server's LAN or Tailscale address.
 - Set `OPENROUTER_MODEL` to a model name the endpoint serves. The default is an OpenRouter model slug that a local server will not recognize.
 - SAM calls tools, so the model and server must support OpenAI-style tool calling (for vLLM, start it with `--enable-auto-tool-choice` and a `--tool-call-parser` for your model).
-- No OpenRouter key is needed for SAM in this mode. AI setup research and AI Visibility prompt suggestions still use OpenRouter and stay off unless `OPENROUTER_API_KEY` is also set.
+- No OpenRouter key is needed for SAM in this mode. AI setup research, Prompt Research, and AI Visibility prompt suggestions still use OpenRouter and stay off unless `OPENROUTER_API_KEY` is also set.
 
 ## Reach it from other devices
 
