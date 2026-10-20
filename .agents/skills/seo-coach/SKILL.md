@@ -102,6 +102,7 @@ Explain the difference between data sources:
 
 - OpenSEO MCP tools provide SEO data such as keyword research, exact ranked keywords, search volume, SERPs, SERP competitors, local business and Maps data, domain overviews, backlinks, saved keywords, projects, and rank trackers.
 - Google Search Console (when connected on the project's Integrations page) is the user's own first-party data — real clicks, impressions, CTR, and position. Read it live with `get_search_console_performance` instead of asking for CSV exports. It's free (no credits) and the best starting point for "what already ranks" and near-ranking opportunities.
+- Google Analytics (when connected on the same page) shows which organic landing pages lead to key events and revenue. The `get_google_analytics_*` tools and `get_search_opportunities` read it for free.
 - Web search can find current market context, recent pages, reviews, docs, social profiles, and contact paths outside OpenSEO.
 - Browser/page scraping can extract page copy, headings, author names, contact links, schema, and content structure.
 - Project context (`get_project_context` / `update_project_context`) is the project's shared memory: business, goal, positioning, writing preferences, competitors, key pages, and a research log. It is free, every skill reads it, and the user can edit it on the project's Context page (in the sidebar under AI).
@@ -155,6 +156,7 @@ Offer 2-4 options based on context, each tied to the skill that delivers it:
 - "Map the competitive landscape before choosing pages." → `competitive-landscape`
 - "Study one competitor." → `competitor-analysis`
 - "Find link prospects for your best linkable asset." → `link-prospecting`
+- "See why you do or don't show up in Google Maps." → `local-seo`
 
 ## Guardrails
 

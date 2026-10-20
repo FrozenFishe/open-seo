@@ -28,6 +28,7 @@ Deliver through the `seo-report` skill, saving with `skill: "seo-audit"`. If tha
 - `get_ranked_keywords`: which queries send which pages traffic. Start with one domain-level call with `resultTypes: ["organic"]`; use `scope: "exact_url"` for the specific pages you compare. A page missing from a limited domain sample is not proof it has no rankings. Ranking rows carry their own `last_updated_time`; keyword metric dates are not ranking dates.
 - `get_serp_results`: the live check behind every ranking claim in the report. The returned `rank` counts every result block, so count organic (unpaid) listings yourself and report the spot with its page, ten spots per page: "#10 (page 1)", "#11 (page 2)". Request depth 20; a page not seen is "not in the first 20 results". Record the exact query, country, language, date, how many organic listings came back, and the matching URL; those details go in the evidence appendix, not the tables. A failed lookup is unknown, not "not in the first 20 results".
 - `get_search_console_performance`: when connected, first-party clicks and impressions separate low visibility from low click-through. Missing access is a coverage gap, not a blocker.
+- `get_google_analytics_organic_landing_pages` and `get_search_opportunities`: when Google Analytics is connected, measured key events and revenue per organic landing page; `get_search_opportunities` joins pages ranking 4–20 in Search Console with those outcomes. Both are free. Use them to show which pages already convert; a "not connected" reply is a coverage gap, not a blocker.
 - `get_keyword_metrics` and `research_keywords`: demand for the queries a candidate page targets. One focused metrics batch usually suffices; one research call with 1–3 seeds when a demand gap could change the decision.
 - Web reading (fetch, scrape, or search): the site's own pages, sitemap, the leading results for a query, and competitor pages.
 
@@ -80,7 +81,7 @@ Every shortlist row ends in one of two places: a recommendation, or a row in the
 - Demand figures are US unless stated; never multiply into an invented global number.
 - Search volume is not visits. Use a stated click-share assumption and show it in a scenario table; a position-one scenario is allowed when labeled hypothetical, not promised.
 - If the current traffic baseline is unknown, call the figure total potential visits, not additional visits. Do not add overlapping queries.
-- Business relevance can be inferred from intent and product fit; say so and label it. Never invent a conversion rate or revenue.
+- Business relevance can be inferred from intent and product fit; say so and label it. Never invent a conversion rate or revenue. Measured Google Analytics key events or revenue for the page may be cited as measured, with their date range.
 - When there is no number, give a directional assessment and its reason ("already third for its main query, so headroom is small").
 
 ### 6. Review, then write
