@@ -19,7 +19,7 @@ Is there a significant way to abuse billing, like getting credits, paid features
 
 Beyond that, review it however you think best. Work out which parts could do the most damage if they're wrong and spend your time there. `docs/maintainers/review-guidelines.md` lists the repo's invariants and the things that look wrong but are intentional.
 
-Fix what's real. Commit as you go. Get `pnpm ci:check` and `pnpm test` passing locally, then push. Those local runs stand in for CI, so don't wait for GitHub CI to finish.
+Fix what's real. Commit as you go. Get `pnpm ci:check`, `pnpm test`, and `pnpm build` passing locally, then push (`ci:check` skips the build, which alone catches server-only imports such as `cloudflare:workers` leaking into the client bundle). Those local runs stand in for CI, so don't wait for GitHub CI to finish.
 
 Open or update the PR against `main`. Write the description in the `simple-issue-description` format, and put anything you left for the maintainer's judgment under Extra context.
 
