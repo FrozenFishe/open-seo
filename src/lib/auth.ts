@@ -43,7 +43,8 @@ const hostedBaseUrlSchema = z
     const url = new URL(value);
     return (
       url.protocol === "https:" ||
-      (url.protocol === "http:" && url.hostname === "localhost")
+      (url.protocol === "http:" &&
+        (url.hostname === "localhost" || url.hostname.endsWith(".localhost")))
     );
   }, "BETTER_AUTH_URL must use https or localhost");
 
@@ -435,18 +436,37 @@ function hasHostedAuthEmailConfig() {
 }
 
 export function hasHostedAuthConfig() {
+  const problem = getHostedAuthConfigProblem();
+  if (problem) {
+    console.error(`Missing Better Auth hosted configuration: ${problem}`);
+  }
+  return !problem;
+}
+
+function getHostedAuthConfigProblem() {
   try {
     getHostedBaseUrl();
     getHostedSecret();
     getGoogleSocialProviderConfig();
-    return (
-      hasHostedTurnstileConfig(env) &&
-      (Reflect.get(env, "BYPASS_EMAIL_VERIFICATION") === "true" ||
-        hasHostedAuthEmailConfig())
-    );
-  } catch {
-    return false;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return error.issues.map((issue) => issue.message).join("; ");
+    }
+    return error instanceof Error ? error.message : String(error);
   }
+
+  if (!hasHostedTurnstileConfig(env)) {
+    return "TURNSTILE_SECRET_KEY is required when TURNSTILE_SITE_KEY is set";
+  }
+
+  if (
+    Reflect.get(env, "BYPASS_EMAIL_VERIFICATION") !== "true" &&
+    !hasHostedAuthEmailConfig()
+  ) {
+    return "LOOPS_API_KEY, LOOPS_TRANSACTIONAL_VERIFY_EMAIL_ID, and LOOPS_TRANSACTIONAL_RESET_PASSWORD_ID are required unless BYPASS_EMAIL_VERIFICATION=true";
+  }
+
+  return null;
 }
 
 export function getAuth() {
