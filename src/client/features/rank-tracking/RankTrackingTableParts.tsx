@@ -73,7 +73,7 @@ export function DeviceRankCell({
         <span className="w-6 text-right font-mono text-xs text-muted-foreground">
           {previousPosition}
         </span>
-        <span className="text-muted-foreground/60">→</span>
+        <span className="text-muted-foreground">→</span>
         <span className="font-mono rounded px-1.5 py-0.5 text-xs font-semibold bg-destructive/15 text-destructive">
           lost
         </span>
@@ -97,7 +97,7 @@ export function DeviceRankCell({
       <span className="w-6 text-right font-mono text-xs text-muted-foreground">
         {previousPosition}
       </span>
-      <span className="text-muted-foreground/60">→</span>
+      <span className="text-muted-foreground">→</span>
       <span
         className={`font-mono rounded px-1.5 py-0.5 text-xs font-semibold ${badgeClass}`}
       >

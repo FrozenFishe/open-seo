@@ -298,7 +298,7 @@ function SourceRow({
                 <span
                   key={tracked}
                   title={AI_ENGINE_LABELS[tracked]}
-                  className={`flex items-center gap-1 text-xs tabular-nums ${count ? "" : "text-muted-foreground/60"}`}
+                  className={`flex items-center gap-1 text-xs tabular-nums ${count ? "" : "text-muted-foreground"}`}
                 >
                   <EngineLabel engine={tracked} />
                   {count ?? "–"}
