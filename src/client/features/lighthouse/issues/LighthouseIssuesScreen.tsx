@@ -114,34 +114,36 @@ export function LighthouseIssuesScreen({
                 isRetrying={issuesQuery.isFetching}
               />
             </div>
-          ) : null}
-
-          <LighthouseIssuesToolbar
-            category={category}
-            categoryCounts={categoryCounts}
-            selectedCategoryLabel={selectedCategoryLabel}
-            isBusy={exportMutation.isPending}
-            visibleIssues={visibleIssues}
-            allIssues={allIssues}
-            onCategoryChange={(next) =>
-              void navigate({
-                search: (prev) => ({ ...prev, category: next }),
-                replace: true,
-              })
-            }
-            onCopy={(data, message) => {
-              void runCopy(data, message);
-            }}
-            onExport={(data) => {
-              void runExport(data);
-            }}
-            onExportRows={runExportRows}
-          />
-          <LighthouseIssueList
-            issues={visibleIssues}
-            isLoading={issuesQuery.isLoading}
-            emptyMessage={emptyMessage}
-          />
+          ) : (
+            <>
+              <LighthouseIssuesToolbar
+                category={category}
+                categoryCounts={categoryCounts}
+                selectedCategoryLabel={selectedCategoryLabel}
+                isBusy={exportMutation.isPending}
+                visibleIssues={visibleIssues}
+                allIssues={allIssues}
+                onCategoryChange={(next) =>
+                  void navigate({
+                    search: (prev) => ({ ...prev, category: next }),
+                    replace: true,
+                  })
+                }
+                onCopy={(data, message) => {
+                  void runCopy(data, message);
+                }}
+                onExport={(data) => {
+                  void runExport(data);
+                }}
+                onExportRows={runExportRows}
+              />
+              <LighthouseIssueList
+                issues={visibleIssues}
+                isLoading={issuesQuery.isLoading}
+                emptyMessage={emptyMessage}
+              />
+            </>
+          )}
         </TableCard>
       </div>
     </div>
