@@ -79,7 +79,7 @@ function AuditHistoryTable({
         <TableBody>
           {history.map((audit) => (
             <TableRow key={audit.id} className="group">
-              <TableCell className="text-xs text-muted-foreground">
+              <TableCell className="text-xs whitespace-nowrap text-muted-foreground">
                 {formatDate(audit.startedAt)}
               </TableCell>
               <TableCell className="max-w-[220px] truncate">
