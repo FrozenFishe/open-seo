@@ -36,7 +36,9 @@ Deliver through the `seo-report` skill, saving with `skill: "competitor-analysis
 - `get_domain_overview`: baseline organic traffic and keyword count.
 - `get_search_console_performance`: when comparing to the user's own domain and Search Console is connected, use it as the first-party baseline (real clicks/impressions/CTR/position) instead of estimating the user's own performance from third-party data.
 - `get_ranked_keywords`: exact keyword, URL, rank, intent, traffic, CPC, and SERP-type rows for the competitor domain or page.
+- `get_keyword_gap`: when comparing to the user, the keywords the competitor ranks for that the user's domain doesn't rank for or ranks below them for, with volume, difficulty, intent, and both ranks — one call instead of diffing two ranked-keyword lists.
 - `get_backlinks_overview`: backlink/referring-domain profile.
+- `get_backlink_gap`: when comparing to the user, the referring domains that link to the competitor but not to the user's domain.
 - `find_serp_competitors`: validate whether the named competitor is a real search competitor across the target keyword set.
 - `search_local_businesses`, `get_local_serp_results`, and `get_google_business_questions`: use for local SEO competitors when Maps/local-pack visibility, nearby businesses, categories, or Google Q&A matter.
 - `get_serp_results`: validate direct head-to-head SERPs for important keywords.
@@ -47,7 +49,7 @@ Deliver through the `seo-report` skill, saving with `skill: "competitor-analysis
 1. Call `get_domain_overview` for the competitor, passing provided location/language when supported.
 2. If comparing to the user, call `get_domain_overview` for the user's domain too — and if Search Console is connected, `get_search_console_performance` for the user's real baseline.
 3. Call `get_ranked_keywords` for the competitor. Use filters like `maxRank`, `minSearchVolume`, `excludeBrandTerms`, and `resultTypes` to keep rows relevant.
-4. If comparing to the user, call `get_ranked_keywords` for the user's domain/page too, or use `get_serp_results` for the shared terms when a lighter check is enough.
+4. If comparing to the user, call `get_keyword_gap` with the competitor (pass `target` when the user's domain is not the project website) for the keywords they win that the user is missing or loses. Don't diff two `get_ranked_keywords` lists by hand. Use `get_serp_results` for the shared terms when a lighter check is enough.
 5. For local SEO, use `search_local_businesses` and `get_local_serp_results` around the relevant business location(s) before drawing local-pack conclusions. Add `get_google_business_questions` only when Q&A evidence matters.
 6. Use `find_serp_competitors` when the competitor was supplied by the user but its search overlap is unclear.
 7. Group competitor keywords into themes:
@@ -57,7 +59,7 @@ Deliver through the `seo-report` skill, saving with `skill: "competitor-analysis
    - Educational guides
    - Branded demand
    - Local/neighborhood terms when relevant
-8. Call `get_backlinks_overview` for the competitor, especially if authority appears to explain rankings. Continue without backlink evidence if it is unavailable.
+8. Call `get_backlinks_overview` for the competitor, especially if authority appears to explain rankings. When comparing to the user, add `get_backlink_gap` for the referring domains the competitor has and the user lacks. Continue without backlink evidence if it is unavailable.
 9. Use `get_serp_results` for important shared or target keywords to compare positioning, passing provided location/language when supported.
 10. Produce an actionable plan:
     - What they are doing well

@@ -40,7 +40,9 @@ Deliver through the `seo-report` skill, saving with `skill: "competitive-landsca
 - `get_domain_overview`: size organic footprint for candidate leaders.
 - `get_search_console_performance`: when the user's own domain is in the comparison and Search Console is connected, anchor their position with first-party clicks/impressions/CTR rather than third-party estimates.
 - `get_ranked_keywords`: find exact ranking keywords, URLs, ranks, intents, and SERP result types for leaders.
+- `get_keyword_gap`: when the user's domain is in the comparison, the keywords up to 3 leaders rank for that the user is missing or ranks below them for, each leader's rank side by side.
 - `get_backlinks_overview`: compare backlink/referring-domain strength where relevant.
+- `get_backlink_gap`: the referring domains that link to up to 3 leaders but not to the user's domain.
 - `search_local_businesses`, `get_local_serp_results`, and `get_google_business_questions`: use for local SEO markets where proximity, Maps rankings, business categories, reviews, or Google Q&A affect who is winning.
 
 ## Workflow
@@ -59,8 +61,8 @@ Deliver through the `seo-report` skill, saving with `skill: "competitive-landsca
    - Communities/forums
    - Documentation/resources
 6. For the strongest recurring domains, call `get_domain_overview`; default to the top 3-5 domains before expanding.
-7. For direct competitors and relevant publishers, call `get_ranked_keywords`.
-8. Use `get_backlinks_overview` when backlink authority appears important or the user asks why a domain is winning. Backlinks may be unavailable if the account has not enabled that data; continue with SERP/domain evidence if it fails.
+7. For direct competitors and relevant publishers, call `get_ranked_keywords`. When the user's domain is in the comparison, call `get_keyword_gap` once with the top 3 direct competitors to find the gaps instead of diffing ranked-keyword lists per domain.
+8. Use `get_backlinks_overview` when backlink authority appears important or the user asks why a domain is winning, and `get_backlink_gap` with the same competitors when the question is which links the user lacks. Backlinks may be unavailable if the account has not enabled that data; continue with SERP/domain evidence if it fails.
 9. Synthesize patterns: content types, themes, SERP formats, local-pack signals, authority advantages, and underserved angles.
 
 ## Output format

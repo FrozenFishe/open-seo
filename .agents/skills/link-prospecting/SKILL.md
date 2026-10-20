@@ -33,8 +33,9 @@ Deliver through the `seo-report` skill, saving with `skill: "link-prospecting"`.
 ## OpenSEO MCP tools
 
 - `get_serp_results`: find ranking articles, listicles, resource pages, comparisons, and topical publishers.
+- `get_backlink_gap`: referring domains that link to up to 3 competitors but not to the user's domain, strongest first, with which competitors each one links to. This is the prospect list of domains.
 - `get_backlinks_overview`: size a competitor's backlink and referring-domain profile.
-- `get_backlinks_profile`: the pages that link to a competitor, with anchor text and link type. These linking pages are prospects. One page of rows costs about 30 credits.
+- `get_backlinks_profile`: the pages that link to a competitor, with anchor text and link type. Use it to find the exact linking page on a prospect domain. One page of rows costs about 30 credits.
 - `get_domain_overview`: qualify important prospect domains.
 - `get_ranked_keywords`: understand what a prospect or competitor ranks for when topical fit matters.
 - `search_local_businesses` and `get_local_serp_results`: use for local SEO link prospecting when nearby businesses, local competitors, or Maps/category signals can reveal partnership targets.
@@ -78,7 +79,7 @@ Use `get_serp_results` in batches for the most relevant patterns. Send at most 1
 1. Clarify the linkable asset and the reason someone would reference it.
 2. Build 5-10 prospecting queries by default.
 3. Call `get_serp_results` for those queries.
-4. If competitors are provided, call `get_backlinks_profile` for the one or two strongest competitor domains, or for the competitor page that matches the asset. Keep the default `mode: "one_per_domain"` and spam filter, and pass `filters: { linkType: "dofollow", hideLost: true, hideBroken: true }`. Keep linking pages that cover the asset's topic. Skip `get_backlinks_overview` unless you need the size of the profile. Continue without backlink evidence if the Backlinks API is unavailable.
+4. If competitors are provided or saved, call `get_backlink_gap` for up to 3 of the strongest competitor domains to list the referring domains that link to them but not to the user. A domain that links to several competitors is a strong prospect. Then call `get_backlinks_profile` for the one or two competitors those top prospects link to, or for the competitor page that matches the asset, to see the specific linking pages. Keep the default `mode: "one_per_domain"` and spam filter, and pass `filters: { linkType: "dofollow", hideLost: true, hideBroken: true }`. Keep linking pages that cover the asset's topic, favoring those on gap domains. Skip `get_backlinks_overview` unless you need the size of the profile. Continue without backlink evidence if the Backlinks API is unavailable.
 5. For local SEO, use `search_local_businesses` and `get_local_serp_results` around priority locations to identify nearby competitors, categories, and local SERP evidence before searching for local chambers, associations, campus resources, community pages, and directories.
 6. Filter prospects:
    - Keep topical relevance and editorial pages.
