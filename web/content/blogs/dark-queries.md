@@ -23,7 +23,7 @@ You can't force Google to hand them over. But you can reconstruct most of them, 
 
 It's not a rounding error you can wave off. Knowing you got a hundred clicks but only seeing fourteen of them is, as I've described it, "sticking your finger in the air." It's nice to know the number exists. But fourteen out of a hundred is not a usable level of data, not if you're trying to decide what to write next, which page to expand, or what your audience actually wants.
 
-![Google Search Console performance for one page: 81 clicks, 13.6K impressions, 0.6% CTR, average position 24.6, with a short Top Queries table.](/blog/dark-queries/gsc-queries.png)
+![Google Search Console performance for one page: 81 clicks, 13.6K impressions, 0.6% CTR, average position 24.6, with a short Top Queries table.](/blog/dark-queries/gsc-queries.webp)
 
 This is the quiet frustration underneath most content planning. I talked about it recently with Sonia Urquilla, who runs [SEO by Sonia](https://seobysonia.com/) and works almost entirely with founders and coaches who don't have a big analytics team. When I brought up the query gap, her reaction was immediate:
 

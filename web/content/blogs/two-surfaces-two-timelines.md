@@ -23,7 +23,7 @@ The first is what the model already knows. That is where "everyone knows Ahrefs,
 
 The second is what the assistant fetches while it answers you. That is a live read of the open web, and you can work on it today.
 
-![A two panel diagram titled Two Surfaces, Two Timelines. The left panel, Training data, is greyed out and labelled years, no lever this quarter, describing where established tool names live. The right panel, Retrieved pages, is highlighted and labelled this month, entirely workable, describing a live index of roughly forty pages that decide any product category.](/blog/two-surfaces-two-timelines/two-surfaces-two-timelines.png)
+![A two panel diagram titled Two Surfaces, Two Timelines. The left panel, Training data, is greyed out and labelled years, no lever this quarter, describing where established tool names live. The right panel, Retrieved pages, is highlighted and labelled this month, entirely workable, describing a live index of roughly forty pages that decide any product category.](/blog/two-surfaces-two-timelines/two-surfaces-two-timelines.webp)
 
 OpenAI documents the second surface plainly, and the wording repays a close read:
 
@@ -41,7 +41,7 @@ The retrieval half comes down to a crawl, a rewrite, and a selection. You can be
 
 The obvious next question is whether the pages that get cited are the pages that already rank. I went looking for a number and found three that disagree.
 
-![A bar chart titled The Studies Disagree, showing the share of AI Overview citations that also rank organically: Ahrefs 38 percent from 863,000 SERPs, Surfer SEO 52 percent from 405,576 AI Overviews, seoClarity 56 percent from 362,000 queries. Below, a second comparison shows the same Ahrefs measure at 76 percent in July 2025 falling to 38 percent in March 2026.](/blog/two-surfaces-two-timelines/ai-overview-organic-overlap-studies.png)
+![A bar chart titled The Studies Disagree, showing the share of AI Overview citations that also rank organically: Ahrefs 38 percent from 863,000 SERPs, Surfer SEO 52 percent from 405,576 AI Overviews, seoClarity 56 percent from 362,000 queries. Below, a second comparison shows the same Ahrefs measure at 76 percent in July 2025 falling to 38 percent in March 2026.](/blog/two-surfaces-two-timelines/ai-overview-organic-overlap-studies.webp)
 
 [Ahrefs](https://ahrefs.com/blog/ai-overview-citations-top-10) put it at 38%, from 863,000 SERPs and 4 million citation URLs. [Surfer](https://surferseo.com/blog/ai-overviews-study/) measured 52% across 405,576 AI Overviews. [seoClarity](https://www.seoclarity.net/research/aio-rankings-overlap) reports 56% from the top 20, across 362,000 queries and 5.1 million citations.
 
@@ -75,7 +75,7 @@ The industry is still arguing about whether these are one surface. The court and
 
 Which brings me back to my own server, and to the check almost nobody runs.
 
-![A two panel comparison titled Refused at the Door. Left panel, browser user agent, 200, eight requests back to back, every one served, X-Powered-By PHP header present. Right panel highlighted, GPTBot user agent, 429, four requests 45 seconds apart after a two minute cooldown, no X-Powered-By header. Caption notes six sibling sites on the same host served GPTBot 200 under the identical test.](/blog/two-surfaces-two-timelines/gptbot-user-agent-block-test.png)
+![A two panel comparison titled Refused at the Door. Left panel, browser user agent, 200, eight requests back to back, every one served, X-Powered-By PHP header present. Right panel highlighted, GPTBot user agent, 429, four requests 45 seconds apart after a two minute cooldown, no X-Powered-By header. Caption notes six sibling sites on the same host served GPTBot 200 under the identical test.](/blog/two-surfaces-two-timelines/gptbot-user-agent-block-test.webp)
 
 Same IP. Browser user agent, eight requests back to back, 200 every time. GPTBot user agent, four requests spaced 45 seconds apart after a two minute cooldown, 429 every time. So this was not rate limiting.
 

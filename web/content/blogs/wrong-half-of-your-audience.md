@@ -31,7 +31,7 @@ If you want an agent to run the audit below, connect the [OpenSEO MCP](/docs/mcp
 
 Sort "rental homes in Baldwin Park" and "property management companies Baldwin Park" through the standard four-type model and both come back commercial. Run them through the hot, warm, and cold map in our [search intent guide](/library/keyword-research/search-intent-mapping) and both look warm. That model describes what a searcher wants to do. It carries nothing about who the searcher is, and in a two-sided business that variable decides whether the click has any value at all.
 
-![OpenSEO keyword research results for property management in Orlando, where the intent column labels both tenant queries and owner queries as commercial, with an added audience column marking each row tenant or owner](/blog/wrong-half-of-your-audience/audience-intent-table-openseo.png)
+![OpenSEO keyword research results for property management in Orlando, where the intent column labels both tenant queries and owner queries as commercial, with an added audience column marking each row tenant or owner](/blog/wrong-half-of-your-audience/audience-intent-table-openseo.webp)
 
 Any company with a supply side and a demand side inherits the problem. Recruiters and candidates. Hosts and guests. The keyword database cannot see the split, because both sides reach for the same nouns.
 
@@ -57,7 +57,7 @@ Her reason for the shape is the answer layer. People type long questions into Ch
 
 Stack Alyssa's ladder on Alex's stages and the output is a grid instead of a list. Every cell holds one audience at one rung. Alex takes his grid below the metro into sub-communities, because an owner in Orlando searches Baldwin Park, the neighborhood, and not the city. The volume in those cells is thin and the competition for them is thinner, since the agencies chasing the metro term left them empty.
 
-![A three by three grid of owner buying stages against content ladder rungs, with two cells filled to show existing pages and seven left empty](/blog/wrong-half-of-your-audience/audience-rung-grid-openseo.png)
+![A three by three grid of owner buying stages against content ladder rungs, with two cells filled to show existing pages and seven left empty](/blog/wrong-half-of-your-audience/audience-rung-grid-openseo.webp)
 
 ## Do it with OpenSEO
 

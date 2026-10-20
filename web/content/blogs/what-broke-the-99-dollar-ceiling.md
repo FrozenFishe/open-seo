@@ -21,7 +21,7 @@ Those two questions built a ceiling at $99 a month, and that ceiling killed a de
 
 Price under $99 and you were a toy, useful but not something a team would build a process around. Price over $99 and you got compared to the full [Semrush](https://www.semrush.com/) suite on day one, and unless you had all of it, you lost. Every indie SEO tool had two options: play small forever, or jump to enterprise and skip the middle.
 
-![A bar chart titled The $99 Ceiling comparing monthly entry prices: OpenSEO at $10 where most users never pass that tier, Ahrefs at $99 and Semrush at $110 as baselines, with a horizontal line marking the $99 comparison trigger above which any tool gets measured against a full suite.](/blog/what-broke-the-99-dollar-ceiling/price-ceiling-openseo.png)
+![A bar chart titled The $99 Ceiling comparing monthly entry prices: OpenSEO at $10 where most users never pass that tier, Ahrefs at $99 and Semrush at $110 as baselines, with a horizontal line marking the $99 comparison trigger above which any tool gets measured against a full suite.](/blog/what-broke-the-99-dollar-ceiling/price-ceiling-openseo.webp)
 
 That ceiling was real and it held for a decade. [Moz Pro has listed a $99 entry tier continuously since at least February 2016](https://moz.com/products/pro/pricing), which four separate archived snapshots confirm, and the tier above it drifted between $149 and $179 over the same period. The stability of the $99 line is the notable part.
 
@@ -31,7 +31,7 @@ One correction to the story I used to tell, though. The market converged *on* $9
 
 When Ben Senescu told me OpenSEO runs at $10 a month, my first read was that somebody had finally undercut the ceiling. That is not what happened, and the real answer is more useful to you.
 
-![A quote card reading: They aren't comparing against Semrush, because they've never used Semrush before. It was totally inaccessible to them at that price point. Attributed to Ben Senescu, founder of OpenSEO, from The Unscripted SEO Interview Podcast.](/blog/what-broke-the-99-dollar-ceiling/quote-never-used-semrush.png)
+![A quote card reading: They aren't comparing against Semrush, because they've never used Semrush before. It was totally inaccessible to them at that price point. Attributed to Ben Senescu, founder of OpenSEO, from The Unscripted SEO Interview Podcast.](/blog/what-broke-the-99-dollar-ceiling/quote-never-used-semrush.webp)
 
 His paying customers are not professional SEOs. They are entrepreneurs doing SEO for the first time, people who never had the $110 option, so they are not comparing anything. The reason they can do it now is that the work got cheap.
 
@@ -53,7 +53,7 @@ If you sat out SEO because the tooling was priced for agencies, the door is open
 
 Ben put this better than I would have, and he was talking about his own roadmap when he said it:
 
-![A quote card reading: I can do anything. What's the one thing I should do? Attributed to Ben Senescu, founder of OpenSEO, from The Unscripted SEO Interview Podcast.](/blog/what-broke-the-99-dollar-ceiling/quote-one-thing.png)
+![A quote card reading: I can do anything. What's the one thing I should do? Attributed to Ben Senescu, founder of OpenSEO, from The Unscripted SEO Interview Podcast.](/blog/what-broke-the-99-dollar-ceiling/quote-one-thing.webp)
 
 He had roughly sixty open pull requests from strangers, and by his own account most of them were probably good work. He declared bankruptcy on the queue, published a roadmap explaining why, and stopped taking external code. That is uncomfortable to write and it is also the job now.
 

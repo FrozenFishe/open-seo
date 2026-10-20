@@ -15,7 +15,7 @@ There are three new pages in your project sidebar: Prompt Research, Prompt Explo
 
 Prompt Research starts from a keyword and lists questions people ask about it, most common first, with ChatGPT's answer to each and the sites it cited.
 
-![Prompt Research for the keyword "password manager": questions such as "Which password manager has never been hacked?", "What is the downside of 1password?", and "Is bitwarden still good in 2026?", each with its number of cited sources. Questions whose answers mention Bitwarden carry a You badge. Two are selected and the Track selected (2) button is active.](/blog/ai-visibility-in-openseo/prompt-research.png)
+![Prompt Research for the keyword "password manager": questions such as "Which password manager has never been hacked?", "What is the downside of 1password?", and "Is bitwarden still good in 2026?", each with its number of cited sources. Questions whose answers mention Bitwarden carry a You badge. Two are selected and the Track selected (2) button is active.](/blog/ai-visibility-in-openseo/prompt-research.webp)
 
 This is where we'd start. Questions like "which password manager has never been hacked?" are the ones where an AI answer decides which products a buyer hears about. Tick the ones that sound like your customers and click **Track selected** to add them to Prompt Tracking.
 
@@ -25,7 +25,7 @@ Prompt Research covers US English for now, and each keyword costs about $0.25 to
 
 Prompt Explorer runs one prompt through any mix of ChatGPT, Claude, Gemini, and Perplexity and shows the answers side by side. You get each full answer, the sources each model cited, and the related searches it ran while answering. Add your brand name and OpenSEO flags which answers mention you. We've updated Prompt Explorer to use the latest models from each provider, so the answers you compare are accurate to what those models say today.
 
-![Prompt Explorer running "What's the best free password manager?" across ChatGPT, Claude, Gemini, and Perplexity with web search on and Bitwarden highlighted. The ChatGPT answer carries a Bitwarden badge and opens with "Bitwarden is the best free password manager for most people."](/blog/ai-visibility-in-openseo/prompt-explorer.png)
+![Prompt Explorer running "What's the best free password manager?" across ChatGPT, Claude, Gemini, and Perplexity with web search on and Bitwarden highlighted. The ChatGPT answer carries a Bitwarden badge and opens with "Bitwarden is the best free password manager for most people."](/blog/ai-visibility-in-openseo/prompt-explorer.webp)
 
 Use it before you commit a prompt to tracking, or when you want to see how a competitor gets described. Each answer is billed on the model's actual usage, which runs from a few cents to about $0.20 for Claude with web search. Rerunning the same prompt with the same models and settings within seven days is free.
 
@@ -33,7 +33,7 @@ Use it before you commit a prompt to tracking, or when you want to see how a com
 
 Prompt Tracking is similar to rank tracking: set up a schedule for the prompts you want to monitor over time. Save the questions that matter to your business, group them into topics, and pick a market and the engines to check: ChatGPT, Gemini, and Google AI Overviews. Run a check whenever you want, or schedule one daily, weekly, or monthly.
 
-![The Prompts tab in Prompt Tracking for Bitwarden: prompts grouped under "Switching and teams" and "Choosing a password manager", each checked on ChatGPT, Gemini, and Google AI Overviews. Brand mentions are near 100% while owned citations range from 33% to 67%.](/blog/ai-visibility-in-openseo/prompt-tracking.png)
+![The Prompts tab in Prompt Tracking for Bitwarden: prompts grouped under "Switching and teams" and "Choosing a password manager", each checked on ChatGPT, Gemini, and Google AI Overviews. Brand mentions are near 100% while owned citations range from 33% to 67%.](/blog/ai-visibility-in-openseo/prompt-tracking.webp)
 
 For every answer, OpenSEO records two things separately:
 
@@ -44,11 +44,11 @@ They often disagree. ChatGPT can recommend you without linking to you, and an AI
 
 The **Competitors** tab shows how often each competitor was mentioned or cited in the latest check, and where they tend to appear in the answer. Bitwarden does well on mentions: it was named in 25 of 27 non-branded answers, ahead of 1Password at 21. Its own site was cited in only half of them, though, which is where the Citations tab comes in.
 
-![The Competitors tab for Bitwarden: Bitwarden mentioned in 93% of answers and cited in 50%, 1Password mentioned in 78%, Proton Pass in 59%, NordPass in 37%, Dashlane in 26%, and Keeper in 22%, with average positions, and suggested sites such as allaboutcookies.org, security.org, passwordmanager.com, and pcmag.com below.](/blog/ai-visibility-in-openseo/competitors.png)
+![The Competitors tab for Bitwarden: Bitwarden mentioned in 93% of answers and cited in 50%, 1Password mentioned in 78%, Proton Pass in 59%, NordPass in 37%, Dashlane in 26%, and Keeper in 22%, with average positions, and suggested sites such as allaboutcookies.org, security.org, passwordmanager.com, and pcmag.com below.](/blog/ai-visibility-in-openseo/competitors.webp)
 
 The **Citations** tab lists every page the latest answers cited, grouped by page or by domain. Filter it to third-party domains and you get a short list of the review sites, comparison posts, and docs that the models lean on for your category. For password managers that's review sites like allaboutcookies.org, security.org, passwordmanager.com, and PCMag. allaboutcookies.org alone was cited in 12 answers, more than 1Password's own site. Those are the pages worth getting onto.
 
-![The Citations tab grouped by domain: bitwarden.com is cited in 16 answers, followed by third-party sites allaboutcookies.org, youtube.com, and reddit.com, competitor 1password.com, then security.org, passwordmanager.com, and pcmag.com, with a per-engine breakdown for each.](/blog/ai-visibility-in-openseo/citations.png)
+![The Citations tab grouped by domain: bitwarden.com is cited in 16 answers, followed by third-party sites allaboutcookies.org, youtube.com, and reddit.com, competitor 1password.com, then security.org, passwordmanager.com, and pcmag.com, with a per-engine breakdown for each.](/blog/ai-visibility-in-openseo/citations.webp)
 
 AI answers vary from run to run. Ask the same question twice and you can get two different lists of brands, so judge your visibility by the trend over a few weeks, not by one check. When a check fails, OpenSEO marks it as failed and leaves it out of your rates instead of counting it against you.
 
