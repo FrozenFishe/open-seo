@@ -1,6 +1,12 @@
 import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/client/components/ui/alert";
 import { Badge } from "@/client/components/ui/badge";
 import { Button } from "@/client/components/ui/button";
 import { Skeleton } from "@/client/components/ui/skeleton";
@@ -23,6 +29,10 @@ import {
 } from "@/client/features/integrations/googleProviders";
 import { useGooglePickerResume } from "@/client/features/integrations/useGooglePickerResume";
 import { getStandardErrorMessage } from "@/client/lib/error-messages";
+import {
+  dashboardGa4ReportOptions,
+  dashboardGscReportOptions,
+} from "@/client/features/dashboard/dashboardReportQueries";
 
 /**
  * Connects one project to Search Console or Google Analytics: link a Google
@@ -63,6 +73,8 @@ export function GoogleConnectionCard({
   const canManage = connection?.canManage === true;
   const needsGoogleOAuthSetup =
     connectionQuery.isSuccess && !connection?.googleOAuthConfigured;
+
+  const reconnectRequired = useGrantRejected(provider, projectId, connection);
 
   const showPicker = picking ?? (!connected && hasGrant && canManage);
   const accountsKey = [config.accountsKey, projectId];
@@ -156,8 +168,9 @@ export function GoogleConnectionCard({
       action={
         connectionQuery.isPending || connectionUnavailable ? undefined : (
           <ConnectionStatusPill
-            connected={connected && !needsGoogleOAuthSetup}
             setupRequired={needsGoogleOAuthSetup}
+            reconnectRequired={reconnectRequired}
+            connected={connected}
           />
         )
       }
@@ -188,20 +201,29 @@ export function GoogleConnectionCard({
           {dismissButton}
         </div>
       ) : connected && !picking ? (
-        <GoogleConnectedState
-          property={connection?.property ?? ""}
-          detail={connection?.propertyDetail}
-          canManageAccounts={hasGrant}
-          email={connection?.connectedByEmail}
-          onChange={startPicking}
-          onDisconnect={() => {
-            setPropertyMutation.reset();
-            disconnectMutation.mutate();
-          }}
-          disconnecting={disconnectMutation.isPending}
-          disabled={linking}
-          canManage={canManage}
-        />
+        <div className="space-y-4">
+          {reconnectRequired ? (
+            <GoogleReconnectAlert
+              canManage={canManage}
+              linking={linking}
+              onReconnect={handleConnect}
+            />
+          ) : null}
+          <GoogleConnectedState
+            property={connection?.property ?? ""}
+            detail={connection?.propertyDetail}
+            canManageAccounts={hasGrant}
+            email={connection?.connectedByEmail}
+            onChange={startPicking}
+            onDisconnect={() => {
+              setPropertyMutation.reset();
+              disconnectMutation.mutate();
+            }}
+            disconnecting={disconnectMutation.isPending}
+            disabled={linking}
+            canManage={canManage}
+          />
+        </div>
       ) : showPicker ? (
         <fieldset disabled={changingConnection}>
           <GooglePropertyPicker
@@ -259,23 +281,85 @@ export function GoogleConnectionCard({
   );
 }
 
-function ConnectionStatusPill({
-  connected,
-  setupRequired,
+/** Whether Google rejects this saved connection. A dead grant (revoked,
+ *  expired, or lost property access) is only learned from a report call, so
+ *  read the dashboard's cached report rather than calling Google again. An
+ *  invalidated result predates the latest change and no longer counts. */
+function useGrantRejected(
+  provider: GoogleProvider,
+  projectId: string,
+  connection: GoogleConnection | undefined,
+): boolean {
+  const queryClient = useQueryClient();
+  const reportKey =
+    provider === "gsc"
+      ? dashboardGscReportOptions(projectId, connection?.property ?? null)
+          .queryKey
+      : dashboardGa4ReportOptions(projectId).queryKey;
+  const cachedReport = useQuery<{ connected: boolean }>({
+    queryKey: reportKey,
+    enabled: false,
+  }).data;
+  return (
+    connection?.connected === true &&
+    cachedReport?.connected === false &&
+    !queryClient.getQueryState(reportKey)?.isInvalidated
+  );
+}
+
+function GoogleReconnectAlert({
+  canManage,
+  linking,
+  onReconnect,
 }: {
-  connected: boolean;
-  setupRequired: boolean;
+  canManage: boolean;
+  linking: boolean;
+  onReconnect: () => void;
 }) {
   return (
-    <Badge
-      variant={connected ? "success" : setupRequired ? "warning" : "outline"}
-    >
+    <Alert variant="warning">
+      <AlertTriangle className="size-4" />
+      <AlertTitle>Google rejected this connection</AlertTitle>
+      <AlertDescription>
+        <p>
+          The access was revoked or expired, or the Google account lost access
+          to this property. Reconnect to see your data again.
+        </p>
+        {canManage ? (
+          <Button
+            size="sm"
+            className="mt-2"
+            onClick={onReconnect}
+            disabled={linking}
+          >
+            {linking ? "Opening Google…" : "Reconnect Google account"}
+          </Button>
+        ) : null}
+      </AlertDescription>
+    </Alert>
+  );
+}
+
+function ConnectionStatusPill({
+  setupRequired,
+  reconnectRequired,
+  connected,
+}: {
+  setupRequired: boolean;
+  reconnectRequired: boolean;
+  connected: boolean;
+}) {
+  const [label, variant] = setupRequired
+    ? (["Setup required", "warning"] as const)
+    : reconnectRequired
+      ? (["Reconnect needed", "warning"] as const)
+      : connected
+        ? (["Connected", "success"] as const)
+        : (["Not connected", "outline"] as const);
+  return (
+    <Badge variant={variant}>
       <span className="size-1.5 rounded-full bg-current" />
-      {connected
-        ? "Connected"
-        : setupRequired
-          ? "Setup required"
-          : "Not connected"}
+      {label}
     </Badge>
   );
 }

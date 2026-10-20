@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/client/components/ui/button";
-import { getSearchPerformanceReport } from "@/serverFunctions/searchPerformance";
+import { dashboardGscReportOptions } from "@/client/features/dashboard/dashboardReportQueries";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { TabsTrigger } from "@/client/components/ui/tabs";
@@ -49,13 +49,8 @@ export function DashboardKeywords({
     retry: false,
   });
   const striking = useQuery({
-    queryKey: ["dashboardGscReport", projectId, siteUrl],
-    queryFn: () =>
-      getSearchPerformanceReport({
-        data: { projectId, dateRange: "last_28_days" },
-      }),
+    ...dashboardGscReportOptions(projectId, siteUrl),
     enabled: connected && source === "striking",
-    staleTime: 10 * 60_000,
   });
   if (!connected)
     return (

@@ -17,7 +17,7 @@ import {
   formatCtr,
   formatPosition,
 } from "@/client/features/search-performance/SearchPerformanceColumns";
-import { getSearchPerformanceReport } from "@/serverFunctions/searchPerformance";
+import { dashboardGscReportOptions } from "@/client/features/dashboard/dashboardReportQueries";
 import {
   formatDay,
   moreDetailsClass,
@@ -50,13 +50,8 @@ export function GscCard({
   siteUrl: string | null;
 }) {
   const reportQuery = useQuery({
-    queryKey: ["dashboardGscReport", projectId, siteUrl],
-    queryFn: () =>
-      getSearchPerformanceReport({
-        data: { projectId, dateRange: "last_28_days" },
-      }),
+    ...dashboardGscReportOptions(projectId, siteUrl),
     enabled: connected,
-    staleTime: 10 * 60_000,
   });
   const report = reportQuery.data;
 

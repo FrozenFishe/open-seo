@@ -17,6 +17,10 @@ vi.mock("@/serverFunctions/ga4", () => ({
   listGa4Properties: vi.fn(),
   setGa4Property: vi.fn(),
   disconnectGa4: vi.fn(),
+  getGa4DashboardReport: vi.fn(),
+}));
+vi.mock("@/serverFunctions/searchPerformance", () => ({
+  getSearchPerformanceReport: vi.fn(),
 }));
 vi.mock("@/serverFunctions/projects", () => ({ getProjects: vi.fn() }));
 vi.mock("@/serverFunctions/googleAccounts", () => ({
@@ -42,9 +46,12 @@ function renderSetup(
   {
     connectionError,
     accounts,
+    report,
   }: {
     connectionError?: "initial" | "refetch";
     accounts?: GooglePickerAccount[];
+    /** The dashboard report already in the cache, and whether it is stale. */
+    report?: { connected: boolean; invalidated?: boolean };
   } = {},
 ) {
   const client = new QueryClient({
@@ -64,6 +71,15 @@ function renderSetup(
       [provider === "gsc" ? "gscSites" : "ga4Properties", "project-a"],
       { accounts },
     );
+  }
+  if (report) {
+    const reportKey =
+      provider === "gsc"
+        ? ["dashboardGscReport", "project-a", "https://example.com/"]
+        : ["dashboardGa4Report", "project-a"];
+    client.setQueryData(reportKey, { connected: report.connected });
+    if (report.invalidated)
+      void client.invalidateQueries({ queryKey: reportKey });
   }
   if (connectionError) {
     client
@@ -190,4 +206,23 @@ describe("Search Console website setup guidance", () => {
       expect(html).not.toContain("We couldn’t find your website");
     },
   );
+});
+
+describe.each(["gsc", "ga4"] as const)("%s dead grant status", (surface) => {
+  it("asks to reconnect instead of showing Connected", () => {
+    const html = renderSetup(surface, true, true, true, {
+      report: { connected: false },
+    });
+    expect(html).toContain("Reconnect needed");
+    expect(html).toContain("Reconnect Google account");
+    expect(html).not.toContain(">Connected<");
+  });
+
+  it("shows Connected once the rejected report is out of date", () => {
+    const html = renderSetup(surface, true, true, true, {
+      report: { connected: false, invalidated: true },
+    });
+    expect(html).toContain(">Connected<");
+    expect(html).not.toContain("Reconnect needed");
+  });
 });

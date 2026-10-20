@@ -10,7 +10,7 @@ import {
   formatCount,
   formatCtr,
 } from "@/client/features/search-performance/SearchPerformanceColumns";
-import { getGa4DashboardReport } from "@/serverFunctions/ga4";
+import { dashboardGa4ReportOptions } from "@/client/features/dashboard/dashboardReportQueries";
 import { Skeleton } from "@/client/components/ui/skeleton";
 // recharts is ~340 KB. Most projects never connect GA4, so the dashboard
 // loads the chart only for a report that has one to draw.
@@ -35,8 +35,7 @@ export function Ga4Card({
   connected: boolean;
 }) {
   const reportQuery = useQuery({
-    queryKey: ["dashboardGa4Report", projectId],
-    queryFn: () => getGa4DashboardReport({ data: { projectId } }),
+    ...dashboardGa4ReportOptions(projectId),
     enabled: connected,
   });
   const report = reportQuery.data;
