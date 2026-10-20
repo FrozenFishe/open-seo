@@ -79,7 +79,9 @@
   --muted-foreground: oklch(20% 0 0 / 60%);
   --accent: oklch(97% 0 0);
   --accent-foreground: oklch(20% 0 0);
-  --destructive: oklch(65% 0.2 25);
+  /* Dark enough that destructive text stays above 4.5:1 on its own 10-20%
+     tint (destructive buttons, menu items, badges) over cards and popovers. */
+  --destructive: oklch(51% 0.19 25);
   /* Dark enough that success text stays above 4.5:1 on its own 10-20% tint
      (badges, rank gains) over cards and the page background. */
   --success: oklch(48% 0.13 145);
