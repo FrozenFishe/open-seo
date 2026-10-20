@@ -9,6 +9,7 @@ import { dataforseoPost } from "@/server/lib/dataforseo/core";
 import {
   assertOk,
   buildTaskBilling,
+  parseBilledTaskItems,
   parseTaskItems,
   parseTaskTotalCount,
   type DataforseoApiResponse,
@@ -339,6 +340,78 @@ export async function fetchBacklinksHistory(input: BacklinksTimeseriesRequest) {
       backlinksHistoryItemSchema,
     ),
     billing: buildTaskBilling(task),
+  };
+}
+
+// One entry per requested target, keyed "1", "2", ... in request order.
+// `target` here is the REFERRING domain that links to that requested target.
+const domainIntersectionEntrySchema = z
+  .object({
+    target: z.string().nullable().optional(),
+    rank: z.number().nullable().optional(),
+    backlinks: z.number().nullable().optional(),
+    backlinks_spam_score: z.number().nullable().optional(),
+    first_seen: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+const backlinksDomainIntersectionItemSchema = z
+  .object({
+    domain_intersection: z
+      .record(z.string(), domainIntersectionEntrySchema.nullable())
+      .nullable()
+      .optional(),
+  })
+  .passthrough();
+
+/**
+ * Referring domains linking to `targets` (keyed "1", "2", ... in order) but
+ * not to any of `excludeTargets`. Filters and order_by address a target's
+ * entry by its key, e.g. ["1.rank", ">=", 30] or "1.rank,desc". The docs
+ * don't pin down whether several targets are intersected or merged
+ * (`intersection_mode`), so the link-gap tool sends one target per call.
+ */
+export async function fetchBacklinksDomainIntersection(input: {
+  targets: string[];
+  excludeTargets?: string[];
+  limit: number;
+  offset?: number;
+  orderBy?: string[];
+  filters?: unknown[];
+}) {
+  const path = "/v3/backlinks/domain_intersection/live";
+  const response = await dataforseoPost(
+    path,
+    [
+      {
+        targets: Object.fromEntries(
+          input.targets.map((target, index) => [String(index + 1), target]),
+        ),
+        exclude_targets: input.excludeTargets,
+        include_subdomains: true,
+        include_indirect_links: true,
+        exclude_internal_backlinks: true,
+        backlinks_status_type: "live",
+        rank_scale: "one_hundred",
+        limit: input.limit,
+        offset: input.offset,
+        order_by: input.orderBy,
+        ...(input.filters && input.filters.length > 0
+          ? { filters: input.filters }
+          : {}),
+      },
+    ],
+    { classify: classifyBacklinksError },
+  );
+  const task = assertOk(response, assertOptions(path));
+  const { items, billing } = parseBilledTaskItems(
+    "backlinks-domain-intersection-live",
+    task,
+    backlinksDomainIntersectionItemSchema,
+  );
+  return {
+    data: { items, totalCount: parseTaskTotalCount(task) },
+    billing,
   };
 }
 

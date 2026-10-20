@@ -1,9 +1,12 @@
+/* eslint-disable max-lines -- one file per DataForSEO section (see index.ts); Labs spans keyword, domain and competitor endpoints */
 import { z } from "zod";
 import { dataforseoPost } from "@/server/lib/dataforseo/core";
 import {
   assertOk,
   buildTaskBilling,
+  parseBilledTaskItems,
   parseTaskItems,
+  parseTaskTotalCount,
   type DataforseoApiResponse,
   type DataforseoItemsTask,
 } from "@/server/lib/dataforseo/envelope";
@@ -392,5 +395,103 @@ export async function fetchSerpCompetitors(input: {
   return {
     data: task.result?.[0]?.items ?? [],
     billing: buildTaskBilling(task),
+  };
+}
+
+const intersectionSerpElementSchema = z
+  .object({
+    rank_absolute: z.number().nullable().optional(),
+    url: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+const domainIntersectionItemSchema = z
+  .object({
+    keyword_data: z
+      .object({
+        keyword: z.string().nullable().optional(),
+        keyword_info: z
+          .object({
+            search_volume: z.number().nullable().optional(),
+            cpc: z.number().nullable().optional(),
+          })
+          .passthrough()
+          .nullable()
+          .optional(),
+        keyword_properties: z
+          .object({
+            keyword_difficulty: z.number().nullable().optional(),
+          })
+          .passthrough()
+          .nullable()
+          .optional(),
+        search_intent_info: z
+          .object({ main_intent: z.string().nullable().optional() })
+          .passthrough()
+          .nullable()
+          .optional(),
+      })
+      .passthrough()
+      .nullable()
+      .optional(),
+    first_domain_serp_element: intersectionSerpElementSchema
+      .nullable()
+      .optional(),
+    second_domain_serp_element: intersectionSerpElementSchema
+      .nullable()
+      .optional(),
+  })
+  .passthrough();
+
+type DomainIntersectionItem = z.infer<typeof domainIntersectionItemSchema>;
+
+/**
+ * Keywords where target1 ranks in the same SERP as target2
+ * (`intersections: true`), or where target1 ranks and target2 does not
+ * (`intersections: false`, which omits second_domain_serp_element).
+ */
+export async function fetchDomainIntersection(input: {
+  target1: string;
+  target2: string;
+  intersections: boolean;
+  locationCode: number;
+  languageCode: string;
+  limit: number;
+  offset?: number;
+  orderBy?: string[];
+  filters?: unknown[];
+  itemTypes?: DataforseoLabsItemType[];
+}): Promise<
+  DataforseoApiResponse<{
+    items: DomainIntersectionItem[];
+    totalCount: number | null;
+  }>
+> {
+  const response = await dataforseoPost<DataforseoItemsTask<unknown>>(
+    "/v3/dataforseo_labs/google/domain_intersection/live",
+    [
+      {
+        target1: input.target1,
+        target2: input.target2,
+        intersections: input.intersections,
+        location_code: input.locationCode,
+        language_code: input.languageCode,
+        limit: input.limit,
+        offset: input.offset,
+        order_by: input.orderBy,
+        filters: input.filters,
+        item_types: input.itemTypes,
+      },
+    ],
+  );
+  const task = assertOk(response);
+  const { items, billing } = parseBilledTaskItems(
+    "google-domain-intersection-live",
+    task,
+    domainIntersectionItemSchema,
+  );
+  return {
+    data: { items, totalCount: parseTaskTotalCount(task) },
+    billing,
   };
 }
