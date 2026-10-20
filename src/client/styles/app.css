@@ -80,7 +80,9 @@
   --accent: oklch(97% 0 0);
   --accent-foreground: oklch(20% 0 0);
   --destructive: oklch(65% 0.2 25);
-  --success: oklch(65% 0.18 145);
+  /* Dark enough that success text stays above 4.5:1 on its own 10-20% tint
+     (badges, rank gains) over cards and the page background. */
+  --success: oklch(48% 0.13 145);
   --success-foreground: oklch(100% 0 0);
   --warning: oklch(80% 0.15 80);
   --warning-foreground: oklch(25% 0.05 80);
