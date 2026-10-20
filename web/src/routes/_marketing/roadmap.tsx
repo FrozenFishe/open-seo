@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import RoadmapContent, {
-  frontmatter as roadmapFrontmatter,
-} from "../../../content/marketing/roadmap.md";
+import RoadmapContent from "../../../content/marketing/roadmap.md";
+import { frontmatter as roadmapFrontmatter } from "../../../content/marketing/roadmap.md?only=frontmatter";
 import { buildPageSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_marketing/roadmap")({

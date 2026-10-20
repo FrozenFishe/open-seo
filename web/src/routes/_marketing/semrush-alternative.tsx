@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import SemrushAlternativeContent, {
-  frontmatter,
-} from "../../../content/marketing/semrush-alternative.mdx";
+import SemrushAlternativeContent from "../../../content/marketing/semrush-alternative.mdx";
+import { frontmatter } from "../../../content/marketing/semrush-alternative.mdx?only=frontmatter";
 import {
   ComparisonTable,
   type ComparisonTableProps,

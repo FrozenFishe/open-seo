@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
-import TermsAndConditionsContent, {
-  frontmatter as termsFrontmatter,
-} from "../../../content/legal/terms-and-conditions.md";
+import TermsAndConditionsContent from "../../../content/legal/terms-and-conditions.md";
+import { frontmatter as termsFrontmatter } from "../../../content/legal/terms-and-conditions.md?only=frontmatter";
 import { LegalPage } from "@/components/legal-page";
 import { buildPageSeo } from "@/lib/seo";
 

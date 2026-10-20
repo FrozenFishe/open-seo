@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import AboutContent, {
-  frontmatter,
-} from "../../../content/marketing/about.mdx";
+import AboutContent from "../../../content/marketing/about.mdx";
+import { frontmatter } from "../../../content/marketing/about.mdx?only=frontmatter";
 import { buildPageSeo } from "@/lib/seo";
 import { SocialLinks } from "@/components/social-links";
 

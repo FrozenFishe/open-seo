@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import AhrefsPricingContent, {
-  frontmatter,
-} from "../../../content/marketing/ahrefs-pricing.mdx";
+import AhrefsPricingContent from "../../../content/marketing/ahrefs-pricing.mdx";
+import { frontmatter } from "../../../content/marketing/ahrefs-pricing.mdx?only=frontmatter";
 import { buildPageSeo, SITE_URL, toCanonicalUrl } from "@/lib/seo";
 
 const PATH = "/ahrefs-pricing";

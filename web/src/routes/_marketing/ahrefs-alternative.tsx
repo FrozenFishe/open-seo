@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import AhrefsAlternativeContent, {
-  frontmatter,
-} from "../../../content/marketing/ahrefs-alternative.mdx";
+import AhrefsAlternativeContent from "../../../content/marketing/ahrefs-alternative.mdx";
+import { frontmatter } from "../../../content/marketing/ahrefs-alternative.mdx?only=frontmatter";
 import {
   ComparisonTable,
   type ComparisonTableProps,
