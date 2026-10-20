@@ -32,8 +32,8 @@ function AboutPage() {
           <img
             src="/images/ben-founder.jpg"
             alt="Ben, founder of OpenSEO"
-            width={1226}
-            height={1224}
+            width={640}
+            height={639}
             className="h-auto w-full rounded-2xl"
           />
           <figcaption className="mt-3 text-sm text-[var(--color-brand-muted)]">
