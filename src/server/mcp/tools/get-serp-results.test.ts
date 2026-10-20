@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getSerpResultsTool } from "./get-serp-results";
+import { serpSchema } from "@/shared/mcp-contracts";
 import { makeToolContext, textContent } from "./tool-test-support";
 import type * as r2CacheModule from "@/server/lib/r2-cache";
 
@@ -72,6 +73,35 @@ describe("get_serp_results", () => {
     expect(live).toHaveBeenCalledWith(expect.objectContaining({ depth: 30 }));
     // Rows are trimmed to the depth that was crawled, not the fixed top 20.
     expect(textContent(result)).toContain('"seo tools" (30 results)');
+  });
+
+  it("keeps every organic result up to depth when SERP features sit between them", async () => {
+    const live = vi.fn().mockResolvedValue([
+      { type: "paid", rank_absolute: 1 },
+      { type: "people_also_ask", rank_absolute: 2 },
+      ...Array.from({ length: 12 }, (_, index) => ({
+        type: "organic",
+        rank_absolute: index + 3,
+        rank_group: index + 1,
+      })),
+    ]);
+    mocks.createDataforseoClient.mockReturnValue({ serp: { live } });
+
+    const result = await getSerpResultsTool.handler(
+      {
+        projectId: "project_1",
+        queries: [{ keyword: "seo tools" }],
+        depth: 10,
+      },
+      toolContext,
+    );
+
+    const [serp] = serpSchema.parse(result.structuredContent).results;
+    expect(serp.ok && serp.items.map((item) => item.organicRank)).toEqual([
+      null,
+      null,
+      ...Array.from({ length: 10 }, (_, index) => index + 1),
+    ]);
   });
 
   it("answers a repeated query from the saved rows without another paid call", async () => {
