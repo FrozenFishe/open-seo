@@ -5,6 +5,7 @@ vi.mock("@/server/lib/runtime-env", () => ({
 }));
 
 import {
+  fetchBacklinksDomainIntersection,
   fetchBacklinksRows,
   fetchBacklinksSummary,
 } from "@/server/lib/dataforseo/backlinks";
@@ -186,6 +187,53 @@ describe("fetchBacklinksSummary", () => {
       ]);
     },
   );
+});
+
+describe("fetchBacklinksDomainIntersection", () => {
+  beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn());
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("keys targets by position and reads the referring domain per target", async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      okResponse([
+        {
+          total_count: 1,
+          items: [
+            { domain_intersection: { "1": { target: "news.test", rank: 60 } } },
+          ],
+        },
+      ]),
+    );
+
+    const result = await fetchBacklinksDomainIntersection({
+      targets: ["competitor.com"],
+      excludeTargets: ["example.com"],
+      limit: 50,
+    });
+
+    const body = vi.mocked(fetch).mock.calls[0]?.[1]?.body;
+    if (typeof body !== "string")
+      throw new Error("Expected a JSON request body");
+    expect(JSON.parse(body)).toMatchObject([
+      {
+        targets: { "1": "competitor.com" },
+        exclude_targets: ["example.com"],
+        rank_scale: "one_hundred",
+        limit: 50,
+      },
+    ]);
+    expect(result.data).toEqual({
+      items: [
+        { domain_intersection: { "1": { target: "news.test", rank: 60 } } },
+      ],
+      totalCount: 1,
+    });
+  });
 });
 
 function expectValidationError(fn: () => unknown) {

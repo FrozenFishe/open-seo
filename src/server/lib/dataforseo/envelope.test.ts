@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   assertOk,
   DataforseoChargedTaskError,
+  parseBilledTaskItems,
   parseTaskItems,
 } from "@/server/lib/dataforseo/envelope";
 import { AppError } from "@/server/lib/errors";
@@ -15,6 +16,23 @@ describe("parseTaskItems", () => {
     { result: undefined },
   ])("returns [] for a task without items (%o)", (task) => {
     expect(parseTaskItems("x", task, itemSchema)).toEqual([]);
+  });
+});
+
+describe("parseBilledTaskItems", () => {
+  it("keeps the billed cost when the payload fails validation", () => {
+    const task = {
+      status_code: 20000,
+      path: ["v3", "backlinks", "domain_intersection", "live"],
+      cost: 0.03,
+      result: [{ items: [{ keyword: 42 }] }],
+    };
+    expect(() => parseBilledTaskItems("x", task, itemSchema)).toThrow(
+      expect.objectContaining({
+        name: "DataforseoChargedTaskError",
+        billing: { path: task.path, costUsd: 0.03 },
+      }),
+    );
   });
 });
 

@@ -221,7 +221,7 @@ export const getBusinessProfileTool = {
   config: {
     title: "Get business profile",
     description:
-      "Reads one Google Business Profile by name, cid, or placeId: categories, rating and review count, rating breakdown, address, phone, website, claimed status, opening hours, and photo count. Use it to audit your own profile, to compare a named competitor's, or to check whether a business has a Google Business Profile at all — it is the cheapest tool for that question, less than half the credits of search_local_businesses. For identity or existence checks, reuse a business already present in your search results. Fetch the full profile when you need missing details such as opening hours or rating breakdown. Charges credits.",
+      "Reads one Google Business Profile by name, cid, or placeId: categories, rating and review count, rating breakdown, address, phone, website, claimed status, opening hours, and photo count. Use it to audit your own profile, to compare a named competitor's, or to check whether a business has a Google Business Profile at all — it is the cheapest tool for that question, less than half the credits of search_local_businesses. For identity or existence checks, reuse a business already present in your search results. Fetch the full profile when you need missing details such as opening hours or rating breakdown. Charges credits (~7 per call).",
     inputSchema: getBusinessProfileInputSchema,
     outputSchema: z.looseObject({
       profile: looseObjectOutputSchema.nullable(),
@@ -370,7 +370,7 @@ export const getBusinessReviewsTool = {
   config: {
     title: "Get business reviews",
     description:
-      "Collects Google reviews for a business, with rating, author, text, and the owner's reply. Use it for review-gap analysis against competitors and to spot unanswered reviews. Usually completes within this call; if the queued job is still running you get status 'processing' plus a taskId — call again with that taskId in 30-60 seconds to collect the result at no extra cost. Charges credits.",
+      "Collects Google reviews for a business, with rating, author, text, and the owner's reply. Use it for review-gap analysis against competitors and to spot unanswered reviews. Usually completes within this call; if the queued job is still running you get status 'processing' plus a taskId — call again with that taskId in 30-60 seconds to collect the result at no extra cost. Charges credits: ~6 at the default 20 reviews, ~40 at 200; with includeOtherSources ~13 per 20 reviews (~128 at 200).",
     inputSchema: getBusinessReviewsInputSchema,
     outputSchema: z.looseObject({
       status: z.enum(["completed", "processing"]),
@@ -526,7 +526,7 @@ export const getBusinessUpdatesTool = {
   config: {
     title: "Get business updates",
     description:
-      "Collects the posts (updates, offers, events) published on a Google Business Profile. Use it to check posting activity and recency on your profile or a competitor's. Usually completes within this call; a 'processing' response returns a taskId to call back with in 30-60 seconds at no extra cost. Charges credits.",
+      "Collects the posts (updates, offers, events) published on a Google Business Profile. Use it to check posting activity and recency on your profile or a competitor's. Usually completes within this call; a 'processing' response returns a taskId to call back with in 30-60 seconds at no extra cost. Charges credits: ~6 at the default 10 posts, ~24 at 100.",
     inputSchema: getBusinessUpdatesInputSchema,
     outputSchema: z.looseObject({
       status: z.enum(["completed", "processing"]),
@@ -955,7 +955,7 @@ export const getLocalRankGridTool = {
   config: {
     title: "Get local rank grid",
     description:
-      "Runs one Google Maps search per point of a square grid around a coordinate and reports where the target business ranks at each point — plus each point's result count and #1 business — revealing how far its Maps visibility reaches. Cost scales with the grid: gridSize squared SERP calls (3x3 = 9, the sensible default; 5x5 = 25). Charges credits per grid point. The searches run as one queued batch that usually finishes within this call; if some are still running you get status 'processing'. Calling again with the same arguments within an hour collects the same searches at no extra charge, so repeat the call in about a minute to finish a 'processing' grid or to recover a lost response.",
+      "Runs one Google Maps search per point of a square grid around a coordinate and reports where the target business ranks at each point — plus each point's result count and #1 business — revealing how far its Maps visibility reaches. Cost scales with the grid: gridSize squared SERP calls (3x3 = 9, the sensible default; 5x5 = 25). Charges credits per grid: ~14 for 3x3, ~39 for 5x5. The searches run as one queued batch that usually finishes within this call; if some are still running you get status 'processing'. Calling again with the same arguments within an hour collects the same searches at no extra charge, so repeat the call in about a minute to finish a 'processing' grid or to recover a lost response.",
     inputSchema: getLocalRankGridInputSchema,
     outputSchema: z.looseObject({
       status: z.enum(["completed", "processing"]),

@@ -35,16 +35,16 @@ Deliver through the `seo-report` skill, saving with `skill: "keyword-research"`.
 - `research_keywords`: primary discovery tool. Use 1-5 seeds per call and prefer 150 results unless the user asks for exhaustive research. For demand in one city, county, or region, call `search_serp_locations` and pass the returned `locationName` on the seed: volume, CPC, and competition become local; keyword ideas, KD, and intent stay national.
 - `get_keyword_metrics`: hydrate up to 700 known keywords with volume, keyword difficulty (KD), search intent, CPC, and monthly trends in one call. Use it to score candidate or known terms — including the Search Console striking-distance queries from step 1.
 - `get_ranked_keywords`: pull exact ranking keyword rows when a target domain or page is part of the research brief.
-- `get_search_console_performance`: when Search Console is connected, start from the project's real first-party demand — queries already earning impressions and near-ranking ("striking distance") terms. Pass `minPosition: 5, maxPosition: 20, minImpressions: 50` so the server filters the striking-distance rows for you (Google sorts by clicks and can't filter by position itself). Then hydrate those striking-distance queries with `get_keyword_metrics` to attach difficulty and intent.
+- `get_search_console_performance`: when Search Console is connected, start from the project's real first-party demand — queries already earning impressions and near-ranking ("striking distance") terms. Pass `minPosition: 5, maxPosition: 20, minImpressions: 50` so the server filters the striking-distance rows for you (Google sorts by clicks and can't filter by position itself). Then hydrate those striking-distance queries with `get_keyword_metrics` to attach difficulty and intent. That tool rejects the whole call if any keyword is over 80 characters, so drop longer queries first.
 - `get_serp_results`: inspect SERPs for the top candidate terms, especially when intent is ambiguous. Pass the same `locationName` for the SERP in one city, county, or region.
-- `search_local_businesses`, `get_local_serp_results`, and `get_google_business_questions`: use for local SEO topics when a business/location radius matters.
+- `get_local_serp_results`: the Maps results near a coordinate, for local topics where the map pack decides who gets the click. Leave Google Business Profile work (profiles, reviews, Q&A, rank grids) to `local-seo`.
 - `list_saved_keywords`: avoid duplicating already-saved work or use existing tags as context.
 - `save_keywords`: save selected keywords only after explicit user confirmation.
 
 ## Workflow
 
 1. Normalize seeds into a small set of distinct research angles. If Search Console is connected for the project, first pull `get_search_console_performance` with `minPosition: 5, maxPosition: 20, minImpressions: 50` (default lookback), and hydrate those queries with `get_keyword_metrics` to attach KD and intent. That ranked, hydrated list is your fastest opportunity set — work it before broad discovery.
-2. If the request is local SEO, identify the business, location/coordinates or service area, and local categories. Research local volume for that city or county with `research_keywords` and `locationName`. Use `search_local_businesses` and `get_local_serp_results` for the most important location/keyword set instead of relying only on national keyword/SERP data.
+2. If the request is local SEO, identify the business, location/coordinates or service area, and local categories. Research local volume for that city or county with `research_keywords` and `locationName`. Use `get_serp_results` with the same `locationName`, and `get_local_serp_results` near the business, for the most important location/keyword set instead of relying only on national keyword/SERP data.
 3. Call `research_keywords` for exploratory seeds. Use bulk calls when possible.
 4. Use `get_keyword_metrics` to hydrate a fixed keyword list — or the striking-distance queries from step 1 — with volume, KD, and intent before prioritizing.
 5. Use `get_ranked_keywords` when the user provides a domain/page and wants opportunities based on current rankings, near-misses, or competitor-owned terms.
@@ -60,6 +60,16 @@ Deliver through the `seo-report` skill, saving with `skill: "keyword-research"`.
 9. Present a shortlist and a longer opportunity table.
 10. Ask before saving keywords. When saving, suggest concise tags such as `topic:<topic>`, `intent:<intent>`, or `page:<slug>`.
 
+## Tracking the chosen keywords
+
+Offer this only after the user picks targets, and only when they want ongoing positions. It is separate from saving keywords.
+
+1. `get_rank_tracker` lists the project's trackers. Reuse one that matches the domain, market, and city.
+2. Otherwise `create_rank_tracker`. It defaults to the project domain and market, mobile, depth 40, and a manual schedule, so creating it spends nothing. For one city, pass a `locationName` from `search_serp_locations`. Set a daily, weekly, or monthly schedule only when the user asks for one.
+3. `estimate_rank_tracker_cost` with `additionalKeywords`, then show the user the per-check cost, and the monthly cost for a scheduled tracker.
+4. After approval, `add_rank_tracking_keywords`. A scheduled tracker needs the approved per-check estimate as `maxEstimatedScheduledCheckCredits`.
+5. Run `run_rank_tracker` only if the user wants positions now. Pass the approved live estimate as `maxCostCredits`, then read results with `get_rank_tracker`.
+
 ## Output format
 
 `h1`: the site or topic.
@@ -73,7 +83,7 @@ Sections in this order:
 3. **Why these** — one finding per keyword that needs justifying: the SERP or metric evidence, then the page to build.
 4. **The longer opportunity list** — a second table, same columns.
 5. **Risks and caveats** — notes: SERP intent that would change the recommendation, missing metrics written as `unknown`, close-variant volumes that are one bucket rather than several.
-6. **What to do next** — an ordered list, including whether to run keyword clustering, write a content brief, or save the chosen keywords.
+6. **What to do next** — an ordered list, including whether to run keyword clustering, write a content brief, save the chosen keywords, or track them.
 7. **How this report was made** — opens with the skill link line from `seo-report`, pointing at `https://openseo.so/docs/skills/keyword-research` ("OpenSEO Keyword Research skill"), then which tools returned what.
 
 ## Guardrails

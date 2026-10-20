@@ -7,6 +7,7 @@ import {
 } from "@/server/lib/dataforseo/business";
 import {
   BACKLINKS_DEFAULT_LIMIT,
+  fetchBacklinksDomainIntersection,
   fetchBacklinksHistory,
   fetchBacklinksRows,
   fetchBacklinksSummary,
@@ -14,6 +15,7 @@ import {
   fetchReferringDomains,
 } from "@/server/lib/dataforseo/backlinks";
 import {
+  fetchDomainIntersection,
   fetchDomainRankOverview,
   fetchKeywordIdeas,
   fetchKeywordOverview,
@@ -227,6 +229,9 @@ export const dataforseoPricing = {
     history: priced(fetchBacklinksHistory, (input) =>
       backlinksUsd(daysInclusive(input.dateFrom, input.dateTo)),
     ),
+    domainIntersection: priced(fetchBacklinksDomainIntersection, (input) =>
+      backlinksUsd(input.limit),
+    ),
   },
   keywords: {
     related: priced(fetchRelatedKeywords, (input) =>
@@ -250,6 +255,9 @@ export const dataforseoPricing = {
       labsUsd(input.limit),
     ),
     relevantPages: priced(fetchRelevantPages, (input) => labsUsd(input.limit)),
+    intersection: priced(fetchDomainIntersection, (input) =>
+      labsUsd(input.limit),
+    ),
   },
   serp: {
     live: priced(fetchLiveSerp, (input) =>

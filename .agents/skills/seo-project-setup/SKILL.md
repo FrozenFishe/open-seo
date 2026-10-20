@@ -118,7 +118,9 @@ Save the pages that actually matter with `addKeyPages` — money pages, topic hu
 
 GSC is the richest first-party signal: existing impressions, near-ranking terms, cannibalization, and pages that already have search demand.
 
-**Preferred (hosted): connect it natively.** On the project's Integrations page, connect Google Search Console and pull live data with `get_search_console_performance`. Once connected, the agent reads it directly in `keyword-research` and `keyword-clustering` — no manual files to maintain.
+**Preferred (hosted): connect it natively.** On the project's Integrations page, connect Google Search Console and pull live data with `get_search_console_performance`. Once connected, the agent reads it directly in `keyword-research`, `keyword-clustering`, and `seo-audit` — no manual files to maintain.
+
+Offer to connect Google Analytics on the same page. It adds measured key events and revenue per organic landing page, which `seo-audit` uses to tell pages that convert from pages that only get visits. `get_google_analytics_measurement_health` is a free way to confirm the connection.
 
 **Fallback (self-hosted, or if the user prefers files):** ask the user to export CSVs from Search Console into a local working folder (see step 9).
 
@@ -163,6 +165,8 @@ After intake, recommend one next OpenSEO workflow:
 - `competitive-landscape`: when the market is unclear
 - `competitor-analysis`: when they know a competitor to study
 - `link-prospecting`: when they have a linkable asset or target page
+- `local-seo`: when rankings depend on a storefront or service area
+- `ai-visibility-audit` or `ai-prompt-research`: when they care how AI assistants describe or recommend them
 
 ## Output format
 
@@ -179,7 +183,7 @@ Then summarize:
 - Known positioning
 - Competitors saved
 - Key pages saved
-- Search Console status and any local files
+- Search Console and Google Analytics status, and any local files
 - Sections still missing from project context
 - Recommended next workflow
 
@@ -189,7 +193,7 @@ Tell the user they can read and edit everything saved here on the project's Cont
 
 - Keep setup lightweight. The user should feel oriented, not assigned homework.
 - Confirm facts with the user before writing them. Inferences from the site are fine to propose, but they get saved as agreed answers, not guesses.
-- Do not pretend a GSC CSV has been uploaded unless you can see it, and do not claim Search Console is connected unless `get_search_console_performance` confirms it (it returns a "not connected" message otherwise).
+- Do not pretend a GSC CSV has been uploaded unless you can see it, and do not claim Search Console or Google Analytics is connected unless `get_search_console_performance` or `get_google_analytics_measurement_health` confirms it (each returns a "not connected" message otherwise).
 - Keep project setup focused on setup and context unless the user asks for live research. If a step does spend credits, append a research log entry so other skills do not re-buy it.
 - If web search or scraping is used for positioning research, distinguish source evidence from inference.
 - Overwriting a section replaces it. When context already exists, merge the new answers into the existing prose instead of discarding it.

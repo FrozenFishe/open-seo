@@ -86,6 +86,7 @@ vi.mock("@/server/lib/dataforseo/labs", () => ({
   fetchRelevantPages: vi.fn(),
   fetchKeywordOverview: vi.fn(),
   fetchSerpCompetitors: vi.fn(),
+  fetchDomainIntersection: vi.fn(),
 }));
 vi.mock("@/server/lib/dataforseo/serp", () => ({
   fetchLiveSerp: vi.fn(),
@@ -113,6 +114,7 @@ vi.mock("@/server/lib/dataforseo/backlinks", () => ({
   fetchReferringDomains: vi.fn(),
   fetchDomainPagesSummary: vi.fn(),
   fetchBacklinksHistory: vi.fn(),
+  fetchBacklinksDomainIntersection: vi.fn(),
   BACKLINKS_DEFAULT_LIMIT: 100,
 }));
 vi.mock("@/server/lib/dataforseo/lighthouse", () => ({

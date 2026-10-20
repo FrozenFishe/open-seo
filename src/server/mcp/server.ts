@@ -30,6 +30,8 @@ import { instrumentMcpToolHandler } from "@/server/mcp/instrumentation";
 import { submitIndexNowUrlsTool } from "@/server/mcp/tools/submit-indexnow-urls";
 import { getBacklinksOverviewTool } from "@/server/mcp/tools/get-backlinks-overview";
 import { getBacklinksProfileTool } from "@/server/mcp/tools/get-backlinks-profile";
+import { getBacklinkGapTool } from "@/server/mcp/tools/get-backlink-gap";
+import { getKeywordGapTool } from "@/server/mcp/tools/get-keyword-gap";
 import { getDomainKeywordSuggestionsTool } from "@/server/mcp/tools/get-domain-keyword-suggestions";
 import { getDomainOverviewTool } from "@/server/mcp/tools/get-domain-overview";
 import { addRankTrackingKeywordsTool } from "@/server/mcp/tools/add-rank-tracking-keywords";
@@ -276,6 +278,8 @@ export function createOpenSeoMcpServer(
   register(runRankTrackerTool);
   register(getRankedKeywordsTool);
   register(findSerpCompetitorsTool);
+  register(getKeywordGapTool);
+  register(getBacklinkGapTool);
   register(searchLocalBusinessesTool);
   register(getLocalSerpResultsTool);
   register(getGoogleBusinessQuestionsTool);

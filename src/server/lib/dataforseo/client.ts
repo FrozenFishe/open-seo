@@ -24,6 +24,7 @@ import {
   postMyBusinessUpdatesTask,
 } from "@/server/lib/dataforseo/business";
 import {
+  fetchBacklinksDomainIntersection,
   fetchBacklinksHistory,
   fetchBacklinksRows,
   fetchBacklinksSummary,
@@ -31,6 +32,7 @@ import {
   fetchReferringDomains,
 } from "@/server/lib/dataforseo/backlinks";
 import {
+  fetchDomainIntersection,
   fetchDomainRankOverview,
   fetchKeywordIdeas,
   fetchKeywordOverview,
@@ -159,6 +161,11 @@ export function createDataforseoClient(customer: BillingCustomerContext) {
         fetchBacklinksHistory,
         dataforseoPricing.backlinks.history,
       ),
+      domainIntersection: meter(
+        customer,
+        fetchBacklinksDomainIntersection,
+        dataforseoPricing.backlinks.domainIntersection,
+      ),
     },
     keywords: {
       related: meter(
@@ -203,6 +210,11 @@ export function createDataforseoClient(customer: BillingCustomerContext) {
         customer,
         fetchRelevantPages,
         dataforseoPricing.domain.relevantPages,
+      ),
+      intersection: meter(
+        customer,
+        fetchDomainIntersection,
+        dataforseoPricing.domain.intersection,
       ),
     },
     serp: {

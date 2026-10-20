@@ -22,6 +22,8 @@ import { type ToolAuthContext, type ToolContext } from "@/server/mcp/context";
 import { instrumentMcpToolHandler } from "@/server/mcp/instrumentation";
 import { getBacklinksOverviewTool } from "@/server/mcp/tools/get-backlinks-overview";
 import { getBacklinksProfileTool } from "@/server/mcp/tools/get-backlinks-profile";
+import { getBacklinkGapTool } from "@/server/mcp/tools/get-backlink-gap";
+import { getKeywordGapTool } from "@/server/mcp/tools/get-keyword-gap";
 import { getDomainKeywordSuggestionsTool } from "@/server/mcp/tools/get-domain-keyword-suggestions";
 import { getDomainOverviewTool } from "@/server/mcp/tools/get-domain-overview";
 import { addRankTrackingKeywordsTool } from "@/server/mcp/tools/add-rank-tracking-keywords";
@@ -415,6 +417,8 @@ export function buildSamMcpTools(
     run_rank_tracker: adaptTool(runRankTrackerTool),
     get_ranked_keywords: adaptTool(getRankedKeywordsTool),
     find_serp_competitors: adaptTool(findSerpCompetitorsTool),
+    get_keyword_gap: adaptTool(getKeywordGapTool),
+    get_backlink_gap: adaptTool(getBacklinkGapTool),
     search_local_businesses: adaptTool(searchLocalBusinessesTool),
     get_local_serp_results: adaptTool(getLocalSerpResultsTool),
     get_google_business_questions: adaptTool(getGoogleBusinessQuestionsTool),

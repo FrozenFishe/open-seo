@@ -353,3 +353,30 @@ export function parseTaskItems<T extends z.ZodTypeAny>(
   }
   return parsed.data;
 }
+
+/**
+ * parseTaskItems for a billed task: a payload that fails validation throws
+ * DataforseoChargedTaskError carrying the task's cost, so the metering seam
+ * still charges a call DataForSEO billed instead of dropping it.
+ */
+export function parseBilledTaskItems<T extends z.ZodTypeAny>(
+  endpoint: string,
+  task: DataforseoTaskLike,
+  itemSchema: T,
+): { items: Array<z.infer<T>>; billing: DataforseoApiCallCost } {
+  const billing = buildTaskBilling(task);
+  const first = task.result?.[0];
+  const items = isRecord(first) ? first.items : [];
+  const parsed = z.array(itemSchema).safeParse(items ?? []);
+  if (!parsed.success) {
+    console.error(
+      `dataforseo.${endpoint}.invalid-payload`,
+      parsed.error.issues.slice(0, 5),
+    );
+    throw new DataforseoChargedTaskError(
+      `DataForSEO ${endpoint} returned an invalid response shape`,
+      billing,
+    );
+  }
+  return { items: parsed.data, billing };
+}

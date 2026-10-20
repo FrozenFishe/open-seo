@@ -29,6 +29,27 @@ describe("dataforseoPricing", () => {
       credits: 39,
     },
     {
+      name: "Labs domain intersection, keyword gap default 50 rows",
+      estimateUsd: dataforseoPricing.domain.intersection({
+        target1: "competitor.com",
+        target2: "example.com",
+        intersections: false,
+        ...location,
+        limit: 50,
+      }),
+      rawUsd: 0.018,
+      credits: 24,
+    },
+    {
+      name: "backlinks domain intersection, backlink gap default 50 rows",
+      estimateUsd: dataforseoPricing.backlinks.domainIntersection({
+        targets: ["competitor.com"],
+        limit: 50,
+      }),
+      rawUsd: 0.024 + 50 * 0.000036,
+      credits: 34,
+    },
+    {
       name: "live SERP at the default depth (2 pages)",
       estimateUsd: dataforseoPricing.serp.live({ keyword: "seo", ...location }),
       rawUsd: 0.0035,

@@ -46,7 +46,7 @@ export const getDomainOverviewTool = {
   config: {
     title: "Get domain overview",
     description:
-      "Returns a high-level view of a domain's organic footprint: estimated organic traffic, organic keyword count, backlinks, and referring domains. Use this first for domain research; for the detailed ranked-keyword list, call get_domain_keyword_suggestions next. Charges credits (~100-300 typical). Cached for 12 hours per domain.",
+      "Returns a high-level view of a domain's organic footprint: estimated organic traffic and organic keyword count. backlinks and referringDomains are always null here; call get_backlinks_overview for them. Use this first for domain research; for the ranked keywords with their URLs, call get_ranked_keywords next. Charges credits (~16). Cached for 12 hours per domain.",
     inputSchema,
     outputSchema: z
       .object({
@@ -94,8 +94,7 @@ export const getDomainOverviewTool = {
       `Target: ${result.displayTarget} (scope: ${result.scope})`,
       `Organic traffic: ${result.organicTraffic ?? "?"}`,
       `Organic keywords: ${result.organicKeywords ?? "?"}`,
-      `Backlinks: ${result.backlinks ?? "?"}`,
-      `Referring domains: ${result.referringDomains ?? "?"}`,
+      "Backlinks and referring domains: not included; call get_backlinks_overview.",
       ...(result.scope === "subdomains"
         ? []
         : [
