@@ -7,6 +7,8 @@ export default defineConfig({
   // Keep test-results/ at the repo root (see .gitignore) now that the config lives in tests/.
   outputDir: "../test-results",
   testDir: ".",
+  // Website specs run against the marketing site via playwright.free-tools.config.ts.
+  testIgnore: "free-tools/**",
   timeout: 45_000,
   expect: {
     timeout: 10_000,

@@ -6,7 +6,7 @@ const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 export default defineConfig({
   // Keep test-results/ at the repo root (see .gitignore) now that the config lives in tests/.
   outputDir: "../test-results",
-  testDir: "../web/tests",
+  testDir: "./free-tools",
   testMatch: "**/*.spec.ts",
   workers: 1,
   timeout: 45_000,

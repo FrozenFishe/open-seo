@@ -110,7 +110,7 @@ run parallel read-only lanes (Explore subagents work well):
   `src/server/workflows/`, `src/serverFunctions/`;
 - `src/server/features/`;
 - `src/client/`, `src/shared/`, `src/lib/`, `src/types/`, `scripts/`,
-  `web/tests/`, plus a cross-cutting grep sweep for the repo-specific patterns
+  `web/tests/`, `tests/free-tools/`, plus a cross-cutting grep sweep for the repo-specific patterns
   above.
 
 Prefer a few high-confidence candidates over a large speculative inventory.

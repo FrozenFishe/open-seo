@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { z } from "zod";
 
 declare global {
   interface Window {
@@ -24,7 +25,8 @@ const script = `
     isExpired() { return state.expired; }
   };
 `;
-let requests: { path: string; token: string }[];
+const requestBodySchema = z.object({ turnstileToken: z.string().optional() });
+let requests: { path: string; token: string | undefined }[];
 test.beforeEach(async ({ page }) => {
   requests = [];
   await page.route(scriptUrl, (route) =>
@@ -32,9 +34,10 @@ test.beforeEach(async ({ page }) => {
   );
   // Never call the paid provider endpoints from these browser tests.
   await page.route("**/api/**", (route) => {
+    const body: unknown = route.request().postDataJSON();
     requests.push({
       path: new URL(route.request().url()).pathname,
-      token: route.request().postDataJSON()?.turnstileToken,
+      token: requestBodySchema.parse(body ?? {}).turnstileToken,
     });
     return route.fulfill({ status: 503, json: { error: "Test response" } });
   });
