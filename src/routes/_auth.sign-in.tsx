@@ -28,6 +28,7 @@ const signInSchema = z.object({
 });
 
 export const Route = createFileRoute("/_auth/sign-in")({
+  staticData: { renderOnServer: true },
   validateSearch: authRedirectSearchSchema,
   component: SignInPage,
 });

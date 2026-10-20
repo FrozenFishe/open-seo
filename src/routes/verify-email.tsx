@@ -27,6 +27,7 @@ const verifyEmailSearchSchema = authRedirectSearchSchema.extend({
 });
 
 export const Route = createFileRoute("/verify-email")({
+  staticData: { renderOnServer: true },
   validateSearch: verifyEmailSearchSchema,
   component: VerifyEmailPage,
 });

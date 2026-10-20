@@ -13,6 +13,7 @@ import {
 } from "@/client/components/ui/card";
 
 export const Route = createFileRoute("/_authenticated/oauth-consent")({
+  staticData: { renderOnServer: true },
   component: OAuthConsentPage,
 });
 

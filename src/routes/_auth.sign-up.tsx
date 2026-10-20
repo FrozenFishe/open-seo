@@ -36,6 +36,7 @@ const signUpSchema = z
   });
 
 export const Route = createFileRoute("/_auth/sign-up")({
+  staticData: { renderOnServer: true },
   validateSearch: authRedirectSearchSchema.extend({
     // A site checked with the marketing site's free tool; onboarding
     // prefills it, and the website step validates it on save.

@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
 import { DefaultCatchBoundary } from "@/client/components/DefaultCatchBoundary";
 import { captureGoogleLinkError } from "@/client/features/integrations/googleLinkError";
@@ -17,6 +17,10 @@ import { themePreferenceInitScript } from "@/client/lib/theme";
 import { NotFound } from "@/client/components/NotFound";
 import { PrivacyBootstrap } from "@/client/components/PrivacyChoices";
 import { TooltipProvider } from "@/client/components/ui/tooltip";
+import {
+  PageAfterHydration,
+  appShellHintScript,
+} from "@/client/layout/serverRendering";
 import appCss from "@/client/styles/app.css?url";
 import { Toaster } from "sonner";
 import { queryClient } from "@/client/tanstack-db";
@@ -93,6 +97,12 @@ function AppLayout() {
 function RootDocument({ children }: { children: React.ReactNode }) {
   const showDevtools =
     import.meta.env.DEV && import.meta.env.VITE_SHOW_DEVTOOLS !== "false";
+  // The browser keeps one query client for the whole session. A server render
+  // gets its own, so nothing a page caches while rendering for one request can
+  // surface in another's HTML.
+  const [client] = React.useState(() =>
+    typeof window === "undefined" ? new QueryClient() : queryClient,
+  );
 
   return (
     <html suppressHydrationWarning translate="no">
@@ -100,14 +110,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script
           dangerouslySetInnerHTML={{ __html: themePreferenceInitScript }}
         />
+        {appShellHintScript ? (
+          <script dangerouslySetInnerHTML={{ __html: appShellHintScript }} />
+        ) : null}
         <HeadContent />
       </head>
       <body>
-        <ClientOnly>
-          <QueryClientProvider client={queryClient}>
-            <TooltipProvider>
+        <QueryClientProvider client={client}>
+          <TooltipProvider>
+            <PageAfterHydration>{children}</PageAfterHydration>
+            <ClientOnly>
               <PrivacyBootstrap />
-              {children}
               <ExportToSheetsModal />
               <Toaster position="bottom-right" mobileOffset={{ bottom: 100 }} />
               {showDevtools ? (
@@ -123,9 +136,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   ]}
                 />
               ) : null}
-            </TooltipProvider>
-          </QueryClientProvider>
-        </ClientOnly>
+            </ClientOnly>
+          </TooltipProvider>
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>

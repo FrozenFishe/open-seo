@@ -35,8 +35,8 @@ export function AuthenticatedAppLayout({
     React.useState(false);
   // On non-project pages (e.g. /settings) there's no projectId in the URL, so
   // derive one for the nav/switcher: prefer the last-visited project, else the
-  // most recent. The whole app tree is client-only (see root ClientOnly), so we
-  // can read localStorage synchronously during render — this lets the sidebar
+  // most recent. The app shell renders only on the client (see
+  // PageAfterHydration in the root route), so we can read localStorage synchronously during render — this lets the sidebar
   // show the full project nav on the very first paint instead of briefly
   // flashing only the always-visible Connect group while projects load. It is
   // read on every render, not once: the shell stays mounted across project

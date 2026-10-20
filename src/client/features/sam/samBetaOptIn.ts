@@ -36,8 +36,8 @@ export function optInToSamBeta() {
   listeners.forEach((listener) => listener());
 }
 
-// The app tree is client-only (see root ClientOnly), so the server snapshot is
-// never rendered; it only has to exist.
+// The app pages render only on the client (see PageAfterHydration in the root
+// route), so the server snapshot is never rendered; it only has to exist.
 export function useSamBetaOptIn(): boolean {
   return useSyncExternalStore(subscribe, read, () => false);
 }
