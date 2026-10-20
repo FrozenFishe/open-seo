@@ -168,7 +168,14 @@ function getDefaultFromTag() {
   const matchingTag = tagCandidates.find((entry) => entry.tag === bestVersion);
   if (matchingTag) return matchingTag.tag;
 
-  return fetchPublicTag(bestVersion) ?? getLatestSemverTag();
+  const fetched = fetchPublicTag(bestVersion);
+  if (fetched) return fetched;
+
+  const fallback = getLatestSemverTag();
+  process.stderr.write(
+    `warning: could not fetch ${bestVersion} from ${PUBLIC_REPO}; using local tag ${fallback ?? "(none)"}. Pass --from to pick the base explicitly.\n`,
+  );
+  return fallback;
 }
 
 // Release tags are published only on the public repo, so a clone of another
@@ -186,7 +193,11 @@ function fetchPublicTag(tag) {
         `https://github.com/${PUBLIC_REPO}.git`,
         `refs/tags/${tag}:refs/tags/${tag}`,
       ],
-      { stdio: "ignore" },
+      {
+        stdio: "ignore",
+        timeout: 30_000,
+        env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
+      },
     );
     return tag;
   } catch {
