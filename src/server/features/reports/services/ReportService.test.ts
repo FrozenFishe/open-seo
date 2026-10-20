@@ -96,6 +96,7 @@ describe("saveReport", () => {
     await expect(save({ reportId: "report_gone" })).rejects.toThrow(
       "No report report_gone in this project. Call list_reports, or omit reportId to create a new one.",
     );
+    expect(mocks.getReport).toHaveBeenCalledWith("project_1", "report_gone");
     expect(mocks.updateReportContent).not.toHaveBeenCalled();
   });
 

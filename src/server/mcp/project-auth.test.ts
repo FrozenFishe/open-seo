@@ -83,7 +83,7 @@ describe("withMcpProjectAuth", () => {
     const wrapped = withMcpProjectAuth(handler);
     await expect(
       wrapped({ projectId: "someone-elses-project" }, toolContext),
-    ).rejects.toThrow();
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
 
     expect(handler).not.toHaveBeenCalled();
   });

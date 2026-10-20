@@ -126,6 +126,12 @@ describe("site audit cleanup", () => {
         context,
       ),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    // This lookup gates terminate() and the scratchpad wipe, which are keyed
+    // by audit alone.
+    expect(mocks.getAuditForProject).toHaveBeenCalledWith(
+      "audit_1",
+      "project_1",
+    );
     expect(mocks.deleteAuditForProject).not.toHaveBeenCalled();
   });
 
