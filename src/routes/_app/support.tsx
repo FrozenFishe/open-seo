@@ -14,6 +14,7 @@ const DISCORD_URL = "https://discord.gg/c9uGs3cFXr";
 const GITHUB_URL = "https://github.com/every-app/open-seo";
 
 export const Route = createFileRoute("/_app/support")({
+  head: () => ({ meta: [{ title: "Help & Community · OpenSEO" }] }),
   component: SupportPage,
 });
 

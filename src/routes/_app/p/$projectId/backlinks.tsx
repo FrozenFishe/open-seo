@@ -7,6 +7,7 @@ import {
 import { defaultScopeForInput } from "@/shared/researchScope";
 
 export const Route = createFileRoute("/_app/p/$projectId/backlinks")({
+  head: () => ({ meta: [{ title: "Backlinks · OpenSEO" }] }),
   validateSearch: backlinksSearchSchema,
   component: BacklinksRoute,
 });

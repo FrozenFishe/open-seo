@@ -68,6 +68,7 @@ const aiSearchSchema = z.object({
 });
 
 export const Route = createFileRoute("/_app/ai")({
+  head: () => ({ meta: [{ title: "Agent setup · OpenSEO" }] }),
   validateSearch: aiSearchSchema,
   component: AiPage,
 });

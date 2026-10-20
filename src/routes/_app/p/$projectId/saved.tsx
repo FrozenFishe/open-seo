@@ -61,6 +61,7 @@ import {
 } from "@/types/schemas/keywords";
 
 export const Route = createFileRoute("/_app/p/$projectId/saved")({
+  head: () => ({ meta: [{ title: "Saved Keywords · OpenSEO" }] }),
   validateSearch: savedKeywordsSearchSchema,
   // The project switcher keeps this page; filter drafts must not follow.
   remountDeps: ({ params }) => params.projectId,

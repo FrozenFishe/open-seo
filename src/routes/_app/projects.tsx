@@ -16,6 +16,7 @@ import { getLastProjectId } from "@/client/lib/active-project";
 import { CreateProjectModal } from "@/client/features/projects/CreateProjectModal";
 
 export const Route = createFileRoute("/_app/projects")({
+  head: () => ({ meta: [{ title: "Projects · OpenSEO" }] }),
   component: ProjectsPage,
 });
 

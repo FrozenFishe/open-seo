@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DashboardPage } from "@/client/features/dashboard/DashboardPage";
 
 export const Route = createFileRoute("/_app/p/$projectId/")({
+  head: () => ({ meta: [{ title: "Dashboard · OpenSEO" }] }),
   validateSearch: dashboardSearchSchema,
   component: DashboardRoute,
 });

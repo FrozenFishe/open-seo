@@ -15,6 +15,7 @@ import { listReports, type ReportListItem } from "@/serverFunctions/reports";
 import { REPORT_APP_LIST_LIMIT } from "@/types/schemas/reports";
 
 export const Route = createFileRoute("/_app/p/$projectId/reports/")({
+  head: () => ({ meta: [{ title: "Reports · OpenSEO" }] }),
   component: ReportsPage,
 });
 

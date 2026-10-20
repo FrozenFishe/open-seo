@@ -3,6 +3,7 @@ import { ProjectPageHeader } from "@/client/features/projects/ProjectPageHeader"
 import { SettingsTabs } from "@/client/features/projects/SettingsTabs";
 
 export const Route = createFileRoute("/_app/p/$projectId/settings")({
+  head: () => ({ meta: [{ title: "Project settings · OpenSEO" }] }),
   component: ProjectSettingsLayout,
 });
 

@@ -21,6 +21,7 @@ import {
 import type { ReportTemplate } from "@/types/schemas/report-templates";
 
 export const Route = createFileRoute("/_app/p/$projectId/reports/templates")({
+  head: () => ({ meta: [{ title: "Report templates · OpenSEO" }] }),
   component: ReportTemplatesPage,
 });
 
