@@ -25,7 +25,7 @@ Set `DATAFORSEO_API_KEY` in `.env` using the [DataForSEO setup guide](./DATAFORS
 docker compose up -d
 ```
 
-Open `http://localhost:<PORT>` (default `3001`). The first start builds the app and may take 1-2 minutes; follow progress with `docker compose logs -f`.
+Open `http://localhost:<PORT>` (default `3001`). The first start builds the app and may take 1-2 minutes; later restarts reuse that build. Follow progress with `docker compose logs -f`.
 
 Optional env values:
 
