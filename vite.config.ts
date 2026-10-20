@@ -40,8 +40,10 @@ export default defineConfig(({ mode, command }) => {
       ? Number(env.PORT)
       : 3001;
   const showDevtools = env.VITE_SHOW_DEVTOOLS !== "false";
+  // ALLOWED_HOST accepts a comma-separated list (e.g. a reverse-proxy domain
+  // plus a Tailscale MagicDNS name); a leading "." allows all subdomains.
   const allowedHosts = [
-    env.ALLOWED_HOST,
+    ...(env.ALLOWED_HOST ?? "").split(",").map((host) => host.trim()),
     env.BETTER_AUTH_URL ? new URL(env.BETTER_AUTH_URL).hostname : undefined,
   ].filter((host): host is string => Boolean(host));
   const emitSourcemaps = env.POSTHOG_SOURCEMAPS === "true";

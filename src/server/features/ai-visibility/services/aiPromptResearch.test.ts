@@ -28,13 +28,10 @@ vi.mock("ai", () => ({
   generateText,
   Output: { object: (value: unknown) => value },
 }));
-vi.mock("@/server/lib/openrouter", () => ({ buildChatAgentModel: vi.fn() }));
-vi.mock("@/server/lib/chatAgent", () => ({
-  requireOpenRouterCostUsd: () => 0.003,
+vi.mock("@/server/lib/openrouter", () => ({
+  buildAiFeatureModel: async () => ({ model: {}, costUsd: () => 0.003 }),
 }));
 vi.mock("@/server/lib/runtime-env", () => ({
-  getRequiredEnvValue: async () => "key",
-  getOptionalEnvValue: vi.fn(),
   isHostedServerAuthMode: isHosted,
 }));
 vi.mock("@/server/billing/researchSpend", () => ({ billResearchSpend }));

@@ -1,0 +1,8 @@
+# The scanner reviews the whole checkout, including .github workflows, so it
+# opts out of the app image's root .dockerignore. Only build output and local
+# secrets stay out.
+**/node_modules
+**/dist
+.env
+.env.*
+!.env.example

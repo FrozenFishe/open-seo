@@ -11,16 +11,11 @@ import {
   billResearchSpend,
   type ResearchSpend,
 } from "@/server/billing/researchSpend";
-import { requireOpenRouterCostUsd } from "@/server/lib/chatAgent";
 import { fetchLiveSerp } from "@/server/lib/dataforseo/serp";
 import { DataforseoChargedTaskError } from "@/server/lib/dataforseo/envelope";
 import { normalizeBacklinksTarget } from "@/server/lib/dataforseoBacklinksTarget";
 import { AppError } from "@/server/lib/errors";
-import { buildChatAgentModel } from "@/server/lib/openrouter";
-import {
-  getOptionalEnvValue,
-  getRequiredEnvValue,
-} from "@/server/lib/runtime-env";
+import { buildAiFeatureModel } from "@/server/lib/openrouter";
 import { readSite } from "@/server/lib/scrape";
 import {
   CONTEXT_USD_PER_CREDIT,
@@ -107,6 +102,8 @@ export async function researchWebsite(
   };
   if (!missingOverview && !missingCompetitors && !missingTopics)
     return websiteResearchSchema.parse(preserved);
+  // Resolved before any paid reads, so a missing AI config fails for free.
+  const ai = await buildAiFeatureModel("low");
   // Each field is independent: saved context supplies the evidence, and the
   // model only receives output fields and tools for the missing information.
   const spend: ResearchSpend[] = [];
@@ -164,11 +161,7 @@ export async function researchWebsite(
       searchOutage = false;
       sources.clear();
       return generateText({
-        model: buildChatAgentModel(
-          await getRequiredEnvValue("OPENROUTER_API_KEY"),
-          await getOptionalEnvValue("OPENROUTER_MODEL"),
-          "low",
-        ),
+        model: ai.model,
         output: Output.object({
           schema: outputSchema,
         }),
@@ -330,7 +323,7 @@ export async function researchWebsite(
           spend.push({
             provider: "openrouter",
             creditFeature: "agent",
-            costUsd: requireOpenRouterCostUsd(step.providerMetadata),
+            costUsd: ai.costUsd(step.providerMetadata),
             operation: "project_website_research",
           });
         },

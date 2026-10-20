@@ -1,4 +1,4 @@
-import { AUTH_MODES } from "@/lib/auth-mode";
+import { AUTH_MODES, isHostedAuthMode } from "@/lib/auth-mode";
 import {
   looksLikeDataForSeoKey,
   MIN_BETTER_AUTH_SECRET_LENGTH,
@@ -195,30 +195,7 @@ function checkOptionalFeatures(env: EnvRecord, items: PreflightItem[]): void {
     });
   }
 
-  items.push(
-    get(env, "OPENROUTER_API_KEY")
-      ? {
-          key: "ai",
-          name: "AI features",
-          level: "ok",
-          message: "OPENROUTER_API_KEY set",
-        }
-      : get(env, "OPENROUTER_BASE_URL")
-        ? {
-            key: "ai",
-            name: "AI features",
-            level: "ok",
-            message:
-              "OPENROUTER_BASE_URL set — SAM uses a self-hosted OpenAI-compatible endpoint.",
-          }
-        : {
-            key: "ai",
-            name: "AI features",
-            level: "info",
-            message:
-              "OPENROUTER_API_KEY not set (optional) — SAM, the in-app SEO agent, is disabled.",
-          },
-  );
+  items.push(checkAi(env));
 
   items.push(
     get(env, "CONTEXT_API_KEY")
@@ -236,6 +213,52 @@ function checkOptionalFeatures(env: EnvRecord, items: PreflightItem[]): void {
             'CONTEXT_API_KEY not set (optional) — on Docker the site audit "Render JavaScript" option is disabled; on Cloudflare, Browser Run renders without a fallback.',
         },
   );
+}
+
+const AI_FEATURES =
+  "SAM, website setup research, Prompt Research, and prompt suggestions";
+
+// Outside hosted mode, OPENROUTER_BASE_URL takes precedence over OpenRouter
+// for every AI feature; a key set alongside it is sent to that endpoint as its
+// bearer token.
+function checkAi(env: EnvRecord): PreflightItem {
+  const name = "AI features";
+  if (
+    get(env, "OPENROUTER_BASE_URL") &&
+    isHostedAuthMode(get(env, "AUTH_MODE"))
+  ) {
+    return {
+      key: "ai",
+      name,
+      level: "warn",
+      message:
+        "OPENROUTER_BASE_URL is ignored in hosted mode — billing needs OpenRouter's usage costs, so OPENROUTER_API_KEY is required. Unset OPENROUTER_BASE_URL.",
+    };
+  }
+  if (get(env, "OPENROUTER_BASE_URL")) {
+    return get(env, "OPENROUTER_MODEL")
+      ? {
+          key: "ai",
+          name,
+          level: "ok",
+          message: `OPENROUTER_BASE_URL set — ${AI_FEATURES} use the self-hosted OpenAI-compatible endpoint. Its model needs tool calling and JSON-schema structured output; usage costs are not reported.`,
+        }
+      : {
+          key: "ai",
+          name,
+          level: "warn",
+          message:
+            "OPENROUTER_BASE_URL is set but OPENROUTER_MODEL is not — set it to the model name your endpoint serves, or AI requests fail.",
+        };
+  }
+  return get(env, "OPENROUTER_API_KEY")
+    ? { key: "ai", name, level: "ok", message: "OPENROUTER_API_KEY set" }
+    : {
+        key: "ai",
+        name,
+        level: "info",
+        message: `OPENROUTER_API_KEY not set (optional) — ${AI_FEATURES} are disabled. Set OPENROUTER_BASE_URL and OPENROUTER_MODEL to use a self-hosted OpenAI-compatible endpoint instead.`,
+      };
 }
 
 // Shared per-feature checks: the Docker preflight prints these at boot and
@@ -265,7 +288,7 @@ export function runSelfhostPreflight(env: EnvRecord): PreflightResult {
           name: "ALLOWED_HOST",
           level: "info",
           message:
-            'Not set — only localhost access will work. Behind a reverse proxy or tunnel, set ALLOWED_HOST=yourdomain.com or requests are blocked with Vite\'s "Blocked request" page.',
+            'Not set — only localhost and raw IP addresses are accepted. Behind a reverse proxy, tunnel, or a DNS name (e.g. a Tailscale MagicDNS name), set ALLOWED_HOST=yourdomain.com (comma-separate several) or requests are blocked with Vite\'s "Blocked request" page.',
         },
   );
 
@@ -274,7 +297,7 @@ export function runSelfhostPreflight(env: EnvRecord): PreflightResult {
     name: "Scheduled checks",
     level: "info",
     message:
-      "Rank-tracking schedules do not run in Docker mode — trigger checks from the Rank Tracking page.",
+      "The built-in scheduler runs due rank-tracking and AI Visibility checks every five minutes while the container is running.",
   });
 
   return { items, failed: items.some((item) => item.level === "fail") };
@@ -295,7 +318,7 @@ export function formatPreflightReport(result: PreflightResult): string {
   lines.push(
     result.failed
       ? "\nPreflight failed — fix the [FAIL] items above and restart. Nothing was started."
-      : "\nPreflight passed. The app now builds inside the container (~1-2 minutes on first start before it serves).",
+      : "\nPreflight passed. On first start (or after an image update or build-env change) the app builds inside the container for ~1-2 minutes before it serves; later restarts reuse that build.",
   );
 
   return lines.join("\n");
