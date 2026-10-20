@@ -74,19 +74,14 @@ export function SearchTargetingField({
         )}
       </FieldDescription>
       {mode === "local" && (
-        <>
-          <FieldLabel htmlFor={`${id}-city`} className="sr-only">
-            City or region
-          </FieldLabel>
-          <SerpLocationCombobox
-            id={`${id}-city`}
-            value={locationName}
-            onChange={onLocationNameChange}
-            countryCode={countryCode}
-            placeholder="Search cities..."
-            invalid={Boolean(error)}
-          />
-        </>
+        <SerpLocationCombobox
+          id={`${id}-city`}
+          value={locationName}
+          onChange={onLocationNameChange}
+          countryCode={countryCode}
+          placeholder="Search cities..."
+          invalid={Boolean(error)}
+        />
       )}
       {error ? <FieldError>{error}</FieldError> : null}
     </FieldSet>

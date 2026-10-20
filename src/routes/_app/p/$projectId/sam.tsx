@@ -8,6 +8,7 @@ const samSearchSchema = z.object({
 });
 
 export const Route = createFileRoute("/_app/p/$projectId/sam")({
+  head: () => ({ meta: [{ title: "Sam · OpenSEO" }] }),
   validateSearch: samSearchSchema,
   component: SamRoute,
 });

@@ -39,6 +39,7 @@ const DEFAULT_DOMAIN_SEARCH = {
 } as const;
 
 export const Route = createFileRoute("/_app/p/$projectId/domain")({
+  head: () => ({ meta: [{ title: "Domain Overview · OpenSEO" }] }),
   validateSearch: domainSearchSchema,
   search: {
     middlewares: [stripSearchParams(DEFAULT_DOMAIN_SEARCH)],

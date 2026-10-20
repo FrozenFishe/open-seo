@@ -5,6 +5,7 @@ import { LaunchView } from "@/client/features/audit/launch/LaunchView";
 import { AuditDetail } from "@/client/features/audit/AuditDetail";
 
 export const Route = createFileRoute("/_app/p/$projectId/audit/")({
+  head: () => ({ meta: [{ title: "Site Audit · OpenSEO" }] }),
   validateSearch: auditSearchSchema,
   component: SiteAuditPage,
 });

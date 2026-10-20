@@ -11,6 +11,7 @@ import {
 } from "@/types/schemas/ai-search";
 
 export const Route = createFileRoute("/_app/p/$projectId/prompt-explorer")({
+  head: () => ({ meta: [{ title: "Prompt Explorer · OpenSEO" }] }),
   validateSearch: promptExplorerSearchSchema,
   // Start the setup gate's read on link intent, as AI visibility does.
   loader: ({ params }) => {

@@ -54,7 +54,7 @@ export function LaunchFormCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <form
-          className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:items-center"
+          className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:items-start"
           onSubmit={(event) => {
             event.preventDefault();
             void launchForm.handleSubmit();
@@ -65,20 +65,25 @@ export function LaunchFormCard({
               const urlError = getFieldError(field.state.meta.errors);
 
               return (
-                <Input
-                  className="lg:col-span-9"
-                  aria-label="Site URL"
-                  aria-invalid={urlError ? true : undefined}
-                  placeholder="https://example.com"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => {
-                    field.handleChange(event.target.value);
-                    if (launchForm.state.errorMap.onSubmit) {
-                      launchForm.setErrorMap({ onSubmit: undefined });
-                    }
-                  }}
-                />
+                <div className="space-y-2 lg:col-span-9">
+                  <Input
+                    aria-label="Site URL"
+                    aria-invalid={urlError ? true : undefined}
+                    aria-describedby={urlError ? "audit-url-error" : undefined}
+                    placeholder="https://example.com"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => {
+                      field.handleChange(event.target.value);
+                      if (launchForm.state.errorMap.onSubmit) {
+                        launchForm.setErrorMap({ onSubmit: undefined });
+                      }
+                    }}
+                  />
+                  {urlError ? (
+                    <FieldError id="audit-url-error">{urlError}</FieldError>
+                  ) : null}
+                </div>
               );
             }}
           </launchForm.Field>
@@ -272,29 +277,19 @@ function LaunchErrors({
   outOfCredits,
 }: Pick<Props, "launchForm" | "outOfCredits">) {
   return (
-    <div className="space-y-2">
-      <launchForm.Field name="url">
-        {(field) => {
-          const urlError = getFieldError(field.state.meta.errors);
+    <launchForm.Subscribe selector={(state) => state.errorMap.onSubmit}>
+      {(submitError) => {
+        const errorMessage = getFormError(submitError);
 
-          return urlError ? <FieldError>{urlError}</FieldError> : null;
-        }}
-      </launchForm.Field>
-
-      <launchForm.Subscribe selector={(state) => state.errorMap.onSubmit}>
-        {(submitError) => {
-          const errorMessage = getFormError(submitError);
-
-          if (errorMessage && outOfCredits)
-            return <InsufficientCreditsError title={errorMessage} />;
-          return errorMessage ? (
-            <Alert variant="destructive">
-              <AlertCircle />
-              <AlertTitle>{errorMessage}</AlertTitle>
-            </Alert>
-          ) : null;
-        }}
-      </launchForm.Subscribe>
-    </div>
+        if (errorMessage && outOfCredits)
+          return <InsufficientCreditsError title={errorMessage} />;
+        return errorMessage ? (
+          <Alert variant="destructive">
+            <AlertCircle />
+            <AlertTitle>{errorMessage}</AlertTitle>
+          </Alert>
+        ) : null;
+      }}
+    </launchForm.Subscribe>
   );
 }

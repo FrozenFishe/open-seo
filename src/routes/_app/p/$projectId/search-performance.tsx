@@ -10,6 +10,7 @@ import {
 } from "@/types/schemas/search-performance";
 
 export const Route = createFileRoute("/_app/p/$projectId/search-performance")({
+  head: () => ({ meta: [{ title: "Search Performance · OpenSEO" }] }),
   validateSearch: searchPerformanceSearchSchema,
   search: {
     middlewares: [

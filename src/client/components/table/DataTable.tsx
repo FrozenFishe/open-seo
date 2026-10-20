@@ -227,91 +227,86 @@ export function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {isLoading ? (
-              Array.from({ length: 8 }, (_, index) => (
-                <TableRow key={index} aria-hidden>
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>
-                      <Skeleton
-                        className={
-                          column.id === "select" ? "size-4" : "h-4 w-full"
-                        }
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : rows.length === 0 ? (
-              <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={columns.length}>
-                  {isFiltered ? (
-                    <EmptyState
-                      kind="filtered"
-                      variant="plain"
-                      title="No rows match these filters"
-                      description="Change or clear the filters to see more rows."
-                      action={
-                        onClearFilters ? (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onClearFilters}
-                          >
-                            Clear filters
-                          </Button>
-                        ) : undefined
-                      }
-                    />
-                  ) : (
-                    <EmptyState variant="plain" {...empty} />
-                  )}
-                </TableCell>
-              </TableRow>
-            ) : (
-              rows.map((row) => (
-                <Fragment key={row.id}>
-                  <TableRow
-                    data-state={row.getIsSelected() ? "selected" : undefined}
-                    data-active={row.id === activeRowId ? "" : undefined}
-                    className={
-                      onRowClick
-                        ? "cursor-pointer data-active:bg-primary/5 data-active:shadow-[inset_2px_0_0_var(--color-primary)]"
-                        : undefined
-                    }
-                    onClick={
-                      onRowClick ? (event) => onRowClick(row, event) : undefined
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      const meta = cell.column.columnDef.meta?.cellClassName;
-                      return (
-                        <TableCell
-                          key={cell.id}
+            {isLoading
+              ? Array.from({ length: 8 }, (_, index) => (
+                  <TableRow key={index} aria-hidden>
+                    {columns.map((column) => (
+                      <TableCell key={column.id}>
+                        <Skeleton
                           className={
-                            typeof meta === "function" ? meta(row) : meta
+                            column.id === "select" ? "size-4" : "h-4 w-full"
                           }
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                  {renderExpandedRow && row.getIsExpanded() ? (
-                    <TableRow className="hover:bg-transparent">
-                      <TableCell colSpan={columns.length}>
-                        {renderExpandedRow(row)}
+                        />
                       </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : rows.map((row) => (
+                  <Fragment key={row.id}>
+                    <TableRow
+                      data-state={row.getIsSelected() ? "selected" : undefined}
+                      data-active={row.id === activeRowId ? "" : undefined}
+                      className={
+                        onRowClick
+                          ? "cursor-pointer data-active:bg-primary/5 data-active:shadow-[inset_2px_0_0_var(--color-primary)]"
+                          : undefined
+                      }
+                      onClick={
+                        onRowClick
+                          ? (event) => onRowClick(row, event)
+                          : undefined
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        const meta = cell.column.columnDef.meta?.cellClassName;
+                        return (
+                          <TableCell
+                            key={cell.id}
+                            className={
+                              typeof meta === "function" ? meta(row) : meta
+                            }
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
-                  ) : null}
-                </Fragment>
-              ))
-            )}
+                    {renderExpandedRow && row.getIsExpanded() ? (
+                      <TableRow className="hover:bg-transparent">
+                        <TableCell colSpan={columns.length}>
+                          {renderExpandedRow(row)}
+                        </TableCell>
+                      </TableRow>
+                    ) : null}
+                  </Fragment>
+                ))}
           </TableBody>
         </Table>
       )}
+      {!isLoading && rows.length === 0 && !error ? (
+        // Outside the scrolling table, so a wide table on a narrow screen
+        // cannot push the message out of view.
+        isFiltered ? (
+          <EmptyState
+            kind="filtered"
+            variant="plain"
+            title="No rows match these filters"
+            description="Change or clear the filters to see more rows."
+            action={
+              onClearFilters ? (
+                <Button variant="outline" size="sm" onClick={onClearFilters}>
+                  Clear filters
+                </Button>
+              ) : undefined
+            }
+          />
+        ) : (
+          <EmptyState variant="plain" {...empty} />
+        )
+      ) : null}
       {footer}
     </TableCard>
   );

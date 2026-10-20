@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LayoutTemplate } from "lucide-react";
 import { PageHeader } from "@/client/components/PageHeader";
 import { Button } from "@/client/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +15,7 @@ import { listReports, type ReportListItem } from "@/serverFunctions/reports";
 import { REPORT_APP_LIST_LIMIT } from "@/types/schemas/reports";
 
 export const Route = createFileRoute("/_app/p/$projectId/reports/")({
+  head: () => ({ meta: [{ title: "Reports · OpenSEO" }] }),
   component: ReportsPage,
 });
 
@@ -44,7 +46,7 @@ function ReportsPage() {
           description="HTML reports your agents saved to this project."
           actions={
             <Button
-              variant="ghost"
+              variant="outline"
               nativeButton={false}
               render={
                 <Link
@@ -53,6 +55,7 @@ function ReportsPage() {
                 />
               }
             >
+              <LayoutTemplate aria-hidden />
               Templates
             </Button>
           }

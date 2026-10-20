@@ -8,6 +8,7 @@ import { PaidPlanGate } from "@/client/features/billing/PaidPlanGate";
 export const Route = createFileRoute(
   "/_app/p/$projectId/ai-visibility/research",
 )({
+  head: () => ({ meta: [{ title: "Prompt Research · OpenSEO" }] }),
   validateSearch: z.object({ q: z.string().trim().max(100).optional() }),
   component: AiResearchRoute,
 });

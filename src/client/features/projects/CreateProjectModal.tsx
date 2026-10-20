@@ -125,10 +125,6 @@ export function CreateProjectModal({ onClose }: { onClose: () => void }) {
               )}
             </form.AppField>
 
-            <p className="text-sm text-muted-foreground">
-              Adding your website starts a 50-page scan with JavaScript
-              rendering. Rendering uses your credits.
-            </p>
             <form.AppField name="domain">
               {(field) => (
                 <field.TextField
@@ -140,7 +136,7 @@ export function CreateProjectModal({ onClose }: { onClose: () => void }) {
                       </span>
                     </>
                   }
-                  description="You can connect Search Console and set up rank tracking after creating the project."
+                  description="Adding your website starts a 50-page scan with JavaScript rendering, which uses your credits. You can connect Search Console and set up rank tracking after creating the project."
                   placeholder="example.com"
                   maxLength={255}
                 />

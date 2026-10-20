@@ -4,6 +4,7 @@ import { PageHeader } from "@/client/components/PageHeader";
 import { isHostedClientAuthMode } from "@/lib/auth-mode";
 
 export const Route = createFileRoute("/_app/settings")({
+  head: () => ({ meta: [{ title: "Settings · OpenSEO" }] }),
   component: SettingsLayout,
 });
 

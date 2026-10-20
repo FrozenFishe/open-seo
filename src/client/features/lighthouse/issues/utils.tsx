@@ -34,5 +34,6 @@ export function issuesToTable(issues: LighthouseIssue[]) {
 export function categoryLabel(category: CategoryTab) {
   if (category === "best-practices") return "Best practices";
   if (category === "all") return "All";
+  if (category === "seo") return "SEO";
   return `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
 }

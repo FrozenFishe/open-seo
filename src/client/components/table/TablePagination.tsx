@@ -68,6 +68,9 @@ export function TablePagination<TSize extends number>({
     if (isOutOfRange && !isLoading) onPageChange(currentPage);
   }, [currentPage, isLoading, isOutOfRange, onPageChange]);
 
+  // An empty table already says why it is empty; paging controls add nothing.
+  if (totalCount === 0 && !isLoading) return null;
+
   return (
     <div className="flex flex-col gap-3 border-t border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2 text-sm text-muted-foreground tabular-nums">
@@ -171,7 +174,7 @@ function formatRange(
   totalCount: number | null,
   pageRange: Props<number>["pageRange"],
 ) {
-  if (totalCount === 0) return "0";
+  if (totalCount === 0) return "0 rows";
   const start = pageRange?.start ?? (page - 1) * pageSize + 1;
   const pageEnd = pageRange?.end ?? start + pageSize - 1;
   if (totalCount == null) {

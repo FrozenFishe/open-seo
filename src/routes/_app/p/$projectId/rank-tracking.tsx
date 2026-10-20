@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, useParams } from "@tanstack/react-router";
 import { BackLink, PageHeader } from "@/client/components/PageHeader";
 
 export const Route = createFileRoute("/_app/p/$projectId/rank-tracking")({
+  head: () => ({ meta: [{ title: "Rank Tracking · OpenSEO" }] }),
   component: RankTrackingLayout,
 });
 

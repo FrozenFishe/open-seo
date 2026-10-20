@@ -10,6 +10,7 @@ import {
 import { keywordsSearchSchema } from "@/types/schemas/keywords";
 
 export const Route = createFileRoute("/_app/p/$projectId/keywords")({
+  head: () => ({ meta: [{ title: "Keyword Research · OpenSEO" }] }),
   validateSearch: keywordsSearchSchema,
   // The project switcher keeps this page; filter drafts must not follow.
   remountDeps: ({ params }) => params.projectId,

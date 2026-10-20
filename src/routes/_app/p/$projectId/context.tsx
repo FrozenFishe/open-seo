@@ -3,6 +3,7 @@ import { ProjectPageHeader } from "@/client/features/projects/ProjectPageHeader"
 import { ProjectContextPage } from "@/client/features/projects/project-context/ProjectContextPage";
 
 export const Route = createFileRoute("/_app/p/$projectId/context")({
+  head: () => ({ meta: [{ title: "Context · OpenSEO" }] }),
   component: ProjectContextRoute,
 });
 
