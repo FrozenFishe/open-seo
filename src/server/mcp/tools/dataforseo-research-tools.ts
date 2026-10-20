@@ -956,7 +956,7 @@ export const searchLocalBusinessesTool = {
   config: {
     title: "Search local businesses",
     description:
-      "Searches local business listings near a coordinate, with optional rating, review-count, and claimed-status filters. Use this to discover businesses you cannot name yet: local candidates, nearby competitors, or unclaimed listings. It does not run Maps rank checks or Q&A. When you already know the business, use get_business_profile instead — it returns the full profile and costs less than half the credits, so it is also the cheap way to check whether a Google Business Profile exists at all. Charges credits.",
+      "Searches local business listings near a coordinate, with optional rating, review-count, and claimed-status filters. Use this to discover businesses you cannot name yet: local candidates, nearby competitors, or unclaimed listings. It does not run Maps rank checks or Q&A. When you already know the business, use get_business_profile instead — it returns the full profile and costs less than half the credits, so it is also the cheap way to check whether a Google Business Profile exists at all. Charges credits per call: ~25 at the default 20 rows, ~39 at 50.",
     inputSchema: searchLocalBusinessesInputSchema,
     outputSchema: z.looseObject({
       businesses: z.array(looseObjectOutputSchema),
@@ -1003,7 +1003,7 @@ export const getLocalSerpResultsTool = {
   config: {
     title: "Get local SERP results",
     description:
-      "Fetches one Google Maps or Local Finder SERP near a coordinate. Returns trimmed provider rows (identity, rank, rating, categories, hours) with rank fields intact; callers decide how to match a target business. Charges credits.",
+      "Fetches one Google Maps or Local Finder SERP near a coordinate. Returns trimmed provider rows (identity, rank, rating, categories, hours) with rank fields intact; callers decide how to match a target business. Charges credits per call: ~3 for maps at any depth; local_finder ~3 per 10 results (~6 at the default 20).",
     inputSchema: getLocalSerpResultsInputSchema,
     outputSchema: z.looseObject({
       results: z.array(looseObjectOutputSchema),
@@ -1052,7 +1052,7 @@ export const getGoogleBusinessQuestionsTool = {
   config: {
     title: "Get Google business questions",
     description:
-      "Fetches Google Business Profile questions and answers for one business (by businessName, cid, or placeId) near a coordinate. Run this only when Q&A evidence is needed. Charges credits.",
+      "Fetches Google Business Profile questions and answers for one business (by businessName, cid, or placeId) near a coordinate. Run this only when Q&A evidence is needed. Charges credits: ~7 per 20 rows of depth (~7 at the default 20, ~35 at 100).",
     inputSchema: getGoogleBusinessQuestionsInputSchema,
     outputSchema: z.looseObject({
       questions: z.array(looseObjectOutputSchema),
