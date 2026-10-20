@@ -20,7 +20,10 @@ import { Separator } from "@/client/components/ui/separator";
 import { Skeleton } from "@/client/components/ui/skeleton";
 import type { ProjectSummary } from "./types";
 
-const SEARCH_THRESHOLD = 8;
+// The filter input is what arrow keys and Enter act on. Without it, focus
+// lands on "New project" and the keyboard cannot reach the other projects,
+// so it shows as soon as there is a project to switch to.
+const SEARCH_THRESHOLD = 2;
 
 function matchesProject(project: ProjectSummary, query: string) {
   const needle = query.trim().toLowerCase();
