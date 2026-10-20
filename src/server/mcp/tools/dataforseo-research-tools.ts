@@ -874,7 +874,7 @@ export const getRankedKeywordsTool = {
   config: {
     title: "Get ranked keywords",
     description:
-      "Returns market-specific keyword, URL, rank, search volume, CPC, intent, and traffic rows for a domain or page. Accepts country-level DataForSEO Labs location/language codes. Use this for strategy evidence; use get_domain_overview for aggregate domain footprint. Charges credits.",
+      "Returns market-specific keyword, URL, rank, search volume, CPC, intent, and traffic rows for a domain or page. Accepts country-level DataForSEO Labs location/language codes. Use this for strategy evidence; use get_domain_overview for aggregate domain footprint. Charges credits per call: ~24 at the default 50 rows, ~31 at 100.",
     inputSchema: getRankedKeywordsInputSchema,
     outputSchema: z.looseObject({
       keywords: z.array(looseObjectOutputSchema),
@@ -1095,7 +1095,7 @@ export const findSerpCompetitorsTool = {
   config: {
     title: "Find SERP competitors",
     description:
-      "Compares domains competing in Google results for a supplied keyword set in a country-level DataForSEO Labs market. Accepts location/language codes; not radius-based local SEO. Charges credits.",
+      "Compares domains competing in Google results for a supplied keyword set in a country-level DataForSEO Labs market. Accepts location/language codes; not radius-based local SEO. Charges credits per call: ~24 at the default 50 rows, ~31 at 100.",
     inputSchema: findSerpCompetitorsInputSchema,
     outputSchema: z.looseObject({
       competitors: z.array(looseObjectOutputSchema),
@@ -1154,7 +1154,7 @@ export const getKeywordMetricsTool = {
   config: {
     title: "Get keyword metrics",
     description:
-      "Hydrate up to 700 known keywords with search volume, keyword difficulty (KD), search intent, CPC, competition, and monthly trends in a single call. Use it to score candidate or known keywords — including Search Console striking-distance queries — by real demand and ranking difficulty. For countries served from Google Ads data (e.g. Iceland), KD and intent are null. Charges credits.",
+      "Hydrate up to 700 known keywords with search volume, keyword difficulty (KD), search intent, CPC, competition, and monthly trends in a single call. Use it to score candidate or known keywords — including Search Console striking-distance queries — by real demand and ranking difficulty. For countries served from Google Ads data (e.g. Iceland), KD and intent are null. Each keyword must be 80 characters or fewer; one longer keyword rejects the whole call. Charges credits per call: ~17 for 10 keywords, ~31 for 100, ~123 for 700 (doubled with clickstream data); ~116 flat for countries served from Google Ads data.",
     inputSchema: getKeywordMetricsInputSchema,
     outputSchema: z.looseObject({
       keywords: z.array(looseObjectOutputSchema),
