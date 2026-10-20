@@ -119,7 +119,7 @@ Search Console data doesn't cost credits in OpenSEO. It's your data so Google gi
 
 Run this weekly for a year on the $10 plan and your usage doesn't move. The credits in OpenSEO go toward pulling data from outside your own site, keyword volumes, competitor backlinks, live SERP results. Your own Search Console data sits outside that entirely.
 
-![OpenSEO usage for the last 30 days: $3.22 total, with usage by feature split across AI Prompt Responses, Keyword Research, Domain Overview, and Backlinks. Search Console has no line.](/blog/weekly-seo-report/usage-by-feature.png)
+![OpenSEO usage for the last 30 days: $3.22 total, with usage by feature split across AI Prompt Responses, Keyword Research, Domain Overview, and Backlinks. Search Console has no line.](/blog/weekly-seo-report/usage-by-feature.webp)
 
 _Usage by feature - GSC Insights doesn't appear because Search Console pulls zero credits_
 

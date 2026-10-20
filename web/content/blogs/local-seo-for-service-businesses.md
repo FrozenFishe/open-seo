@@ -37,7 +37,7 @@ The map pack is the block of three businesses with a map that sits above the reg
 
 Before you touch your profile, find out what people type when they want to hire you. Your vocabulary and theirs often don't match. We ran H&H's main service, `kitchen remodeling`, through OpenSEO's [keyword research](/docs/skills/keyword-research), and this is the raw result:
 
-![OpenSEO Keyword Research results for the seed kitchen remodeling in the United States, September 28, 2026. 149 keywords. Top rows: Kitchen Cabinets 246,000, High End Kitchen 201,000, Craft Street Kitchen 110,000, Kitchen Remodeling Near Me 74,000 with a difficulty score of 15, Kitchen Remodel 60,500, Preppy Kitchen 49,500.](/blog/local-seo-for-service-businesses/keyword-research-kitchen-remodeling-openseo.png)
+![OpenSEO Keyword Research results for the seed kitchen remodeling in the United States, September 28, 2026. 149 keywords. Top rows: Kitchen Cabinets 246,000, High End Kitchen 201,000, Craft Street Kitchen 110,000, Kitchen Remodeling Near Me 74,000 with a difficulty score of 15, Kitchen Remodel 60,500, Preppy Kitchen 49,500.](/blog/local-seo-for-service-businesses/keyword-research-kitchen-remodeling-openseo.webp)
 
 Look at what sits above the one you want. `kitchen cabinets` at 246,000 a month is people shopping for boxes. `preppy kitchen` is a cooking channel. `kitchen island ideas` is somebody on a Sunday afternoon with a Pinterest board. Those searchers aren't hiring a contractor. Ranking for them would put you in front of [the wrong half of your audience](/blogs/wrong-half-of-your-audience).
 
@@ -45,7 +45,7 @@ The search that pays is fourth: `kitchen remodeling near me`, 74,000 a month, di
 
 Those are national estimates, so use them to learn _which words_ people use. They don't tell you how many of those people live near you. OpenSEO can pull volume for a single city or county if you give it one, at an extra credit cost per seed. For a town the size of Cookeville, expect small numbers, and don't let that scare you off. [Jonathan Schüßler](https://unscriptedseo.com/how-one-freelancer-ranks-in-50-german-towns-with-programmatic-seo/), who does SEO for service businesses in Germany, built a wedding photography business on search terms other photographers ignored for being too small:
 
-![A quote card reading: Why not target the one where all the most expensive stuff is happening, but there's not many clicks. Attributed to Jonathan Schüßler, freelance SEO for service businesses, from The Unscripted SEO Interview Podcast.](/blog/local-seo-for-service-businesses/quote-not-many-clicks.png)
+![A quote card reading: Why not target the one where all the most expensive stuff is happening, but there's not many clicks. Attributed to Jonathan Schüßler, freelance SEO for service businesses, from The Unscripted SEO Interview Podcast.](/blog/local-seo-for-service-businesses/quote-not-many-clicks.webp)
 
 For a remodeler, "where the expensive stuff is happening" is the kitchen and the addition. The drywall patch can wait. Pick the two or three services that carry your margin and do this step for each. The [keyword research library](/library/keyword-research) goes deeper on seeds and filtering, and the [keyword clustering skill](/docs/skills/keyword-clustering) will group what's left by service.
 
@@ -88,7 +88,7 @@ that no category names, and suggest the closest Google category for it.
 
 If you search for your own service from your office, you'll look great, because you're standing on top of your own pin and your customers aren't. So we checked _kitchen remodeling_ from nine spots around Cookeville, about five miles apart, the way a phone would see it from each one:
 
-![A 3 by 3 grid of Google Maps positions for H&H Construction on the search kitchen remodeling around Cookeville, Tennessee, mobile, 8 km between points, pulled September 24, 2026. North row: 2, 3, 5. Middle row: 1, 1, 3. South row: 1, 1, 2. Average position 2.11, top three at 8 of 9 points. Every point H&H does not win is won by Cookeville Kitchen Sales.](/blog/local-seo-for-service-businesses/local-rank-grid-kitchen-remodeling-openseo.png)
+![A 3 by 3 grid of Google Maps positions for H&H Construction on the search kitchen remodeling around Cookeville, Tennessee, mobile, 8 km between points, pulled September 24, 2026. North row: 2, 3, 5. Middle row: 1, 1, 3. South row: 1, 1, 2. Average position 2.11, top three at 8 of 9 points. Every point H&H does not win is won by Cookeville Kitchen Sales.](/blog/local-seo-for-service-businesses/local-rank-grid-kitchen-remodeling-openseo.webp)
 
 At the front door, first. Due west and due south, first. Drive north-east and H&H slides to third, then fifth. A homeowner in the north end of town searching for a kitchen remodeler sees four other companies before this one, and the same business takes all five points H&H doesn't win.
 
@@ -114,7 +114,7 @@ than I am.
 
 Compare against the business taking the points you lost, even if it's smaller than the big names in town. For H&H, that's Cookeville Kitchen Sales, a kitchen showroom 3.9 km north-north-east of H&H's office. The two profiles compare like this:
 
-![Side-by-side comparison of two Google Business Profiles, both as of September 28, 2026. Category: H&H Construction, Remodeler; Cookeville Kitchen Sales, Kitchen remodeler. Rating 5.0 against 4.6. Reviews 10 against 67. Photos 35 against 67. Services listed 29 against 11. Attributes set 4 against 8. H&H wins rating and services; the competitor wins category, reviews, photos and attributes.](/blog/local-seo-for-service-businesses/gbp-head-to-head-openseo.png)
+![Side-by-side comparison of two Google Business Profiles, both as of September 28, 2026. Category: H&H Construction, Remodeler; Cookeville Kitchen Sales, Kitchen remodeler. Rating 5.0 against 4.6. Reviews 10 against 67. Photos 35 against 67. Services listed 29 against 11. Attributes set 4 against 8. H&H wins rating and services; the competitor wins category, reviews, photos and attributes.](/blog/local-seo-for-service-businesses/gbp-head-to-head-openseo.webp)
 
 H&H wins on rating and on range of services. It loses on an exact-match category and a review count 6.7 times smaller, which map to two of Google's three factors: relevance and prominence.
 
@@ -143,13 +143,13 @@ and which will take months.
 
 You can fix a category in five minutes. You can't close a 10-to-67 gap in Google reviews in a month. It's still the second job, because it's where the showroom is furthest ahead. [Drew Dorenfest](https://unscriptedseo.com/drew-dorenfest-seo-for-small-businesses-cited-content-the-trailer-editor-mindset/), who runs SEO and review systems for small businesses, explained why it matters so much in a close race:
 
-![A quote card reading: Whoever has the most reviews, the most recent reviews is often gonna be near the top, especially if you're apples to apples. Attributed to Drew Dorenfest, founder of Client Magnet CRM, from The Unscripted SEO Interview Podcast.](/blog/local-seo-for-service-businesses/quote-most-recent-reviews.png)
+![A quote card reading: Whoever has the most reviews, the most recent reviews is often gonna be near the top, especially if you're apples to apples. Attributed to Drew Dorenfest, founder of Client Magnet CRM, from The Unscripted SEO Interview Podcast.](/blog/local-seo-for-service-businesses/quote-most-recent-reviews.webp)
 
 "Apples to apples" is the north-west corner of that grid: same distance, same service, and the tie goes to the pile of recent reviews. Drew's own fix is boring and it works: an automatic thank-you email with a direct link to leave a Google review, sent when a job is marked complete, so the ask doesn't depend on anyone's memory.
 
 The better moment is before the email, while you're still standing in the finished kitchen. Josie Davis, who runs H&H with her husband Alec, [described what their customers say at the end of a job](https://unscriptedsmallbusiness.com/dominating-cookeville-home-renovation-additions-remodeling-hh-construction/): "we don't know what we're gonna do once we're not talking to you every day." That's the sentence to listen for. A customer who says it will write you a review if you ask.
 
-![A quote card reading: Construction is a marriage of a certain form. You're gonna be spending a lot of time with those people. Attributed to Josie Davis, co-owner of H&H Construction, from The Unscripted Small Business Podcast.](/blog/local-seo-for-service-businesses/quote-marriage-of-certain-form.png)
+![A quote card reading: Construction is a marriage of a certain form. You're gonna be spending a lot of time with those people. Attributed to Josie Davis, co-owner of H&H Construction, from The Unscripted Small Business Podcast.](/blog/local-seo-for-service-businesses/quote-marriage-of-certain-form.webp)
 
 Her ten reviews are all five stars, and that's worth protecting while you grow the count. Ask the customers who would describe the job the way she describes the work. Don't buy reviews, and don't offer anything for them.
 

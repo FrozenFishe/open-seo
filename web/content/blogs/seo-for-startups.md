@@ -18,7 +18,7 @@ If you want an agent to help, connect [OpenSEO MCP](/docs/mcp) first so it can u
 - [How can you improve your site's rankings?](#how-can-you-improve-your-sites-rankings)
 - [A simple founder SEO priority list](#a-simple-founder-seo-priority-list)
 
-![SEO for Startups infographic](/blog/seo-for-startups/infographic.png)
+![SEO for Startups infographic](/blog/seo-for-startups/infographic.webp)
 
 ## Mental Model: How does SEO affect your business?
 
@@ -62,7 +62,7 @@ That can shape your strategy. If a competitor gets traffic from a specific page 
 
 For a focused workflow, use the [competitor analysis skill](/docs/skills/competitor-analysis). If you are still figuring out which domains matter, start with the broader [competitive landscape skill](/docs/skills/competitive-landscape).
 
-![OpenSEO domain overview showing top pages, keywords, and estimated traffic](/blog/seo-for-startups/domain-overview.png)
+![OpenSEO domain overview showing top pages, keywords, and estimated traffic](/blog/seo-for-startups/domain-overview.webp)
 
 ### Keyword Research
 
@@ -72,7 +72,7 @@ It also helps map a market. If you search a seed phrase like "best crm for," the
 
 For a repeatable workflow, use the [keyword research skill](/docs/skills/keyword-research). When you have a useful list of ideas, use the [keyword clustering skill](/docs/skills/keyword-clustering) to group them into page targets.
 
-![OpenSEO keyword research view showing related or suggested keywords for a seed term](/blog/seo-for-startups/keyword-research.png)
+![OpenSEO keyword research view showing related or suggested keywords for a seed term](/blog/seo-for-startups/keyword-research.webp)
 
 ### Backlink Analysis
 
@@ -82,7 +82,7 @@ When you look at who links to competitors, you start to see which publications, 
 
 Those links can tell you how attention moves through a market. To look at one domain right now, the [free backlink checker](/backlink-checker) shows its referring domains and strongest links without an account.
 
-![OpenSEO backlink analysis showing referring domains or top backlinks for a competitor](/blog/seo-for-startups/backlink-analysis.png)
+![OpenSEO backlink analysis showing referring domains or top backlinks for a competitor](/blog/seo-for-startups/backlink-analysis.webp)
 
 ## How can you improve your site's rankings?
 

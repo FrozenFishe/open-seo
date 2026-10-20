@@ -41,7 +41,7 @@ Now the small-site case, from a crawl of seoarcade.com.
 
 The site runs a Q&A section. Every question has a page, and every individual answer to that question also gets its own permalink. Filtering the crawl to a single question about keyword forecasts returns **20 of the 867 crawled URLs**. Eight of those came back 200, all carrying the same title and between 824 and 1,127 words of overlapping text.
 
-![OpenSEO site audit pages tab filtered to one question slug, showing 20 of 867 crawled URLs, all sharing the title "How does my life change with keyword forecasts? -" with word counts between 824 and 1,127, four of them returning 429 and the rest returning 200](/library/site-audit/duplicate-answer-permalinks-openseo.png)
+![OpenSEO site audit pages tab filtered to one question slug, showing 20 of 867 crawled URLs, all sharing the title "How does my life change with keyword forecasts? -" with word counts between 824 and 1,127, four of them returning 429 and the rest returning 200](/library/site-audit/duplicate-answer-permalinks-openseo.webp)
 
 Each of those eight sits in the sitemap and reports `isIndexable: true`. By any crawl-based definition this is index bloat, and the obvious move is to noindex the answer permalinks and ship it.
 

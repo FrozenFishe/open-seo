@@ -58,13 +58,13 @@ Kristiyan Yankov of Above Apex opened his interview by refusing to be taken at h
 
 Apply that to the estimate itself. A [domain overview](/features/domain-overview) on the national restoration brand returned 3,023,467 estimated organic traffic across 49,475 keywords on 19 August. Running the identical query on 21 August returned 3,018,438 across 49,729. Two days moved the traffic estimate by five thousand visits and added two hundred and fifty keywords. Neither figure is a measurement, and quoting either one to the last digit is where the trouble starts.
 
-![OpenSEO domain overview for a national restoration brand, Top Pages tab, showing 7,587 pages against 49,729 keywords, with general, air duct, and carpet cleaning pages sitting inside the top five by traffic](/blog/competitor-set-is-wrong/restoration-competitor-top-pages-openseo.png)
+![OpenSEO domain overview for a national restoration brand, Top Pages tab, showing 7,587 pages against 49,729 keywords, with general, air duct, and carpet cleaning pages sitting inside the top five by traffic](/blog/competitor-set-is-wrong/restoration-competitor-top-pages-openseo.webp)
 
 The Top Pages tab is where the estimate stops flattering anyone. The single highest-traffic page is the water damage service page at 372,528, carrying 488 keywords. Beside it sit general cleaning at 338,557, air duct cleaning at 286,978, and carpet and upholstery cleaning at 269,678. Those three pages account for 895,213 of the estimate, close to thirty percent of the whole footprint, and all three serve the company's cleaning line. A restoration company that plans its content calendar against the full three million is partly planning against a carpet cleaner.
 
 Keyword counts inflate for a related reason. The same pull returned five mold-related keywords each reporting an identical 74,000 search volume and an identical 22,496 traffic estimate, four of the five resolving to the same URL.
 
-![Five mold-related keywords in an OpenSEO ranked-keyword table, each showing the same 74,000 search volume and the same 22,496 traffic estimate, four of them pointing at one mold remediation page](/library/competitive-analysis/close-variant-keyword-inflation-openseo.png)
+![Five mold-related keywords in an OpenSEO ranked-keyword table, each showing the same 74,000 search volume and the same 22,496 traffic estimate, four of them pointing at one mold remediation page](/library/competitive-analysis/close-variant-keyword-inflation-openseo.webp)
 
 Google reports one combined volume for close variants, so plurals and near-identical phrasings each inherit the group figure. Count them as five keywords and you have counted the same demand five times. Pages don't have this problem: the brand's 49,729 keywords sit on 7,587 pages, and each page counts once. The [competitor traffic estimates strategy](/library/competitive-analysis/competitor-traffic-estimates) covers the rest of the corrections.
 
