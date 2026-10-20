@@ -60,6 +60,16 @@ Deliver through the `seo-report` skill, saving with `skill: "keyword-research"`.
 9. Present a shortlist and a longer opportunity table.
 10. Ask before saving keywords. When saving, suggest concise tags such as `topic:<topic>`, `intent:<intent>`, or `page:<slug>`.
 
+## Tracking the chosen keywords
+
+Offer this only after the user picks targets, and only when they want ongoing positions. It is separate from saving keywords.
+
+1. `get_rank_tracker` lists the project's trackers. Reuse one that matches the domain, market, and city.
+2. Otherwise `create_rank_tracker`. It defaults to the project domain and market, mobile, depth 40, and a manual schedule, so creating it spends nothing. For one city, pass a `locationName` from `search_serp_locations`. Set a daily, weekly, or monthly schedule only when the user asks for one.
+3. `estimate_rank_tracker_cost` with `additionalKeywords`, then show the user the per-check cost, and the monthly cost for a scheduled tracker.
+4. After approval, `add_rank_tracking_keywords`. A scheduled tracker needs the approved per-check estimate as `maxEstimatedScheduledCheckCredits`.
+5. Run `run_rank_tracker` only if the user wants positions now. Pass the approved live estimate as `maxCostCredits`, then read results with `get_rank_tracker`.
+
 ## Output format
 
 `h1`: the site or topic.
@@ -73,7 +83,7 @@ Sections in this order:
 3. **Why these** — one finding per keyword that needs justifying: the SERP or metric evidence, then the page to build.
 4. **The longer opportunity list** — a second table, same columns.
 5. **Risks and caveats** — notes: SERP intent that would change the recommendation, missing metrics written as `unknown`, close-variant volumes that are one bucket rather than several.
-6. **What to do next** — an ordered list, including whether to run keyword clustering, write a content brief, or save the chosen keywords.
+6. **What to do next** — an ordered list, including whether to run keyword clustering, write a content brief, save the chosen keywords, or track them.
 7. **How this report was made** — opens with the skill link line from `seo-report`, pointing at `https://openseo.so/docs/skills/keyword-research` ("OpenSEO Keyword Research skill"), then which tools returned what.
 
 ## Guardrails
