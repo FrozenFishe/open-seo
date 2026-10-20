@@ -148,7 +148,11 @@ export function ProjectSwitcher({
             </Button>
           ) : null}
         </div>
-        <ComboboxContent className="w-(--anchor-width)">
+        {/* Opened from a trigger button, Base UI renders the popup as a dialog. */}
+        <ComboboxContent
+          className="w-(--anchor-width)"
+          aria-label="Switch project"
+        >
           {projects.length >= SEARCH_THRESHOLD ? (
             <ComboboxInput
               className="w-auto"
@@ -160,7 +164,10 @@ export function ProjectSwitcher({
           {projects.length > 0 ? (
             <ComboboxEmpty>No projects match.</ComboboxEmpty>
           ) : null}
-          <ComboboxList className="max-h-[min(60vh,21rem)]">
+          <ComboboxList
+            aria-label="Projects"
+            className="max-h-[min(60vh,21rem)]"
+          >
             {(project: ProjectSummary) => (
               <ComboboxItem key={project.id} value={project}>
                 <span className="flex min-w-0 flex-col">
