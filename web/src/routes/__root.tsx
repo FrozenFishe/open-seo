@@ -7,6 +7,7 @@ import {
 import * as React from "react";
 import appCss from "@/styles/app.css?url";
 import { RootProvider } from "fumadocs-ui/provider/tanstack";
+import type { ImageProps } from "fumadocs-core/framework";
 import { PrivacyChoices } from "@/components/privacy-choices";
 
 export const Route = createRootRoute({
@@ -69,10 +70,31 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         />
       </head>
       <body className="flex flex-col min-h-screen bg-fd-background text-fd-foreground">
-        <RootProvider search={{ enabled: false }}>{children}</RootProvider>
+        <RootProvider
+          search={{ enabled: false }}
+          components={{ Image: ContentImage }}
+        >
+          {children}
+        </RootProvider>
         <PrivacyChoices />
         <Scripts />
       </body>
     </html>
+  );
+}
+
+// fumadocs renders every Markdown image through this component. React
+// preloads each eager <img> from the document head, so a post with five
+// screenshots fetched all of them ahead of its scripts. Content images sit
+// below the header, so lazy-load them unless a caller asks for priority.
+function ContentImage({ src, priority, ...props }: ImageProps) {
+  return (
+    <img
+      src={typeof src === "string" ? src : undefined}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
+      {...props}
+    />
   );
 }
