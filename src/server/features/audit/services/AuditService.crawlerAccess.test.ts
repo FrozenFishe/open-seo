@@ -157,8 +157,14 @@ describe("audit crawler access", () => {
 
   it("records a signed store as Shopify when the probe itself is throttled", async () => {
     // Shopify's edge 429 carries no `powered-by` header.
-    vi.mocked(fetch).mockImplementation(() =>
-      Promise.resolve(new Response(null, { status: 429 })),
+    vi.mocked(fetch).mockImplementation((url) =>
+      Promise.resolve(
+        (url instanceof Request ? url.url : url.toString()).includes(
+          "dns-query",
+        )
+          ? new Response(JSON.stringify({ Status: 0, Answer: [] }))
+          : new Response(null, { status: 429 }),
+      ),
     );
 
     const resolved = await startAndResolve();
@@ -178,5 +184,15 @@ describe("audit crawler access", () => {
       createAuditMock.mock.calls[0][0].config.crawlerCredentialId,
     ).toBeUndefined();
     expect(workflowCreateMock.mock.calls[0][0].params.access).toBeUndefined();
+  });
+});
+
+describe("audit start URL", () => {
+  it("refuses a start URL that embeds a loopback address", async () => {
+    await expect(
+      AuditService.startAudit({ ...input, startUrl: "http://[::127.0.0.1]/" }),
+    ).rejects.toMatchObject({ code: "CRAWL_TARGET_BLOCKED" });
+    expect(createAuditMock).not.toHaveBeenCalled();
+    expect(workflowCreateMock).not.toHaveBeenCalled();
   });
 });
