@@ -283,6 +283,21 @@ function ComboboxChipsInput({
   );
 }
 
+/**
+ * `onInputValueChange` for a combobox that always has a value, such as a
+ * country picker. Escape on a closed list would blank the field and swallow
+ * the key, so a parent dialog could not close. This keeps the selection and
+ * lets Escape through.
+ */
+function keepSelectionOnEscape(
+  _inputValue: string,
+  eventDetails: ComboboxPrimitive.Root.ChangeEventDetails,
+) {
+  if (eventDetails.reason !== "escape-key") return;
+  eventDetails.cancel();
+  eventDetails.allowPropagation();
+}
+
 function useComboboxAnchor() {
   return React.useRef<HTMLDivElement | null>(null);
 }
@@ -303,5 +318,6 @@ export {
   ComboboxChipsInput,
   ComboboxTrigger,
   ComboboxValue,
+  keepSelectionOnEscape,
   useComboboxAnchor,
 };

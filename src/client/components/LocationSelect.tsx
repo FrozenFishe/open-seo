@@ -5,6 +5,7 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  keepSelectionOnEscape,
 } from "@/client/components/ui/combobox";
 import { LOCATION_OPTIONS } from "@/shared/keyword-locations";
 
@@ -43,6 +44,7 @@ export function LocationSelect({
       value={selected}
       itemToStringLabel={(option) => option.label}
       autoHighlight
+      onInputValueChange={keepSelectionOnEscape}
       filter={matches}
       onValueChange={(option) => {
         if (option) onChange(option.code);
