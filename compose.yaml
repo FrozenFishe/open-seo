@@ -24,11 +24,13 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-}
-      # Optional: AI features (SAM, the in-app SEO agent)
+      # Optional: AI features (SAM, setup research, Prompt Research, prompt
+      # suggestions). Without these the in-app setup gate asks for the key.
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-}
-      # Optional: point SAM at a self-hosted OpenAI-compatible endpoint (e.g.
-      # local vLLM) instead of OpenRouter. When set, no OpenRouter key is needed.
+      # Optional: point every AI feature at a self-hosted OpenAI-compatible
+      # endpoint (e.g. local vLLM) instead of OpenRouter. When set, no
+      # OpenRouter key is needed; set OPENROUTER_MODEL to the served model.
       - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-}
       - VITE_SHOW_DEVTOOLS=false
     # Lets the container reach services on the Docker host (e.g. a local

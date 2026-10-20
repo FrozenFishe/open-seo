@@ -55,4 +55,19 @@ describe("runSelfhostPreflight", () => {
     expect(itemFor(result, "Search Console")?.level).toBe("warn");
     expect(itemFor(result, "Search Console")?.message).toContain("32");
   });
+
+  it.each([
+    [{ OPENROUTER_BASE_URL: "http://vllm:8000/v1" }, "warn"],
+    [
+      {
+        OPENROUTER_BASE_URL: "http://vllm:8000/v1",
+        OPENROUTER_MODEL: "qwen3",
+      },
+      "ok",
+    ],
+  ])("checks the AI model for a self-hosted endpoint %o", (env, level) => {
+    const result = runSelfhostPreflight({ AUTH_MODE: "local_noauth", ...env });
+
+    expect(itemFor(result, "AI features")?.level).toBe(level);
+  });
 });

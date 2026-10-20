@@ -34,25 +34,36 @@ Optional env values:
 - `ALLOWED_HOST` (reverse-proxy or DNS hostnames to allow, comma-separated; localhost and raw IP addresses always work)
 - `AUTH_MODE=local_noauth` (already set in compose)
 - `OPEN_SEO_IMAGE` (defaults to `ghcr.io/every-app/open-seo:latest`)
-- `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `OPENROUTER_BASE_URL` (AI features; see [Use a self-hosted LLM for SAM](#use-a-self-hosted-llm-for-sam))
+- `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `OPENROUTER_BASE_URL` (AI features; see [Use a self-hosted LLM](#use-a-self-hosted-llm))
 
-AI Visibility uses your `DATAFORSEO_API_KEY` and sends tracked questions to DataForSEO. Set `OPENROUTER_API_KEY` for setup research, Prompt Research, and generated prompt suggestions. You pay providers directly; the app shows the collection cost before a check or schedule starts. Keep the container running for background answers and daily, weekly, or monthly tracking. The built-in scheduler checks for due work every five minutes; no host cron setup is required. See the [AI Visibility guide](https://openseo.so/docs/ai-visibility).
+AI Visibility uses your `DATAFORSEO_API_KEY` and sends tracked questions to DataForSEO. Set `OPENROUTER_API_KEY` (or a [self-hosted LLM](#use-a-self-hosted-llm)) for setup research, Prompt Research, and generated prompt suggestions. You pay providers directly; the app shows the collection cost before a check or schedule starts. Keep the container running for background answers and daily, weekly, or monthly tracking. The built-in scheduler checks for due work every five minutes; no host cron setup is required. See the [AI Visibility guide](https://openseo.so/docs/ai-visibility).
 
 To open it from other devices, a tailnet, or behind a reverse proxy, see [Reach it from other devices](#reach-it-from-other-devices).
 
-## Use a self-hosted LLM for SAM
+## Use a self-hosted LLM
 
-SAM, the in-app SEO agent, can run on any OpenAI-compatible endpoint (vLLM, Ollama, LM Studio, and similar) instead of OpenRouter. Set these in `.env`, then run `docker compose up -d --force-recreate open-seo`:
+Every AI feature can run on your own OpenAI-compatible server (vLLM, Ollama, LM Studio, and similar) instead of OpenRouter. Set these in `.env`, then run `docker compose up -d --force-recreate open-seo`:
 
 ```bash
 OPENROUTER_BASE_URL=http://host.docker.internal:8000/v1
 OPENROUTER_MODEL=your-served-model-name
 ```
 
+With a base URL set, these features use your server:
+
+- SAM, the in-app SEO agent
+- Website setup research (overview, competitors, and suggested topics)
+- Prompt Research relevance filtering
+- Generated AI Visibility prompt suggestions
+
+Setup notes:
+
 - Use the `/v1` base URL as the container sees it. `localhost` inside the container is the container itself; `host.docker.internal` reaches the Docker host (`compose.yaml` maps it on Linux too), or use the server's LAN or Tailscale address.
 - Set `OPENROUTER_MODEL` to a model name the endpoint serves. The default is an OpenRouter model slug that a local server will not recognize.
-- SAM calls tools, so the model and server must support OpenAI-style tool calling (for vLLM, start it with `--enable-auto-tool-choice` and a `--tool-call-parser` for your model).
-- No OpenRouter key is needed for SAM in this mode. AI setup research, Prompt Research, and AI Visibility prompt suggestions still use OpenRouter and stay off unless `OPENROUTER_API_KEY` is also set.
+- The model and server must support OpenAI-style tool calling (for vLLM, start it with `--enable-auto-tool-choice` and a `--tool-call-parser` for your model) and JSON-schema structured output. Smaller local models may return invalid results, which show up as a failed research run you can retry.
+- No `OPENROUTER_API_KEY` is needed. If your server requires a key, set `OPENROUTER_API_KEY`; it is sent to your server, not to OpenRouter.
+- OpenRouter-specific tuning (provider routing, reasoning effort, regional model fallback) is skipped, and your server reports no usage cost, so AI spend shows as $0.
+- Live search and website reading for setup research work as usual, and Prompt Research still needs your `DATAFORSEO_API_KEY` for question data.
 
 ## Reach it from other devices
 

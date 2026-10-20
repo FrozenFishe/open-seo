@@ -195,12 +195,15 @@ export class SamChatAgent extends Think {
 
   private buildModel(reasoningEffort: "max" | "low") {
     // OPENROUTER_BASE_URL: self-hosted OpenAI-compatible endpoint (vLLM,
-    // Ollama, ...); it makes OPENROUTER_API_KEY optional.
+    // Ollama, ...); it makes OPENROUTER_API_KEY optional outside hosted mode.
     return buildChatAgentModel(
-      getEnvValueSync(this.env, "OPENROUTER_API_KEY"),
-      getEnvValueSync(this.env, "OPENROUTER_MODEL"),
+      {
+        apiKey: getEnvValueSync(this.env, "OPENROUTER_API_KEY"),
+        modelId: getEnvValueSync(this.env, "OPENROUTER_MODEL"),
+        baseURL: getEnvValueSync(this.env, "OPENROUTER_BASE_URL"),
+        authMode: getEnvValueSync(this.env, "AUTH_MODE"),
+      },
       reasoningEffort,
-      getEnvValueSync(this.env, "OPENROUTER_BASE_URL"),
     );
   }
 

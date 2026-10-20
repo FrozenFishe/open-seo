@@ -4,6 +4,12 @@ import {
   type OpenRouterProvider,
 } from "@openrouter/ai-sdk-provider";
 import { wrapLanguageModel } from "ai";
+import {
+  openRouterCostUsd,
+  requireOpenRouterCostUsd,
+} from "@/server/lib/chatAgent";
+import { isHostedAuthMode } from "@/lib/auth-mode";
+import { getOptionalEnvValue } from "@/server/lib/runtime-env";
 
 // OpenRouter model slug used for the SAM in-app chat agent. Override with
 // OPENROUTER_MODEL to swap models without a code change.
@@ -44,6 +50,15 @@ async function openAiBlockedHere(): Promise<boolean> {
   return OPENAI_BLOCKED_COUNTRIES.includes(egressCountry);
 }
 
+// Fails closed: hosted billing needs OpenRouter's reported cost, so hosted
+// mode never routes to a base URL.
+function selfHostedBaseUrl(config: {
+  baseURL?: string;
+  authMode: string | undefined;
+}) {
+  return isHostedAuthMode(config.authMode) ? undefined : config.baseURL;
+}
+
 /**
  * Returns the AI SDK LanguageModel for the chat agent. `usage: { include: true }`
  * turns on OpenRouter usage accounting so each response carries its real USD
@@ -60,21 +75,29 @@ async function openAiBlockedHere(): Promise<boolean> {
  * vLLM, Ollama, ...) for self-hosted deployments. Those servers accept plain
  * chat completions and reject or ignore OpenRouter-specific fields, so the
  * request is sent without usage accounting, provider routing, or reasoning
- * tuning — local inference meters as $0 (openRouterCostUsd falls back to 0
- * when no cost is reported).
+ * tuning — local inference meters as $0. Hosted mode ignores `baseURL`: its
+ * billing meters OpenRouter's reported cost, which a base URL would zero out,
+ * so hosted always talks to OpenRouter and fails without a key.
  *
  * Sync on purpose: Think's `getModel()` hook is sync and runs on every turn,
  * so the SAM agent reads the key/model from its DO env and builds here.
  */
 export function buildChatAgentModel(
-  apiKey: string | undefined,
-  modelId?: string,
+  config: {
+    apiKey: string | undefined;
+    modelId?: string;
+    baseURL?: string;
+    authMode: string | undefined;
+  },
   reasoningEffort: "max" | "low" = "max",
-  baseURL?: string,
 ): LanguageModelV3 {
-  const model = modelId ?? DEFAULT_CHAT_AGENT_MODEL;
+  const { apiKey } = config;
+  const model = config.modelId ?? DEFAULT_CHAT_AGENT_MODEL;
+  const baseURL = selfHostedBaseUrl(config);
   if (!apiKey && !baseURL) {
-    throw new Error("OPENROUTER_API_KEY is required for the chat agent");
+    throw new Error(
+      "Missing required environment variable: OPENROUTER_API_KEY (or OPENROUTER_BASE_URL for a self-hosted endpoint)",
+    );
   }
   // A self-hosted endpoint needs no real key; a placeholder stands in.
   const openrouter = createOpenRouter({
@@ -97,6 +120,29 @@ export function buildChatAgentModel(
       wrapStream: async ({ params }) => (await pick()).doStream(params),
     },
   });
+}
+
+/**
+ * The model and cost reader for one-shot AI features (website setup research,
+ * prompt suggestions, Prompt Research relevance), from the same env SAM uses.
+ * With OPENROUTER_BASE_URL set (outside hosted mode), requests go to that
+ * self-hosted endpoint and no key is needed. OpenRouter must report a cost
+ * for every step, since hosted billing meters it; a self-hosted endpoint
+ * reports none, so its spend reads as $0 instead of failing the run.
+ */
+export async function buildAiFeatureModel(reasoningEffort: "max" | "low") {
+  const config = {
+    apiKey: await getOptionalEnvValue("OPENROUTER_API_KEY"),
+    modelId: await getOptionalEnvValue("OPENROUTER_MODEL"),
+    baseURL: await getOptionalEnvValue("OPENROUTER_BASE_URL"),
+    authMode: await getOptionalEnvValue("AUTH_MODE"),
+  };
+  return {
+    model: buildChatAgentModel(config, reasoningEffort),
+    costUsd: selfHostedBaseUrl(config)
+      ? openRouterCostUsd
+      : requireOpenRouterCostUsd,
+  };
 }
 
 function openRouterModel(

@@ -1,4 +1,4 @@
-import { AUTH_MODES } from "@/lib/auth-mode";
+import { AUTH_MODES, isHostedAuthMode } from "@/lib/auth-mode";
 import {
   looksLikeDataForSeoKey,
   MIN_BETTER_AUTH_SECRET_LENGTH,
@@ -195,30 +195,7 @@ function checkOptionalFeatures(env: EnvRecord, items: PreflightItem[]): void {
     });
   }
 
-  items.push(
-    get(env, "OPENROUTER_API_KEY")
-      ? {
-          key: "ai",
-          name: "AI features",
-          level: "ok",
-          message: "OPENROUTER_API_KEY set",
-        }
-      : get(env, "OPENROUTER_BASE_URL")
-        ? {
-            key: "ai",
-            name: "AI features",
-            level: "ok",
-            message:
-              "OPENROUTER_BASE_URL set — SAM uses a self-hosted OpenAI-compatible endpoint (set OPENROUTER_MODEL to a model it serves). AI setup research, Prompt Research, and prompt suggestions still need OPENROUTER_API_KEY.",
-          }
-        : {
-            key: "ai",
-            name: "AI features",
-            level: "info",
-            message:
-              "OPENROUTER_API_KEY not set (optional) — SAM, the in-app SEO agent, AI setup research, and Prompt Research are disabled. To run SAM on a self-hosted OpenAI-compatible endpoint instead, set OPENROUTER_BASE_URL and OPENROUTER_MODEL.",
-          },
-  );
+  items.push(checkAi(env));
 
   items.push(
     get(env, "CONTEXT_API_KEY")
@@ -236,6 +213,52 @@ function checkOptionalFeatures(env: EnvRecord, items: PreflightItem[]): void {
             'CONTEXT_API_KEY not set (optional) — on Docker the site audit "Render JavaScript" option is disabled; on Cloudflare, Browser Run renders without a fallback.',
         },
   );
+}
+
+const AI_FEATURES =
+  "SAM, website setup research, Prompt Research, and prompt suggestions";
+
+// Outside hosted mode, OPENROUTER_BASE_URL takes precedence over OpenRouter
+// for every AI feature; a key set alongside it is sent to that endpoint as its
+// bearer token.
+function checkAi(env: EnvRecord): PreflightItem {
+  const name = "AI features";
+  if (
+    get(env, "OPENROUTER_BASE_URL") &&
+    isHostedAuthMode(get(env, "AUTH_MODE"))
+  ) {
+    return {
+      key: "ai",
+      name,
+      level: "warn",
+      message:
+        "OPENROUTER_BASE_URL is ignored in hosted mode — billing needs OpenRouter's usage costs, so OPENROUTER_API_KEY is required. Unset OPENROUTER_BASE_URL.",
+    };
+  }
+  if (get(env, "OPENROUTER_BASE_URL")) {
+    return get(env, "OPENROUTER_MODEL")
+      ? {
+          key: "ai",
+          name,
+          level: "ok",
+          message: `OPENROUTER_BASE_URL set — ${AI_FEATURES} use the self-hosted OpenAI-compatible endpoint. Its model needs tool calling and JSON-schema structured output; usage costs are not reported.`,
+        }
+      : {
+          key: "ai",
+          name,
+          level: "warn",
+          message:
+            "OPENROUTER_BASE_URL is set but OPENROUTER_MODEL is not — set it to the model name your endpoint serves, or AI requests fail.",
+        };
+  }
+  return get(env, "OPENROUTER_API_KEY")
+    ? { key: "ai", name, level: "ok", message: "OPENROUTER_API_KEY set" }
+    : {
+        key: "ai",
+        name,
+        level: "info",
+        message: `OPENROUTER_API_KEY not set (optional) — ${AI_FEATURES} are disabled. Set OPENROUTER_BASE_URL and OPENROUTER_MODEL to use a self-hosted OpenAI-compatible endpoint instead.`,
+      };
 }
 
 // Shared per-feature checks: the Docker preflight prints these at boot and

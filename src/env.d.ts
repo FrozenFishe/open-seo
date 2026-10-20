@@ -85,12 +85,12 @@ declare namespace Cloudflare {
       }
     >;
 
-    // OpenRouter API key for the SAM in-app chat agent.
+    // OpenRouter API key for AI features (SAM, setup research, prompts).
     OPENROUTER_API_KEY?: string;
     // Optional OpenRouter model slug override (defaults in openrouter.ts).
     OPENROUTER_MODEL?: string;
-    // Optional OpenAI-compatible base URL for the SAM chat agent — points at
-    // a self-hosted endpoint (local vLLM, Ollama, ...) instead of OpenRouter.
+    // Optional OpenAI-compatible base URL for every AI feature — points at a
+    // self-hosted endpoint (local vLLM, Ollama, ...) instead of OpenRouter.
     OPENROUTER_BASE_URL?: string;
   }
 }
