@@ -30,9 +30,14 @@ if (values.help) {
   process.exit(0);
 }
 
+const PUBLIC_REPO = "every-app/open-seo";
+
 /** @param {readonly string[]} args */
 function git(args) {
-  return execFileSync("git", args, { encoding: "utf8" }).trim();
+  return execFileSync("git", args, {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  }).trim();
 }
 
 /** @param {readonly string[]} args */
@@ -163,7 +168,30 @@ function getDefaultFromTag() {
   const matchingTag = tagCandidates.find((entry) => entry.tag === bestVersion);
   if (matchingTag) return matchingTag.tag;
 
-  return getLatestSemverTag();
+  return fetchPublicTag(bestVersion) ?? getLatestSemverTag();
+}
+
+// Release tags are published only on the public repo, so a clone of another
+// remote can be missing the latest one. Fetch just that tag before falling back
+// to an older local tag.
+/** @param {string} tag */
+function fetchPublicTag(tag) {
+  try {
+    execFileSync(
+      "git",
+      [
+        "fetch",
+        "--quiet",
+        "--no-tags",
+        `https://github.com/${PUBLIC_REPO}.git`,
+        `refs/tags/${tag}:refs/tags/${tag}`,
+      ],
+      { stdio: "ignore" },
+    );
+    return tag;
+  } catch {
+    return undefined;
+  }
 }
 
 function getPreferredRepo() {
@@ -172,7 +200,7 @@ function getPreferredRepo() {
 
 /** @param {string | undefined} repo */
 function getDefaultToRef(repo) {
-  return repo === "every-app/open-seo" ? "main" : "HEAD";
+  return repo === PUBLIC_REPO ? "main" : "HEAD";
 }
 
 /** @param {readonly string[]} rangeArgs */
