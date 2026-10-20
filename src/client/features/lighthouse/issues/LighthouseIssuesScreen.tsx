@@ -96,7 +96,7 @@ export function LighthouseIssuesScreen({
           finalUrl={issuesQuery.data?.finalUrl}
           scores={issuesQuery.data?.scores}
           metrics={issuesQuery.data?.metrics}
-          severityCounts={severityCounts}
+          severityCounts={issuesQuery.data ? severityCounts : null}
         />
 
         <TableCard>
