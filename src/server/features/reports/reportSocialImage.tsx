@@ -1,5 +1,5 @@
 import { ImageResponse } from "takumi-js/response";
-import { domainField } from "@/types/schemas/domain";
+import { domainField } from "@/types/schemas/domainField";
 import logo from "../../../public/android-chrome-192x192.png?inline";
 
 /** One template for all reports. Assets stay local; titles never go to an image service. */

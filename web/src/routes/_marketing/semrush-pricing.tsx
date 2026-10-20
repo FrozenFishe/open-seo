@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import SemrushPricingContent, {
-  frontmatter,
-} from "../../../content/marketing/semrush-pricing.mdx";
+import SemrushPricingContent from "../../../content/marketing/semrush-pricing.mdx";
+import { frontmatter } from "../../../content/marketing/semrush-pricing.mdx?only=frontmatter";
 import { buildPageSeo, SITE_URL, toCanonicalUrl } from "@/lib/seo";
 
 const PATH = "/semrush-pricing";

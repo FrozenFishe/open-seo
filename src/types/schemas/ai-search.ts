@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { WEB_SEARCH_COUNTRY_CODES } from "@/shared/prompt-search-countries";
-import { researchScopeSchema } from "@/shared/researchScope";
+import { researchScopeSchema } from "@/shared/researchScopeSchema";
 
 /**
  * Input + output schemas for the AI Search feature (Brand Lookup + Prompt

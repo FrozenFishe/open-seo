@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import OpenseoVsDataforseoContent, {
-  frontmatter,
-} from "../../../content/marketing/openseo-vs-dataforseo.mdx";
+import OpenseoVsDataforseoContent from "../../../content/marketing/openseo-vs-dataforseo.mdx";
+import { frontmatter } from "../../../content/marketing/openseo-vs-dataforseo.mdx?only=frontmatter";
 import { buildPageSeo, SITE_URL, toCanonicalUrl } from "@/lib/seo";
 
 const PATH = "/openseo-vs-dataforseo";

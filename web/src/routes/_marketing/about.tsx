@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import AboutContent, {
-  frontmatter,
-} from "../../../content/marketing/about.mdx";
+import AboutContent from "../../../content/marketing/about.mdx";
+import { frontmatter } from "../../../content/marketing/about.mdx?only=frontmatter";
 import { buildPageSeo } from "@/lib/seo";
 import { SocialLinks } from "@/components/social-links";
 
@@ -33,8 +32,8 @@ function AboutPage() {
           <img
             src="/images/ben-founder.jpg"
             alt="Ben, founder of OpenSEO"
-            width={1226}
-            height={1224}
+            width={640}
+            height={639}
             className="h-auto w-full rounded-2xl"
           />
           <figcaption className="mt-3 text-sm text-[var(--color-brand-muted)]">

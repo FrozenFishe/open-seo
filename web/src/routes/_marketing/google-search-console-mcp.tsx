@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import GoogleSearchConsoleMcpContent, {
-  frontmatter,
-} from "../../../content/marketing/google-search-console-mcp.mdx";
+import GoogleSearchConsoleMcpContent from "../../../content/marketing/google-search-console-mcp.mdx";
+import { frontmatter } from "../../../content/marketing/google-search-console-mcp.mdx?only=frontmatter";
 import {
   ComparisonTable,
   type ComparisonTableProps,

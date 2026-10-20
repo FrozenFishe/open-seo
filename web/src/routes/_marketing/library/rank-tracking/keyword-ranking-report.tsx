@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
-import Content, {
-  frontmatter,
-} from "../../../../../content/marketing/library/keyword-ranking-report.mdx";
+import Content from "../../../../../content/marketing/library/keyword-ranking-report.mdx";
+import { frontmatter } from "../../../../../content/marketing/library/keyword-ranking-report.mdx?only=frontmatter";
 import { LibrarySpokePage } from "@/components/library-page";
 import { buildPageSeo } from "@/lib/seo";
 import { RANK_TRACKING_LIBRARY } from "@/lib/strategy-libraries";

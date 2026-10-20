@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import WhyOpenSeoContent, {
-  frontmatter,
-} from "../../../content/marketing/why-openseo.mdx";
+import WhyOpenSeoContent from "../../../content/marketing/why-openseo.mdx";
+import { frontmatter } from "../../../content/marketing/why-openseo.mdx?only=frontmatter";
 import { buildPageSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_marketing/why-openseo")({

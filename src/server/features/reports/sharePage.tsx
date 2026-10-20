@@ -7,7 +7,7 @@ import {
 } from "@/server/features/reports/shareAccess";
 import { REPORT_IFRAME_SANDBOX } from "@/shared/report-sandbox";
 import { sharePath } from "@/shared/report-share";
-import { domainField } from "@/types/schemas/domain";
+import { domainField } from "@/types/schemas/domainField";
 
 // The public face of a shared report, `/s/<token>`: a slim bar and the
 // document in the same sandboxed frame the in-app viewer uses. Rendered to a

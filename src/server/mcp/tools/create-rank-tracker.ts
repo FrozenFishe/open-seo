@@ -16,7 +16,7 @@ import {
   locationCodeSchema,
   projectIdSchema,
 } from "@/server/mcp/schemas";
-import { domainField } from "@/types/schemas/domain";
+import { domainField } from "@/types/schemas/domainField";
 import { scheduleTimeSchema } from "@/types/schemas/schedule-time";
 
 const inputSchema = {

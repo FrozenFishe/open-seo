@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { DocsBody } from "fumadocs-ui/page";
-import OpenSourceSeoContent, {
-  frontmatter as openSourceSeoFrontmatter,
-} from "../../../content/marketing/open-source-seo.md";
+import OpenSourceSeoContent from "../../../content/marketing/open-source-seo.md";
+import { frontmatter as openSourceSeoFrontmatter } from "../../../content/marketing/open-source-seo.md?only=frontmatter";
 import { buildPageSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_marketing/open-source-seo")({

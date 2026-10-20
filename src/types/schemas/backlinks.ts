@@ -3,7 +3,7 @@ import {
   RESEARCH_SCOPES,
   RESEARCH_SCOPE_PARAM_DESCRIPTION,
   type ResearchScope,
-} from "@/shared/researchScope";
+} from "@/shared/researchScopeSchema";
 
 export const backlinksTabSchema = z.enum(["backlinks", "domains", "pages"]);
 

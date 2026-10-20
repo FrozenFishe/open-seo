@@ -296,6 +296,8 @@ export function Testimonials({
                       <img
                         src={t.avatarSrc}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="itc-quote-avatar-img"
                       />
                     ) : (
