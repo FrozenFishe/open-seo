@@ -63,6 +63,13 @@ export function SiteFooter({ className }: { className?: string }) {
             <Link to="/open-source-seo">Why Open Source?</Link>
             <Link to="/blogs">Blog</Link>
             <a href="/docs">Docs</a>
+            <a
+              href="https://seobotai.com/?ref=listingbott"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              SEObot
+            </a>
           </div>
         </div>
 
