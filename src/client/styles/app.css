@@ -27,6 +27,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
@@ -85,8 +86,10 @@
   --accent: oklch(50% 0.12 262);
   --accent-foreground: oklch(100% 0 0);
   /* Dark enough that destructive text stays above 4.5:1 on its own 10-20%
-     tint (destructive buttons, menu items, badges) over cards and popovers. */
+     tint (destructive buttons, badges) over cards and popovers. */
   --destructive: oklch(51% 0.19 25);
+  /* Text on solid destructive, such as a highlighted destructive menu item. */
+  --destructive-foreground: oklch(100% 0 0);
   /* Dark enough that success text stays above 4.5:1 on its own 10-20% tint
      (badges, rank gains) over cards and the page background. */
   --success: oklch(48% 0.13 145);
@@ -137,6 +140,7 @@
   /* Lighter than the light theme's red so destructive text stays above
      4.5:1 on its own tint over cards and popovers. */
   --destructive: oklch(76% 0.17 25);
+  --destructive-foreground: oklch(18% 0 0);
   --success: oklch(65% 0.18 145);
   --success-foreground: oklch(100% 0 0);
   --warning: oklch(80% 0.15 80);
