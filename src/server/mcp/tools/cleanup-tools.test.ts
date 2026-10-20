@@ -49,7 +49,7 @@ vi.mock("@/server/features/audit/repositories/AuditRepository", () => ({
 vi.mock("@/server/lib/posthog", () => ({ captureServerEvent: vi.fn() }));
 
 beforeEach(() => {
-  vi.resetAllMocks();
+  mocks.terminate.mockResolvedValue(undefined);
   mocks.getProjectForOrganization.mockResolvedValue({ id: "project_1" });
   mocks.deleteReport.mockResolvedValue(true);
   mocks.deleteTemplate.mockResolvedValue(true);

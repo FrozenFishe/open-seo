@@ -62,7 +62,6 @@ const run = {
   pollAfterSeconds: 30,
 };
 beforeEach(() => {
-  vi.clearAllMocks();
   mocks.authorize.mockResolvedValue({ id: projectId, domain: "example.com" });
   mocks.service.getTracker.mockResolvedValue(state);
   mocks.service.getRun.mockResolvedValue(run);
