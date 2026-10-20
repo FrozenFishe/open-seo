@@ -107,10 +107,6 @@ function GeneralSection({ project }: { project: ProjectSummary }) {
             )}
           </form.AppField>
 
-          <p className="text-sm text-muted-foreground">
-            Adding your website starts a 50-page scan with JavaScript rendering.
-            Rendering uses your credits.
-          </p>
           <form.AppField name="domain">
             {(field) => (
               <field.TextField
@@ -122,6 +118,7 @@ function GeneralSection({ project }: { project: ProjectSummary }) {
                     </span>
                   </>
                 }
+                description="Adding your website starts a 50-page scan with JavaScript rendering. Rendering uses your credits."
                 placeholder="example.com"
                 maxLength={255}
               />
