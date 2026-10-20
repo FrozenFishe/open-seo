@@ -9,6 +9,7 @@ import { captureClientEvent, resetAnalyticsUser } from "@/client/lib/posthog";
 import { userAdditionalFields } from "@/lib/auth-options";
 import { orgAccessControl, orgRoles } from "@/lib/org-permissions";
 import { getSignInHrefForLocation } from "@/lib/auth-redirect";
+import { isHostedClientAuthMode } from "@/lib/auth-mode";
 
 export const authClient = createAuthClient({
   baseURL: typeof window !== "undefined" ? window.location.origin : "",
@@ -22,7 +23,23 @@ export const authClient = createAuthClient({
   ],
 });
 
-export const { useSession } = authClient;
+type SessionState = ReturnType<typeof authClient.useSession>;
+
+// Only hosted mode serves Better Auth routes. Elsewhere the session atom's
+// mount-time fetch would 404 on every page, so callers get a settled, empty
+// session instead. The auth mode is fixed at build time, so the chosen hook
+// never changes between renders.
+const signedOutSession: SessionState = {
+  data: null,
+  isPending: false,
+  isRefetching: false,
+  error: null,
+  refetch: async () => {},
+};
+
+export const useSession: () => SessionState = isHostedClientAuthMode()
+  ? authClient.useSession
+  : () => signedOutSession;
 
 export function signOutAndRedirect() {
   const signInHref = getSignInHrefForLocation(window.location);

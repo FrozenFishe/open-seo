@@ -113,14 +113,18 @@
   --popover: oklch(25% 0 0);
   --popover-foreground: oklch(92% 0 0);
   --primary: oklch(66% 0.12 262);
-  --primary-foreground: oklch(100% 0 0);
+  /* Dark text on the light primary: white on it is 3.1:1, below AA. The
+     primary stays light because it is also the link and ring color here. */
+  --primary-foreground: oklch(18% 0 0);
   --secondary: oklch(28% 0 0);
   --secondary-foreground: oklch(92% 0 0);
   --muted: oklch(18% 0 0);
   --muted-foreground: oklch(92% 0 0 / 60%);
   --accent: oklch(28% 0 0);
   --accent-foreground: oklch(92% 0 0);
-  --destructive: oklch(65% 0.2 25);
+  /* Lighter than the light theme's red so destructive text stays above
+     4.5:1 on its own tint over cards and popovers. */
+  --destructive: oklch(76% 0.17 25);
   --success: oklch(65% 0.18 145);
   --success-foreground: oklch(100% 0 0);
   --warning: oklch(80% 0.15 80);
@@ -138,7 +142,7 @@
   --sidebar: oklch(24% 0 0);
   --sidebar-foreground: oklch(92% 0 0);
   --sidebar-primary: oklch(66% 0.12 262);
-  --sidebar-primary-foreground: oklch(100% 0 0);
+  --sidebar-primary-foreground: oklch(18% 0 0);
   --sidebar-accent: oklch(100% 0 0 / 8%);
   --sidebar-accent-foreground: oklch(92% 0 0);
   --sidebar-border: oklch(31% 0 0);

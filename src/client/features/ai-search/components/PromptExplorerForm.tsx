@@ -25,6 +25,7 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  keepSelectionOnEscape,
 } from "@/client/components/ui/combobox";
 import {
   WEB_SEARCH_COUNTRY_CODES,
@@ -202,6 +203,7 @@ export function PromptExplorerForm({
                 }
                 itemToStringLabel={(item) => item.label}
                 autoHighlight
+                onInputValueChange={keepSelectionOnEscape}
                 onValueChange={(item) => {
                   if (item) onCountryChange(item.value);
                 }}
