@@ -4,7 +4,7 @@ import { rankTrackingConfigs } from "@/db/schema";
 import { isSupportedLanguageCode } from "@/shared/keyword-locations";
 import { MAX_TRACKED_KEYWORD_LENGTH } from "@/shared/rank-tracking";
 import { comparePeriodSchema } from "@/types/schemas/rank-tracking-search";
-import { domainField } from "@/types/schemas/domain";
+import { domainField } from "@/types/schemas/domainField";
 import { scheduleTimeSchema } from "@/types/schemas/schedule-time";
 
 // ---------------------------------------------------------------------------

@@ -15,7 +15,8 @@ import {
 } from "@/client/components/ui/dialog";
 import { Field, FieldLabel } from "@/client/components/ui/field";
 import type { RankTrackingConfig } from "@/types/schemas/rank-tracking";
-import { domainField, normalizeDomain } from "@/types/schemas/domain";
+import { normalizeDomain } from "@/types/schemas/domain";
+import { domainField } from "@/types/schemas/domainField";
 import { pagesToDepth, estimateRankCheckCredits } from "@/shared/rank-tracking";
 import { getLanguageCode } from "@/client/features/keywords/locations";
 import {

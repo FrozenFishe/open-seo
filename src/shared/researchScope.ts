@@ -1,5 +1,5 @@
 import { parse as parseTld } from "tldts";
-import { z } from "zod";
+import type { ResearchScope } from "@/shared/researchScopeSchema";
 
 /**
  * True when `host` resolves to a real registrable domain (public-suffix list),
@@ -14,23 +14,12 @@ export function isValidDomainHost(host: string): boolean {
   );
 }
 
-/**
- * Research scope for any URL/domain input:
- * - exact_url:  one normalized page URL only
- * - subfolder:  the selected path and its children (not similarly named siblings)
- * - domain:     the selected hostname, excluding its subdomains
- * - subdomains: the selected hostname and all of its subdomains
- */
-export const RESEARCH_SCOPES = [
-  "exact_url",
-  "subfolder",
-  "domain",
-  "subdomains",
-] as const;
-
-export type ResearchScope = (typeof RESEARCH_SCOPES)[number];
-
-export const researchScopeSchema = z.enum(RESEARCH_SCOPES);
+export {
+  RESEARCH_SCOPES,
+  RESEARCH_SCOPE_PARAM_DESCRIPTION,
+  researchScopeSchema,
+  type ResearchScope,
+} from "@/shared/researchScopeSchema";
 
 export const RESEARCH_SCOPE_LABELS: Record<ResearchScope, string> = {
   exact_url: "Exact URL",
@@ -38,10 +27,6 @@ export const RESEARCH_SCOPE_LABELS: Record<ResearchScope, string> = {
   domain: "Domain",
   subdomains: "Subdomains",
 };
-
-/** Base wording for MCP `scope` params; tools append their own caveats. */
-export const RESEARCH_SCOPE_PARAM_DESCRIPTION =
-  "Research scope: 'domain' (hostname without subdomains), 'subdomains' (hostname plus all subdomains), 'subfolder' (path and its children), or 'exact_url' (one page). Defaults to 'subdomains' for root inputs and 'subfolder' when the input has a path.";
 
 /** One-line explanations shown in the scope dropdown. */
 export const RESEARCH_SCOPE_DESCRIPTIONS: Record<ResearchScope, string> = {

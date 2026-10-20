@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isValidDomainHost, researchScopeSchema } from "@/shared/researchScope";
+import { researchScopeSchema } from "@/shared/researchScopeSchema";
 
 /**
  * Extract and validate a bare hostname from user input that may be a full URL.
@@ -12,31 +12,6 @@ export function normalizeDomain(input: string): string {
   const { hostname } = new URL(d); // throws on truly invalid input
   return hostname.replace(/^www\./, "");
 }
-
-/** Zod field: accepts a bare domain or full URL, outputs a clean hostname. */
-export const domainField = z
-  .string()
-  .min(1)
-  .max(253)
-  .transform((val, ctx) => {
-    try {
-      const hostname = normalizeDomain(val);
-      if (!hostname.includes(".") || !isValidDomainHost(hostname)) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Enter a valid domain like example.com",
-        });
-        return z.NEVER;
-      }
-      return hostname;
-    } catch {
-      ctx.addIssue({
-        code: "custom",
-        message: "Enter a valid domain like example.com",
-      });
-      return z.NEVER;
-    }
-  });
 
 export const booleanSearchParamSchema = z
   .union([z.boolean(), z.enum(["true", "false"])])
