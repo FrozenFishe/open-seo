@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { FileText, Trash2 } from "lucide-react";
 import { EmptyState } from "@/client/components/EmptyState";
 import { RowActionsMenu } from "@/client/components/RowActionsMenu";
+import { Button } from "@/client/components/ui/button";
 import { DropdownMenuItem } from "@/client/components/ui/dropdown-menu";
 import {
   Table,
@@ -31,7 +32,23 @@ export function ReportsList({
       <EmptyState
         icon={FileText}
         title="No reports yet"
-        description="Run an OpenSEO skill such as seo-audit from Claude Code or Codex and the report will appear here."
+        description={
+          <>
+            Run an OpenSEO skill such as{" "}
+            <code className="whitespace-nowrap">seo-audit</code> from Claude
+            Code or Codex and the report will appear here.
+          </>
+        }
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            nativeButton={false}
+            render={<Link to="/ai" />}
+          >
+            Set up your agent
+          </Button>
+        }
       />
     );
   }
