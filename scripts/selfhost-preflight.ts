@@ -52,6 +52,12 @@ async function sendPreflightFailedBeacon(failedChecks: string[]) {
   }
 }
 
+console.log(
+  telemetryDisabled()
+    ? "OpenSEO anonymous usage heartbeat: disabled."
+    : "OpenSEO sends an anonymous usage heartbeat (counts only). Disable: OPENSEO_TELEMETRY_DISABLED=1. Details: docs/SELF_HOSTING_DOCKER.md#telemetry",
+);
+
 const result = runSelfhostPreflight(process.env);
 
 console.log("--- OpenSEO self-host preflight ---");
