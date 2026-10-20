@@ -47,7 +47,14 @@ pnpm dev:agents
 
 `pnpm dev:agents` runs through [portless](https://github.com/vercel-labs/portless) at `http://open-seo.localhost:1355` by default.
 
-When using a git worktree, [portless](https://github.com/vercel-labs/portless) prefixes the branch name, for example `http://feature-name.open-seo.localhost:1355`.
+When using a git worktree, [portless](https://github.com/vercel-labs/portless) prefixes the branch name, for example `http://feature-name.open-seo.localhost:1355`. Keep portless current (`npm install -g portless@latest`): older releases don't shorten long branch names, and a branch segment over 63 characters makes a hostname browsers refuse to open.
+
+Some flows need the direct origin instead of the `.localhost` URL. portless still manages the server; open `http://localhost:<port>` using the port printed in `.logs/dev-server.log`:
+
+- **Google Search Console connect.** Google rejects `.localhost` OAuth callbacks with `invalid_request`. Register `http://localhost:<port>/api/gsc/oauth/callback` as a redirect URI on your OAuth client and start the connection from that origin.
+- **SAM chat.** Through the portless URL the chat opens, then fails with "Failed to fetch" because the agent's history and WebSocket routes don't pass through the proxy.
+
+Stop the dev server before running `pnpm build` and restart it afterwards. A production build alongside a running Vite dev server breaks the dev server's module runner, so navigation fails and server functions return `undefined` until you restart it.
 
 ## Report share images
 
