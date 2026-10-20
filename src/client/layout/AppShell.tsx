@@ -106,6 +106,18 @@ export function AuthenticatedAppLayout({
 
   return (
     <SidebarProvider className="h-[100dvh] min-h-0 overflow-hidden">
+      <a
+        href="#main-content"
+        className="sr-only rounded-md bg-card text-sm font-medium shadow-md focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2"
+        // Focus the content directly: the router would treat a hash change
+        // as a navigation.
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById("main-content")?.focus();
+        }}
+      >
+        Skip to main content
+      </a>
       <Sidebar
         projectId={sidebarProjectId}
         projectPending={sidebarProjectPending}
@@ -118,7 +130,13 @@ export function AuthenticatedAppLayout({
           seoApiKeyStatusError={seoApiKeyStatusError}
         />
         {banner}
-        <div className="min-h-0 flex-1 overflow-auto">{children}</div>
+        <div
+          id="main-content"
+          tabIndex={-1}
+          className="min-h-0 flex-1 overflow-auto outline-none"
+        >
+          {children}
+        </div>
       </SidebarInset>
 
       {showMissingSeoApiKeyModal ? (
