@@ -17,8 +17,10 @@ import { themePreferenceInitScript } from "@/client/lib/theme";
 import { NotFound } from "@/client/components/NotFound";
 import { PrivacyBootstrap } from "@/client/components/PrivacyChoices";
 import { TooltipProvider } from "@/client/components/ui/tooltip";
-import { PageLoading } from "@/client/components/Spinner";
-import { PageAfterHydration } from "@/client/layout/serverRendering";
+import {
+  PageAfterHydration,
+  appShellHintScript,
+} from "@/client/layout/serverRendering";
 import appCss from "@/client/styles/app.css?url";
 import { Toaster } from "sonner";
 import { queryClient } from "@/client/tanstack-db";
@@ -108,14 +110,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script
           dangerouslySetInnerHTML={{ __html: themePreferenceInitScript }}
         />
+        {appShellHintScript ? (
+          <script dangerouslySetInnerHTML={{ __html: appShellHintScript }} />
+        ) : null}
         <HeadContent />
       </head>
       <body>
         <QueryClientProvider client={client}>
           <TooltipProvider>
-            <PageAfterHydration fallback={<PageLoading />}>
-              {children}
-            </PageAfterHydration>
+            <PageAfterHydration>{children}</PageAfterHydration>
             <ClientOnly>
               <PrivacyBootstrap />
               <ExportToSheetsModal />
