@@ -94,6 +94,11 @@ overrides:
   mysql2: "^3.23.1"
   "nanoid@3": "^3.3.18"
   "toml@4": "^4.2.0"
+  # Bundle dedupe, not security: recharts 3.8 asks for immer 10 while its own
+  # @reduxjs/toolkit dependency uses immer 11, so the chart chunk shipped both.
+  # recharts only imports castDraft, an identity cast in both majors, and
+  # recharts 3.9.1 itself moved to immer ^11. Drop on upgrading to recharts >=3.9.1.
+  "recharts@3>immer": "^11.1.4"
 
 # Cloudflare echoes targeted placement back as `{ mode: "targeted" }` without
 # `region`; 0.28.2's response schema requires it, so alchemy fails a deploy
