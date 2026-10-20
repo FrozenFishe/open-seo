@@ -76,15 +76,25 @@
   --secondary: oklch(97% 0 0);
   --secondary-foreground: oklch(20% 0 0);
   --muted: oklch(97% 0 0);
-  --muted-foreground: oklch(20% 0 0 / 60%);
-  --accent: oklch(97% 0 0);
-  --accent-foreground: oklch(20% 0 0);
-  --destructive: oklch(65% 0.2 25);
-  --success: oklch(65% 0.18 145);
+  /* 64% keeps muted text above 4.5:1 on the gray surfaces too: the page
+     background, the sidebar and the tab list. */
+  --muted-foreground: oklch(20% 0 0 / 64%);
+  /* The highlighted row in menus, selects and comboboxes. It is the brand
+     blue so the highlight reads at over 3:1 against the popover; the old
+     near-white gray was 1.1:1. Use secondary for quiet hover surfaces. */
+  --accent: oklch(50% 0.12 262);
+  --accent-foreground: oklch(100% 0 0);
+  /* Dark enough that destructive text stays above 4.5:1 on its own 10-20%
+     tint (destructive buttons, menu items, badges) over cards and popovers. */
+  --destructive: oklch(51% 0.19 25);
+  /* Dark enough that success text stays above 4.5:1 on its own 10-20% tint
+     (badges, rank gains) over cards and the page background. */
+  --success: oklch(48% 0.13 145);
   --success-foreground: oklch(100% 0 0);
   --warning: oklch(80% 0.15 80);
   --warning-foreground: oklch(25% 0.05 80);
-  --info: oklch(70% 0.15 230);
+  /* Dark enough that info text stays above 4.5:1 on its own 10% tint. */
+  --info: oklch(48% 0.11 230);
   --info-foreground: oklch(100% 0 0);
   --border: oklch(92% 0 0);
   --input: oklch(82% 0 0);
@@ -120,8 +130,10 @@
   --secondary-foreground: oklch(92% 0 0);
   --muted: oklch(18% 0 0);
   --muted-foreground: oklch(92% 0 0 / 60%);
-  --accent: oklch(28% 0 0);
-  --accent-foreground: oklch(92% 0 0);
+  /* Brand blue highlight, 5:1 against the popover, with dark text on it as
+     on the primary. The old gray was 1.2:1. */
+  --accent: oklch(66% 0.12 262);
+  --accent-foreground: oklch(18% 0 0);
   /* Lighter than the light theme's red so destructive text stays above
      4.5:1 on its own tint over cards and popovers. */
   --destructive: oklch(76% 0.17 25);

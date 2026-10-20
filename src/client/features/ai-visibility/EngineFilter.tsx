@@ -50,10 +50,10 @@ export function EngineFilter({
                     : value.filter((selected) => selected !== engine),
                 )
               }
-              className="flex cursor-default items-center gap-3 rounded-md px-3 py-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground"
+              className="group flex cursor-default items-center gap-3 rounded-md px-3 py-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground"
             >
               <span
-                className={`flex size-4 shrink-0 items-center justify-center rounded border ${checked ? "border-primary bg-primary text-primary-foreground" : "border-input"}`}
+                className={`flex size-4 shrink-0 items-center justify-center rounded border group-focus:border-accent-foreground ${checked ? "border-primary bg-primary text-primary-foreground" : "border-input"}`}
               >
                 <Menu.CheckboxItemIndicator className="flex items-center justify-center">
                   <Check className="size-3" />

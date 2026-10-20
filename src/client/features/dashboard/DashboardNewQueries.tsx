@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { CardShell } from "@/client/components/CardShell";
 import { QueryState } from "@/client/components/QueryState";
-import { GoogleConnectionCard } from "@/client/features/integrations/GoogleConnectionCard";
 import {
   Table,
   TableHeader,
@@ -36,13 +35,9 @@ export function DashboardNewQueries({
   return (
     <QueryState query={query} errorFallback="Could not load new keywords">
       {(data) =>
-        !data.value.connected ? (
-          <GoogleConnectionCard
-            provider="gsc"
-            projectId={projectId}
-            prominent
-          />
-        ) : (
+        // A dead grant: the Search Console card next to this one already
+        // shows the reconnect card, so showing it here too would duplicate it.
+        !data.value.connected ? null : (
           <CardShell
             title="New keywords"
             titleInfo={
