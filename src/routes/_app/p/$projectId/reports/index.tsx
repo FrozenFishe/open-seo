@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { LayoutTemplate } from "lucide-react";
 import { PageHeader } from "@/client/components/PageHeader";
 import { Button } from "@/client/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -44,7 +45,7 @@ function ReportsPage() {
           description="HTML reports your agents saved to this project."
           actions={
             <Button
-              variant="ghost"
+              variant="outline"
               nativeButton={false}
               render={
                 <Link
@@ -53,6 +54,7 @@ function ReportsPage() {
                 />
               }
             >
+              <LayoutTemplate aria-hidden />
               Templates
             </Button>
           }
