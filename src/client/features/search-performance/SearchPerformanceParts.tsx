@@ -30,7 +30,7 @@ import {
   type Report,
   type SearchPerformanceTableRow,
 } from "@/client/features/search-performance/SearchPerformanceColumns";
-import { normalizeExportValue, type CsvValue } from "@/client/lib/csv";
+import { normalizeExportValue, type CsvValue } from "@/client/lib/exportValue";
 import { exportRows } from "@/client/lib/exportRows";
 import { captureClientEvent } from "@/client/lib/posthog";
 import {
