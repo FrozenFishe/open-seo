@@ -100,7 +100,7 @@ const inputSchema = {
     .multipleOf(10)
     .optional()
     .describe(
-      "How many SERP rows to crawl per keyword — a multiple of 10 from 10 to 100, default 20. Google has no offset, so a deeper crawl re-fetches the top too: each additional 10 adds ~2.5 credits per keyword. Only raise it when you need ranks past the top 20.",
+      "How many SERP results to crawl per keyword — a multiple of 10 from 10 to 100, default 20. Google has no offset, so a deeper crawl re-fetches the top too: each additional 10 adds ~2.5 credits per keyword. Only raise it when you need ranks past the top 20.",
     ),
 } as const;
 
@@ -111,7 +111,7 @@ export const getSerpResultsTool = {
   config: {
     title: "Get Google SERP results",
     description:
-      "Fetch live Google organic search results for 1-10 keywords. Use this to inspect who ranks for a query, verify competitors, compare SERPs across keywords, or gather source URLs before content planning. Returns the first `depth` organic results per keyword (default 20), with the ads and SERP features that appear among them. `rank` counts every SERP element (ads, People Also Ask, ...); `organicRank` counts organic results only and matches rank tracker positions. Charges credits per keyword: ~5 each at the default depth 20, and each additional 10 of depth adds ~2.5. A keyword fetched in this project in the last 12 hours with the same market, device, and depth returns those rows again at no charge once the original call has finished, so if a response is lost, wait a minute and repeat the same call. Per-keyword errors don't fail the batch.",
+      "Fetch live Google organic search results for 1-10 keywords. Use this to inspect who ranks for a query, verify competitors, compare SERPs across keywords, or gather source URLs before content planning. Returns up to `depth` organic results per keyword (default 20), with the ads and SERP features that appear among them; when the crawl counts SERP features toward `depth`, fewer organic results come back. `rank` counts every SERP element (ads, People Also Ask, ...); `organicRank` counts organic results only and matches rank tracker positions. Charges credits per keyword: ~5 each at the default depth 20, and each additional 10 of depth adds ~2.5. A keyword fetched in this project in the last 12 hours with the same market, device, and depth returns those rows again at no charge once the original call has finished, so if a response is lost, wait a minute and repeat the same call. Per-keyword errors don't fail the batch.",
     inputSchema,
     outputSchema: serpSchema,
     annotations: {
@@ -138,7 +138,7 @@ export const getSerpResultsTool = {
               q.locationName,
             );
           }
-          const cacheKey = await buildCacheKey("mcp:serp-results", {
+          const cacheKey = await buildCacheKey("mcp:serp-results:v2", {
             organizationId: context.billing.organizationId,
             projectId: args.projectId,
             keyword: q.keyword,
@@ -168,9 +168,9 @@ export const getSerpResultsTool = {
             depth,
             device: q.device,
           });
-          // depth counts organic results, so cut after the depth-th organic
-          // row rather than after depth rows: SERP features in between would
-          // otherwise push paid-for organic results out of the response.
+          // Cap organic rows at depth rather than all rows: otherwise SERP
+          // features in between push crawled organic results out of the
+          // response.
           // Trim noise — return only essentials per item.
           const trimmed = withinOrganicDepth(items, depth).map((item) => ({
             type: item.type,
