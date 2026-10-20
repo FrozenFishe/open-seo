@@ -30,6 +30,7 @@ const resetPasswordSearchSchema = authRedirectSearchSchema.extend({
 });
 
 export const Route = createFileRoute("/reset-password")({
+  staticData: { renderOnServer: true },
   validateSearch: resetPasswordSearchSchema,
   component: ResetPasswordPage,
 });

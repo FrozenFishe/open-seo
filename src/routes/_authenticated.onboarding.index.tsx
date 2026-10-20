@@ -19,7 +19,7 @@ const clampStep = (step: number) =>
   Math.min(Math.max(0, Math.trunc(step)), ONBOARDING_LAST_STEP);
 
 export const Route = createFileRoute("/_authenticated/onboarding/")({
-  // The app renders inside ClientOnly, and this guard reads account-scoped data
+  // This page renders only on the client, and this guard reads account-scoped data
   // through a module-scoped query client. Keep it out of server requests so one
   // worker isolate cannot reuse another account's cached onboarding state.
   ssr: false,

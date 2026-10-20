@@ -5,6 +5,7 @@ import { PageLoading } from "@/client/components/Spinner";
 import { Button } from "@/client/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated")({
+  staticData: { renderOnServer: true },
   component: AuthenticatedShellLayout,
 });
 

@@ -1,3 +1,5 @@
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { Button } from "@/client/components/ui/button";
 import {
@@ -18,12 +20,18 @@ export const authInputClassName =
 export const authSubmitClassName =
   "w-full border-border bg-[color-mix(in_oklab,var(--card),var(--foreground)_8%)] font-semibold hover:bg-[color-mix(in_oklab,var(--card),var(--foreground)_12%)]";
 
+// The raw query string of the page being shown. The signed OAuth query must
+// keep its exact bytes, so this reads the request URL on the server rather than
+// the router's re-serialized search. Reading the same string on both sides
+// keeps server-rendered links identical to the hydrated ones.
+const getPageSearch = createIsomorphicFn()
+  .server(() => new URL(getRequest().url).search)
+  .client(() => window.location.search);
+
 export function useAuthPageState(redirect: string | undefined) {
-  const redirectTo = getCurrentAuthRedirect(redirect);
-  const oauthQuery =
-    typeof window !== "undefined"
-      ? getOAuthSignedQuery(window.location.search)
-      : null;
+  const pageSearch = getPageSearch();
+  const redirectTo = getCurrentAuthRedirect(redirect, { search: pageSearch });
+  const oauthQuery = getOAuthSignedQuery(pageSearch);
   const isHostedMode = isHostedClientAuthMode();
 
   return {

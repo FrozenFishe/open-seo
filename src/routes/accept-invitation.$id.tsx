@@ -11,6 +11,7 @@ import { authClient, signOutAndRedirect, useSession } from "@/lib/auth-client";
 import { isHostedClientAuthMode } from "@/lib/auth-mode";
 
 export const Route = createFileRoute("/accept-invitation/$id")({
+  staticData: { renderOnServer: true },
   beforeLoad: () => {
     if (!isHostedClientAuthMode()) {
       throw notFound();

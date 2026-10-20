@@ -10,6 +10,7 @@ import { isHostedClientAuthMode } from "@/lib/auth-mode";
 import { getCurrentAuthRedirect, isDocumentRoute } from "@/lib/auth-redirect";
 
 export const Route = createFileRoute("/_auth")({
+  staticData: { renderOnServer: true },
   validateSearch: authRedirectSearchSchema,
   component: AuthPageLayout,
 });

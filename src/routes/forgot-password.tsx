@@ -18,6 +18,7 @@ const forgotPasswordSchema = z.object({
 });
 
 export const Route = createFileRoute("/forgot-password")({
+  staticData: { renderOnServer: true },
   validateSearch: authRedirectSearchSchema,
   component: ForgotPasswordPage,
 });
