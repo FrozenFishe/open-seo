@@ -31,7 +31,7 @@ export const getSamAccessSetupStatus = createServerFn({ method: "GET" })
     // local vLLM) enables SAM without an OpenRouter key.
     const enabled = Boolean(
       (await getOptionalEnvValue("OPENROUTER_API_KEY")) ||
-        (await getOptionalEnvValue("OPENROUTER_BASE_URL")),
+      (await getOptionalEnvValue("OPENROUTER_BASE_URL")),
     );
     return {
       enabled,

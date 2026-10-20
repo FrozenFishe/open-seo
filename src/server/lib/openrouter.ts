@@ -67,14 +67,18 @@ async function openAiBlockedHere(): Promise<boolean> {
  * so the SAM agent reads the key/model from its DO env and builds here.
  */
 export function buildChatAgentModel(
-  apiKey: string,
+  apiKey: string | undefined,
   modelId?: string,
   reasoningEffort: "max" | "low" = "max",
   baseURL?: string,
 ): LanguageModelV3 {
   const model = modelId ?? DEFAULT_CHAT_AGENT_MODEL;
+  if (!apiKey && !baseURL) {
+    throw new Error("OPENROUTER_API_KEY is required for the chat agent");
+  }
+  // A self-hosted endpoint needs no real key; a placeholder stands in.
   const openrouter = createOpenRouter({
-    apiKey,
+    apiKey: apiKey || "local",
     ...(baseURL ? { baseURL } : {}),
   });
   if (baseURL) return openrouter(model);
