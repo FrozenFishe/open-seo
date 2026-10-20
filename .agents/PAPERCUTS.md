@@ -11,7 +11,6 @@ data, or sensitive paths.
 ## Open
 
 - [ ] `2026-09-30T22:42:22Z` — `codex` — A fresh root install cannot start Vite: dependency optimization imports `use` from the Solid server entry through `@tanstack/devtools-ui`, even with `VITE_SHOW_DEVTOOLS=false`. Make the devtools dependencies use browser resolution during optimization, or exclude them from that pass so contributors can preview the app.
-- [ ] `2026-09-18T10:06:56Z` — `codex` — Website browser tests flood Vite output with "Assets in public directory cannot be imported from JavaScript" for MDX library images. Adjust the MDX image handling to retain public image URLs instead of generating imports, so useful test failures remain visible.
 
 ## Deferred
 
@@ -20,6 +19,7 @@ data, or sensitive paths.
 
 ## Resolved
 
+- [x] `2026-09-18T10:06:56Z` — `codex` — Website browser tests flood Vite output with "Assets in public directory cannot be imported from JavaScript" for MDX library images. Adjust the MDX image handling to retain public image URLs instead of generating imports, so useful test failures remain visible. Resolved 2026-10-20: reproduced in a browser (118 warnings after loading library, blog and docs pages in dev); `web/source.config.ts` now sets `remarkImageOptions: { useImport: false }`, so MDX keeps public image URLs with sizes read from `public/`.
 - [x] `2026-10-06T04:32:17Z` — `claude` — `npm --prefix web run types:check` (the web-content skill's final check) fails on a fresh worktree with only `web/` deps installed: `web/tsconfig.json` includes `**/*.ts`, so it type-checks `web/tests/free-tool-verification.spec.ts`, which imports the root-only `@playwright/test` and reports TS2307 plus a dozen implicit-any errors unrelated to the change. Add `@playwright/test` to `web` devDependencies or exclude that spec from `web/tsconfig.json`. Resolved 2026-10-20: moved the Playwright spec to `tests/free-tools/`, where the root install, tsconfig and lint cover it.
 - [x] `2026-09-30T23:24:29Z` — `claude` — An `ENV_PREVIEW` secret without `AUTH_MODE=local_noauth` makes the PR preview deploy fall back to `cloudflare_access`, which provisions a self-host Access app. The deploy then fails with "Could not read the Zero Trust organization: Unauthorized", because the CI token has no Access permissions. The error suggests `pnpm alchemy login --configure`, which cannot fix CI. Check `AUTH_MODE` in the workflow's "Derive preview URL" step, beside the existing `WORKERS_SUBDOMAIN` check. Resolved 2026-10-20: the "Derive preview URL" step fails fast unless `AUTH_MODE` is `local_noauth` or `hosted`.
 - [x] `2026-09-30T22:10:17Z` — `claude` — Since #784 moved `@tanstack/react-start` to 1.168.60, `pnpm vite build` rewrites the committed `src/routeTree.gen.ts` with a new import order (about 1,000 changed lines, identical routes), which leaves every local build with a dirty tree. Commit the regenerated file on main once. Resolved 2026-10-20: `pnpm vite build` on main no longer changes `src/routeTree.gen.ts`.

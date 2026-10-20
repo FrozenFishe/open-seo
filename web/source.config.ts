@@ -36,4 +36,10 @@ export const legal = defineCollections({
   schema: pageSchema,
 });
 
-export default defineConfig();
+export default defineConfig({
+  mdxOptions: {
+    // Content images live in public/, which Vite refuses to import from
+    // JavaScript. Keep them as URLs; sizes are still read from public/.
+    remarkImageOptions: { useImport: false },
+  },
+});
