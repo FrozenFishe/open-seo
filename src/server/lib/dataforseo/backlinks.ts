@@ -4,13 +4,12 @@ import {
   type BacklinksSpamFilterOptions,
 } from "@/types/schemas/backlinks";
 import { createDataforseoBillingClassifier } from "@/server/lib/dataforseoBillingClassification";
-import { AppError } from "@/server/lib/errors";
 import { dataforseoPost } from "@/server/lib/dataforseo/core";
 import {
   assertOk,
   buildTaskBilling,
+  DataforseoChargedTaskError,
   parseBilledTaskItems,
-  parseTaskItems,
   parseTaskTotalCount,
   type DataforseoApiResponse,
 } from "@/server/lib/dataforseo/envelope";
@@ -180,6 +179,7 @@ export async function fetchBacklinksSummary(input: BacklinksRequest) {
     { classify: classifyBacklinksError },
   );
   const task = assertOk(response, assertOptions("/v3/backlinks/summary/live"));
+  const billing = buildTaskBilling(task);
 
   const firstResult = task.result?.[0];
   if (firstResult) {
@@ -189,20 +189,20 @@ export async function fetchBacklinksSummary(input: BacklinksRequest) {
         "dataforseo.backlinks-summary-live.invalid-result",
         parsed.error.issues.slice(0, 5),
       );
-      throw new AppError(
-        "INTERNAL_ERROR",
+      throw new DataforseoChargedTaskError(
         "DataForSEO backlinks-summary-live returned an invalid response shape",
+        billing,
       );
     }
     return {
       data: parsed.data,
-      billing: buildTaskBilling(task),
+      billing,
     } satisfies DataforseoApiResponse<typeof parsed.data>;
   }
 
   return {
     data: {} as z.infer<typeof backlinksSummaryItemSchema>,
-    billing: buildTaskBilling(task),
+    billing,
   };
 }
 
@@ -240,12 +240,14 @@ export async function fetchBacklinksRows(input: BacklinksListRequest) {
     response,
     assertOptions("/v3/backlinks/backlinks/live"),
   );
+  const { items, billing } = parseBilledTaskItems(
+    "backlinks-live",
+    task,
+    backlinksItemSchema,
+  );
   return {
-    data: {
-      items: parseTaskItems("backlinks-live", task, backlinksItemSchema),
-      totalCount: parseTaskTotalCount(task),
-    },
-    billing: buildTaskBilling(task),
+    data: { items, totalCount: parseTaskTotalCount(task) },
+    billing,
   };
 }
 
@@ -273,16 +275,14 @@ export async function fetchReferringDomains(input: BacklinksListRequest) {
     response,
     assertOptions("/v3/backlinks/referring_domains/live"),
   );
+  const { items, billing } = parseBilledTaskItems(
+    "referring-domains-live",
+    task,
+    referringDomainItemSchema,
+  );
   return {
-    data: {
-      items: parseTaskItems(
-        "referring-domains-live",
-        task,
-        referringDomainItemSchema,
-      ),
-      totalCount: parseTaskTotalCount(task),
-    },
-    billing: buildTaskBilling(task),
+    data: { items, totalCount: parseTaskTotalCount(task) },
+    billing,
   };
 }
 
@@ -306,16 +306,14 @@ export async function fetchDomainPagesSummary(input: BacklinksListRequest) {
     response,
     assertOptions("/v3/backlinks/domain_pages_summary/live"),
   );
+  const { items, billing } = parseBilledTaskItems(
+    "domain-pages-summary-live",
+    task,
+    domainPageSummaryItemSchema,
+  );
   return {
-    data: {
-      items: parseTaskItems(
-        "domain-pages-summary-live",
-        task,
-        domainPageSummaryItemSchema,
-      ),
-      totalCount: parseTaskTotalCount(task),
-    },
-    billing: buildTaskBilling(task),
+    data: { items, totalCount: parseTaskTotalCount(task) },
+    billing,
   };
 }
 
@@ -333,14 +331,12 @@ export async function fetchBacklinksHistory(input: BacklinksTimeseriesRequest) {
     { classify: classifyBacklinksError },
   );
   const task = assertOk(response, assertOptions("/v3/backlinks/history/live"));
-  return {
-    data: parseTaskItems(
-      "backlinks-history-live",
-      task,
-      backlinksHistoryItemSchema,
-    ),
-    billing: buildTaskBilling(task),
-  };
+  const { items, billing } = parseBilledTaskItems(
+    "backlinks-history-live",
+    task,
+    backlinksHistoryItemSchema,
+  );
+  return { data: items, billing };
 }
 
 // One entry per requested target, keyed "1", "2", ... in request order.

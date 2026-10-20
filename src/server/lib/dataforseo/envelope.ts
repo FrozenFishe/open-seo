@@ -332,7 +332,12 @@ export function parseTaskTotalCount(task: DataforseoTaskLike): number | null {
   return typeof first.total_count === "number" ? first.total_count : null;
 }
 
-/** Reads `task.result[0].items`, validating against a Zod schema for loosely-typed endpoints. */
+/**
+ * Reads `task.result[0].items`, validating against a Zod schema for
+ * loosely-typed endpoints. Only for unbilled responses (queued task_get
+ * collection): a billed task uses parseBilledTaskItems so a parse failure
+ * still meters the charge.
+ */
 export function parseTaskItems<T extends z.ZodTypeAny>(
   endpoint: string,
   task: DataforseoTaskLike,

@@ -9,6 +9,7 @@ import {
   invalidFieldName,
   isNoResultsTask,
   isTaskInProgress,
+  parseBilledTaskItems,
   parseTaskItems,
   type DataforseoApiResponse,
   type DataforseoItemsTask,
@@ -116,14 +117,12 @@ export async function fetchLiveSerp(input: {
   // DataForSEO uses a task error for a valid empty SERP. Keep the charged
   // response in the normal billing path and return an empty item list.
   const task = assertOk(response, { treatNoResultsAsEmpty: true });
-  return {
-    data: parseTaskItems(
-      "google-organic-live-advanced",
-      task,
-      serpSnapshotItemSchema,
-    ),
-    billing: buildTaskBilling(task),
-  };
+  const { items, billing } = parseBilledTaskItems(
+    "google-organic-live-advanced",
+    task,
+    serpSnapshotItemSchema,
+  );
+  return { data: items, billing };
 }
 
 export interface RankCheckResult {
@@ -191,16 +190,13 @@ export async function fetchRankCheckSerp(input: {
   // "No Search Results" (40501) is valid for obscure/new keywords — treat as an
   // empty result set rather than failing the whole rank-tracking run.
   const task = assertOk(response, { treatNoResultsAsEmpty: true });
-  const items = parseTaskItems(
+  const { items, billing } = parseBilledTaskItems(
     "google-organic-live-advanced",
     task,
     serpSnapshotItemSchema,
   );
 
-  return {
-    data: buildRankCheckResult(input, items),
-    billing: buildTaskBilling(task),
-  };
+  return { data: buildRankCheckResult(input, items), billing };
 }
 
 // ---------------------------------------------------------------------------

@@ -5,7 +5,6 @@ import {
   assertOk,
   buildTaskBilling,
   parseBilledTaskItems,
-  parseTaskItems,
   parseTaskTotalCount,
   type DataforseoApiResponse,
   type DataforseoItemsTask,
@@ -295,16 +294,14 @@ export async function fetchRankedKeywords(input: {
     ],
   );
   const task = assertOk(response);
+  const { items, billing } = parseBilledTaskItems(
+    "google-ranked-keywords-live",
+    task,
+    domainRankedKeywordItemSchema,
+  );
   return {
-    data: {
-      items: parseTaskItems(
-        "google-ranked-keywords-live",
-        task,
-        domainRankedKeywordItemSchema,
-      ),
-      totalCount: task.result?.[0]?.total_count ?? null,
-    },
-    billing: buildTaskBilling(task),
+    data: { items, totalCount: task.result?.[0]?.total_count ?? null },
+    billing,
   };
 }
 
